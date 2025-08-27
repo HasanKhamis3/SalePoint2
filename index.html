@@ -18,7 +18,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نظام نقطة البيع</title>
+    <title>نظام نقطة البيع - SalePoint</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
     <style>
@@ -28,7 +28,7 @@
         }
         
         body {
-            font-family: 'Arial', sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: #f8f9fa;
             margin: 0;
             padding: 0;
@@ -41,37 +41,45 @@
         }
         
         .sidebar {
-            background-color: var(--primary-color);
-            width: 250px;
+            background: linear-gradient(to bottom, var(--primary-color), var(--secondary-color));
+            width: 280px;
             color: white;
             padding: 20px 0;
             position: fixed;
             height: 100vh;
             z-index: 1000;
+            box-shadow: 3px 0 10px rgba(0, 0, 0, 0.1);
         }
         
         .sidebar .nav-link {
-            color: rgba(255, 255, 255, 0.8);
-            margin-bottom: 5px;
-            padding: 10px 20px;
-            border-radius: 5px;
+            color: rgba(255, 255, 255, 0.9);
+            margin: 8px 15px;
+            padding: 12px 20px;
+            border-radius: 8px;
             transition: all 0.3s;
             cursor: pointer;
             text-decoration: none;
-            display: block;
+            display: flex;
+            align-items: center;
         }
         
         .sidebar .nav-link:hover, 
         .sidebar .nav-link.active {
             color: white;
-            background-color: var(--secondary-color);
+            background-color: rgba(255, 255, 255, 0.15);
+            transform: translateX(5px);
+        }
+        
+        .sidebar .nav-link i {
+            margin-left: 10px;
+            font-size: 1.2rem;
         }
         
         .main-content {
             flex: 1;
-            padding: 20px;
-            background-color: white;
-            margin-right: 250px;
+            padding: 30px;
+            background-color: #f8f9fa;
+            margin-right: 280px;
             min-height: 100vh;
         }
         
@@ -81,32 +89,104 @@
             border-radius: 15px;
             padding: 30px;
             margin-bottom: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         }
         
         .stats-card {
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s;
             height: 100%;
             border: none;
+            text-align: center;
+            padding: 25px 15px;
         }
         
         .stats-card:hover {
-            transform: translateY(-5px);
+            transform: translateY(-8px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+        
+        .stats-card i {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
         }
         
         .page {
             display: none;
+            animation: fadeIn 0.4s ease;
         }
         
         .page.active {
             display: block;
-            animation: fadeIn 0.5s;
         }
         
         @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .card {
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            border: none;
+            margin-bottom: 25px;
+        }
+        
+        .card-header {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-bottom: 1px solid #eee;
+            font-weight: 600;
+            padding: 15px 20px;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            border: none;
+            border-radius: 8px;
+            padding: 10px 20px;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(44, 62, 80, 0.3);
+        }
+        
+        .table th {
+            background-color: #f8f9fa;
+            font-weight: 600;
+            border-top: none;
+        }
+        
+        .content-header {
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #eee;
+        }
+        
+        /* Responsive design */
+        @media (max-width: 992px) {
+            .sidebar {
+                width: 230px;
+            }
+            .main-content {
+                margin-right: 230px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                position: relative;
+                height: auto;
+            }
+            .main-content {
+                margin-right: 0;
+            }
+            .main-container {
+                flex-direction: column;
+            }
         }
     </style>
 </head>
@@ -115,41 +195,44 @@
         <!-- Sidebar -->
         <div class="sidebar">
             <div class="p-3">
-                <h4 class="text-center">نظام نقطة البيع</h4>
-                <h6 class="text-center text-light mb-4">SalePoint System</h6>
+                <h4 class="text-center mb-1">نظام نقطة البيع</h4>
+                <h6 class="text-center text-light mb-4" style="opacity: 0.8;">SalePoint System</h6>
                 <hr>
                 <ul class="nav flex-column" id="sidebar-nav">
                     <li class="nav-item">
                         <a class="nav-link active" data-page="dashboard">
-                            <i class="bi bi-speedometer2 me-2"></i> لوحة التحكم
+                            <i class="bi bi-speedometer2"></i> لوحة التحكم
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" data-page="invoices">
-                            <i class="bi bi-receipt me-2"></i> إدارة الفواتير
+                            <i class="bi bi-receipt"></i> إدارة الفواتير
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" data-page="products">
-                            <i class="bi bi-box me-2"></i> المنتجات
+                            <i class="bi bi-box"></i> المنتجات
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" data-page="customers">
-                            <i class="bi bi-people me-2"></i> العملاء
+                            <i class="bi bi-people"></i> العملاء
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" data-page="reports">
-                            <i class="bi bi-graph-up me-2"></i> التقارير
+                            <i class="bi bi-graph-up"></i> التقارير
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" data-page="settings">
-                            <i class="bi bi-gear me-2"></i> الإعدادات
+                            <i class="bi bi-gear"></i> الإعدادات
                         </a>
                     </li>
                 </ul>
+                <div class="mt-4 p-3 text-center" style="border-top: 1px solid rgba(255,255,255,0.1);">
+                    <small class="text-light" style="opacity: 0.6;">الإصدار 1.0</small>
+                </div>
             </div>
         </div>
 
@@ -158,70 +241,146 @@
             <!-- Dashboard Page -->
             <div id="dashboard" class="page active">
                 <div class="welcome-card">
-                    <h2>مرحباً بك في نظام نقطة البيع</h2>
-                    <p>نظام متكامل لإدارة المبيعات والمخزون والفواتير</p>
+                    <h2><i class="bi bi-shop-window me-2"></i>مرحباً بك في نظام نقطة البيع</h2>
+                    <p class="mb-0">نظام متكامل لإدارة المبيعات والمخزون والفواتير والمحاسبة</p>
                 </div>
                 
                 <div class="row">
-                    <div class="col-md-3 mb-4">
+                    <div class="col-xl-3 col-md-6 mb-4">
                         <div class="stats-card text-center p-4 bg-primary text-white">
-                            <i class="bi bi-receipt fs-1"></i>
+                            <i class="bi bi-receipt"></i>
                             <h4 class="mt-3">الفواتير</h4>
                             <h2 id="invoices-count">0</h2>
+                            <p class="mb-0">فواتير هذا الشهر</p>
                         </div>
                     </div>
-                    <div class="col-md-3 mb-4">
+                    <div class="col-xl-3 col-md-6 mb-4">
                         <div class="stats-card text-center p-4 bg-success text-white">
-                            <i class="bi bi-box fs-1"></i>
+                            <i class="bi bi-box"></i>
                             <h4 class="mt-3">المنتجات</h4>
                             <h2 id="products-count">0</h2>
+                            <p class="mb-0">منتج في المخزون</p>
                         </div>
                     </div>
-                    <div class="col-md-3 mb-4">
+                    <div class="col-xl-3 col-md-6 mb-4">
                         <div class="stats-card text-center p-4 bg-warning text-white">
-                            <i class="bi bi-currency-exchange fs-1"></i>
+                            <i class="bi bi-currency-exchange"></i>
                             <h4 class="mt-3">المبيعات</h4>
                             <h2 id="sales-count">0 د.ب</h2>
+                            <p class="mb-0">إجمالي المبيعات</p>
                         </div>
                     </div>
-                    <div class="col-md-3 mb-4">
+                    <div class="col-xl-3 col-md-6 mb-4">
                         <div class="stats-card text-center p-4 bg-info text-white">
-                            <i class="bi bi-people fs-1"></i>
+                            <i class="bi bi-people"></i>
                             <h4 class="mt-3">العملاء</h4>
                             <h2 id="customers-count">0</h2>
+                            <p class="mb-0">عميل مسجل</p>
                         </div>
                     </div>
                 </div>
                 
-                <div class="card p-4">
-                    <h4>آخر الفواتير</h4>
-                    <p class="text-muted">لا توجد فواتير مسجلة بعد</p>
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="card">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <h5 class="mb-0">آخر الفواتير</h5>
+                                <button class="btn btn-sm btn-outline-primary">عرض الكل</button>
+                            </div>
+                            <div class="card-body">
+                                <div class="text-center py-4">
+                                    <i class="bi bi-receipt text-muted" style="font-size: 3rem;"></i>
+                                    <p class="text-muted mt-3">لا توجد فواتير مسجلة بعد</p>
+                                    <button class="btn btn-primary mt-2" data-page="invoices">إنشاء فاتورة جديدة</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="mb-0">الإشعارات</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="alert alert-info">
+                                    <i class="bi bi-info-circle me-2"></i>مرحباً بك في النظام الجديد
+                                </div>
+                                <div class="alert alert-warning">
+                                    <i class="bi bi-exclamation-triangle me-2"></i>لم تقم بإعداد بيانات الشركة بعد
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <!-- Other pages will be loaded here -->
+            <!-- Invoices Page -->
             <div id="invoices" class="page">
-                <h2>إدارة الفواتير</h2>
-                <p>صفحة إدارة الفواتير - تحت التطوير</p>
+                <div class="content-header">
+                    <h2><i class="bi bi-receipt me-2"></i>إدارة الفواتير</h2>
+                    <p class="text-muted">إدارة فواتير المبيعات والمشتريات</p>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">قائمة الفواتير</h5>
+                        <button class="btn btn-primary">فاتورة جديدة</button>
+                    </div>
+                    <div class="card-body">
+                        <div class="text-center py-5">
+                            <i class="bi bi-receipt text-muted" style="font-size: 3rem;"></i>
+                            <p class="text-muted mt-3">لا توجد فواتير مسجلة بعد</p>
+                            <button class="btn btn-primary mt-2">إنشاء فاتورة جديدة</button>
+                        </div>
+                    </div>
+                </div>
             </div>
 
+            <!-- Products Page -->
             <div id="products" class="page">
-                <h2>إدارة المنتجات</h2>
-                <p>صفحة إدارة المنتجات - تحت التطوير</p>
+                <div class="content-header">
+                    <h2><i class="bi bi-box me-2"></i>إدارة المنتجات</h2>
+                    <p class="text-muted">إدارة منتجات المخزون والفئات</p>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">قائمة المنتجات</h5>
+                        <button class="btn btn-primary">إضافة منتج</button>
+                    </div>
+                    <div class="card-body">
+                        <div class="text-center py-5">
+                            <i class="bi bi-box text-muted" style="font-size: 3rem;"></i>
+                            <p class="text-muted mt-3">لا توجد منتجات مسجلة بعد</p>
+                            <button class="btn btn-primary mt-2">إضافة منتج جديد</button>
+                        </div>
+                    </div>
+                </div>
             </div>
 
+            <!-- Other pages -->
             <div id="customers" class="page">
-                <h2>إدارة العملاء</h2>
+                <div class="content-header">
+                    <h2><i class="bi bi-people me-2"></i>إدارة العملاء</h2>
+                    <p class="text-muted">إدارة عملاء النظام</p>
+                </div>
                 <p>صفحة إدارة العملاء - تحت التطوير</p>
             </div>
 
             <div id="reports" class="page">
-                <h2>التقارير</h2>
+                <div class="content-header">
+                    <h2><i class="bi bi-graph-up me-2"></i>التقارير</h2>
+                    <p class="text-muted">تقارير المبيعات والمشتريات</p>
+                </div>
                 <p>صفحة التقارير - تحت التطوير</p>
             </div>
 
             <div id="settings" class="page">
-                <h2>الإعدادات</h2>
+                <div class="content-header">
+                    <h2><i class="bi bi-gear me-2"></i>الإعدادات</h2>
+                    <p class="text-muted">إعدادات النظام العامة</p>
+                </div>
                 <p>صفحة الإعدادات - تحت التطوير</p>
             </div>
         </div>
@@ -229,55 +388,85 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // منع السلوك الافتراضي للروابط
+        // منع التحديث التلقائي للصفحة
         document.addEventListener('DOMContentLoaded', function() {
-            // منع التحديث التلقائي للصفحة
-            document.getElementById('sidebar-nav').addEventListener('click', function(e) {
-                if (e.target.tagName === 'A' || e.target.parentElement.tagName === 'A') {
-                    e.preventDefault();
-                    
-                    const link = e.target.tagName === 'A' ? e.target : e.target.parentElement;
-                    const pageId = link.getAttribute('data-page');
-                    
-                    if (pageId) {
-                        // إزالة النشط من جميع الروابط
-                        document.querySelectorAll('.nav-link').forEach(navLink => {
-                            navLink.classList.remove('active');
-                        });
-                        
-                        // إضافة النشط للرابط الحالي
-                        link.classList.add('active');
-                        
-                        // إخفاء جميع الصفحات
-                        document.querySelectorAll('.page').forEach(page => {
-                            page.classList.remove('active');
-                        });
-                        
-                        // إظهار الصفحة المحددة
-                        const targetPage = document.getElementById(pageId);
-                        if (targetPage) {
-                            targetPage.classList.add('active');
-                        }
-                    }
-                }
-            });
-
             // تحميل البيانات من localStorage
             loadData();
+            
+            // إضافة event listener للروابط
+            document.getElementById('sidebar-nav').addEventListener('click', function(e) {
+                // منع السلوك الافتراضي للرابط
+                e.preventDefault();
+                
+                // البحث عن الرابط الذي تم النقر عليه
+                let target = e.target;
+                while (target && !target.getAttribute('data-page')) {
+                    target = target.parentElement;
+                }
+                
+                if (target && target.getAttribute('data-page')) {
+                    const pageId = target.getAttribute('data-page');
+                    switchPage(pageId);
+                }
+            });
+            
+            // إضافة event listener لأزرار الصفحات
+            document.addEventListener('click', function(e) {
+                if (e.target.getAttribute('data-page')) {
+                    e.preventDefault();
+                    const pageId = e.target.getAttribute('data-page');
+                    switchPage(pageId);
+                }
+            });
+            
+            // تهيئة الصفحة الأولى
+            switchPage('dashboard');
         });
-
+        
+        // تبديل الصفحات
+        function switchPage(pageId) {
+            // إخفاء جميع الصفحات
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+            
+            // إظهار الصفحة المحددة
+            const targetPage = document.getElementById(pageId);
+            if (targetPage) {
+                targetPage.classList.add('active');
+            }
+            
+            // تحديث القائمة الجانبية
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('data-page') === pageId) {
+                    link.classList.add('active');
+                }
+            });
+            
+            // حفظ الصفحة النشطة
+            localStorage.setItem('activePage', pageId);
+        }
+        
         // تحميل البيانات
         function loadData() {
-            const savedData = localStorage.getItem('salePointData');
-            if (savedData) {
-                const data = JSON.parse(savedData);
+            // تحميل الصفحة النشطة
+            const activePage = localStorage.getItem('activePage');
+            if (activePage) {
+                switchPage(activePage);
+            }
+            
+            // تحميل بيانات التطبيق
+            const appData = localStorage.getItem('salePointData');
+            if (appData) {
+                const data = JSON.parse(appData);
                 document.getElementById('invoices-count').textContent = data.invoices || 0;
                 document.getElementById('products-count').textContent = data.products || 0;
                 document.getElementById('sales-count').textContent = (data.sales || 0) + ' د.ب';
                 document.getElementById('customers-count').textContent = data.customers || 0;
             }
         }
-
+        
         // حفظ البيانات
         function saveData() {
             const data = {
@@ -288,6 +477,13 @@
             };
             localStorage.setItem('salePointData', JSON.stringify(data));
         }
+        
+        // منع إعادة تحميل الصفحة عند الضغط على الروابط
+        document.addEventListener('click', function(e) {
+            if (e.target.tagName === 'A' && e.target.getAttribute('href') === '#') {
+                e.preventDefault();
+            }
+        });
     </script>
 </body>
 </html>
