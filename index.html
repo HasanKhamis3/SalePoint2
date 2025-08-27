@@ -1,7 +1,209 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>إعادة توجيه</title>
+    <script>
+        // إعادة التوجيه إلى الصفحة الرئيسية
+        sessionStorage.redirect = location.href;
+        window.location.href = '/';
+    </script>
+</head>
+<body>
+    <p>إذا لم يتم إعادة توجيهك تلقائياً، <a href="/">انقر هنا</a>.</p>
+</body>
+</html>
 <div id="dashboard" class="page active">
     <h2 class="mb-4">لوحة التحكم</h2>
     <div class="alert alert-info">صفحة لوحة التحكم - تحت التطوير</div>
 </div>
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>برنامج الحسابات</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <style>
+        /* جميع أنماط CSS الخاصة بك هنا */
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #34495e;
+        }
+        
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f5f5f5;
+        }
+        .sidebar {
+            background-color: var(--primary-color);
+            min-height: 100vh;
+            color: white;
+        }
+        /* ... استمر في وضع جميع أنماط CSS هنا ... */
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-2 sidebar p-0">
+                <div class="p-3">
+                    <h4 class="text-center" id="project-name-sidebar">برنامج الحسابات</h4>
+                    <hr>
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" data-page="dashboard">
+                                <i class="bi bi-speedometer2"></i> <span class="nav-text">لوحة التحكم</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" data-page="invoice">
+                                <i class="bi bi-receipt"></i> <span class="nav-text">الفواتير</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" data-page="products">
+                                <i class="bi bi-box-seam"></i> <span class="nav-text">المنتجات</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" data-page="product-cost">
+                                <i class="bi bi-calculator"></i> <span class="nav-text">تكلفة المنتج</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" data-page="settings">
+                                <i class="bi bi-gear"></i> <span class="nav-text">الإعدادات</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="col-md-10 main-content">
+                <div id="content-area">
+                    <!-- سيتم تحميل المحتوى هنا -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- جميع modals هنا -->
+    <div class="modal fade" id="productDetailsModal" tabindex="-1" aria-hidden="true">
+        <!-- محتوى modal -->
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // متغيرات عامة
+        const currencySymbols = {
+            'BHD': 'د.ب',
+            'SAR': 'ر.س',
+            'AED': 'د.إ',
+            'QAR': 'ر.ق',
+            'KWD': 'د.ك',
+            'OMR': 'ر.ع',
+            'USD': '$'
+        };
+        let currentCurrency = 'BHD';
+        let lastProductCode = 0;
+        let products = [];
+        let invoices = [];
+        let taxEnabled = false;
+        let taxRate = 0;
+        let taxNumber = '';
+
+        // دالة تحميل الصفحات
+        function loadPage(page) {
+            const pages = {
+                'dashboard': `
+                    <div id="dashboard" class="page active">
+                        <h2 class="mb-4">لوحة التحكم</h2>
+                        <div class="alert alert-info">صفحة لوحة التحكم - تحت التطوير</div>
+                    </div>
+                `,
+                'invoice': `
+                    <div id="invoice" class="page">
+                        <h2 class="mb-4">الفواتير</h2>
+                        <!-- محتوى صفحة الفواتير -->
+                    </div>
+                `,
+                'products': `
+                    <div id="products" class="page">
+                        <h2 class="mb-4">المنتجات</h2>
+                        <!-- محتوى صفحة المنتجات -->
+                    </div>
+                `,
+                'product-cost': `
+                    <div id="product-cost" class="page">
+                        <h2 class="mb-4">حساب تكلفة المنتج</h2>
+                        <!-- محتوى صفحة تكلفة المنتج -->
+                    </div>
+                `,
+                'settings': `
+                    <div id="settings" class="page">
+                        <h2 class="mb-4">الإعدادات</h2>
+                        <!-- محتوى صفحة الإعدادات -->
+                    </div>
+                `
+            };
+
+            document.getElementById('content-area').innerHTML = pages[page] || pages['dashboard'];
+            
+            // تهيئة الصفحة بعد تحميلها
+            if (page === 'invoice') initInvoicePage();
+            if (page === 'product-cost') initProductCostPage();
+            if (page === 'settings') initSettingsPage();
+            if (page === 'products') initProductsPage();
+        }
+
+        // تهيئة الصفحات
+        function initInvoicePage() {
+            // تهيئة صفحة الفواتير
+            console.log("تهيئة صفحة الفواتير");
+        }
+
+        function initProductCostPage() {
+            // تهيئة صفحة تكلفة المنتج
+            console.log("تهيئة صفحة تكلفة المنتج");
+        }
+
+        function initSettingsPage() {
+            // تهيئة صفحة الإعدادات
+            console.log("تهيئة صفحة الإعدادات");
+        }
+
+        function initProductsPage() {
+            // تهيئة صفحة المنتجات
+            console.log("تهيئة صفحة المنتجات");
+        }
+
+        // تحميل الصفحة الأولى عند البدء
+        document.addEventListener('DOMContentLoaded', function() {
+            // تحميل صفحة لوحة التحكم افتراضيًا
+            loadPage('dashboard');
+            
+            // إضافة event listeners للقائمة الجانبية
+            document.querySelectorAll('.sidebar .nav-link').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const page = this.getAttribute('data-page');
+                    loadPage(page);
+                    
+                    // تحديث القائمة الجانبية
+                    document.querySelectorAll('.sidebar .nav-link').forEach(navLink => {
+                        navLink.classList.remove('active');
+                    });
+                    this.classList.add('active');
+                });
+            });
+        });
+    </script>
+</body>
+</html>
 <div id="invoice" class="page">
     <h2 class="mb-4">الفواتير</h2>
     
@@ -34,6 +236,41 @@
 </div>
 
 <script src="invoice.js"></script>
+// الكود الخاص بصفحة الفواتير
+document.addEventListener('DOMContentLoaded', function() {
+    // تهيئة صفحة الفواتير
+    const invoiceDateInput = document.getElementById('invoice-date');
+    if (invoiceDateInput) {
+        invoiceDateInput.value = new Date().toISOString().split('T')[0];
+    }
+    document.getElementById('invoice-number').value = generateInvoiceNumber();
+    
+    // باقي الكود الخاص بالفاتورة...
+});
+
+function generateInvoiceNumber() {
+    return "INV-" + new Date().getFullYear() + "-" + 
+        (invoices.length + 1).toString().padStart(4, '0');
+}
+<div id="product-cost" class="page">
+    <h2 class="mb-4">حساب تكلفة المنتج</h2>
+    
+    <!-- محتوى صفحة حساب تكلفة المنتج -->
+</div>
+
+<script src="product-cost.js"></script>
+// الكود الخاص بصفحة تكلفة المنتج
+document.addEventListener('DOMContentLoaded', function() {
+    // تهيئة صفحة تكلفة المنتج
+    document.getElementById('product-code').value = generateProductCode();
+    
+    // باقي الكود الخاص بتكلفة المنتج...
+});
+
+function generateProductCode() {
+    lastProductCode++;
+    return "PRD-" + lastProductCode.toString().padStart(4, '0');
+}
 <div id="products" class="page">
     <h2 class="mb-4">المنتجات</h2>
     
@@ -61,76 +298,6 @@
         </table>
     </div>
 </div>
-<div id="product-cost" class="page">
-    <h2 class="mb-4">حساب تكلفة المنتج</h2>
-    
-    <!-- محتوى صفحة حساب تكلفة المنتج -->
-</div>
-
-<script src="product-cost.js"></script>
-<div id="settings" class="page">
-    <h2 class="mb-4">الإعدادات</h2>
-    
-    <!-- محتوى صفحة الإعدادات -->
-</div>
-
-<script src="settings.js"></script>
-:root {
-    --primary-color: #2c3e50;
-    --secondary-color: #34495e;
-}
-
-body {
-    font-family: 'Arial', sans-serif;
-    background-color: #f5f5f5;
-}
-
-.sidebar {
-    background-color: var(--primary-color);
-    min-height: 100vh;
-    color: white;
-}
-
-/* باقي الأنماط من الكود الأصلي */
-// الكود الخاص بصفحة الفواتير
-document.addEventListener('DOMContentLoaded', function() {
-    // تهيئة صفحة الفواتير
-    const invoiceDateInput = document.getElementById('invoice-date');
-    if (invoiceDateInput) {
-        invoiceDateInput.value = new Date().toISOString().split('T')[0];
-    }
-    document.getElementById('invoice-number').value = generateInvoiceNumber();
-    
-    // باقي الكود الخاص بالفاتورة...
-});
-
-function generateInvoiceNumber() {
-    return "INV-" + new Date().getFullYear() + "-" + 
-        (invoices.length + 1).toString().padStart(4, '0');
-}
-// الكود الخاص بصفحة تكلفة المنتج
-document.addEventListener('DOMContentLoaded', function() {
-    // تهيئة صفحة تكلفة المنتج
-    document.getElementById('product-code').value = generateProductCode();
-    
-    // باقي الكود الخاص بتكلفة المنتج...
-});
-
-function generateProductCode() {
-    lastProductCode++;
-    return "PRD-" + lastProductCode.toString().padStart(4, '0');
-}
-// الكود الخاص بصفحة الإعدادات
-document.addEventListener('DOMContentLoaded', function() {
-    // تهيئة صفحة الإعدادات
-    loadSettings();
-    loadDeliverySettings();
-    loadTaxSettings();
-    loadPaymentMethods();
-    loadInvoiceStatuses();
-    
-    // باقي الكود الخاص بالإعدادات...
-});
 // الكود الأساسي للتنقل بين الصفحات وإدارة الحالة العامة
 document.addEventListener('DOMContentLoaded', function() {
     // إدارة تحميل الصفحات
@@ -230,64 +397,38 @@ window.addEventListener('load', function() {
         document.querySelector('[data-page="dashboard"]').classList.add('active');
     }
 });
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>برنامج الحسابات</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
-    <link rel="stylesheet" href="styles.css">
-</head>
-<body>
-    <div class="container-fluid">
-        <div class="row">
-            <!-- Sidebar -->
-            <div class="col-md-2 sidebar p-0">
-                <div class="p-3">
-                    <h4 class="text-center" id="project-name-sidebar">برنامج الحسابات</h4>
-                    <hr>
-                    <ul class="nav flex-column">
-                        <li class="nav-item">
-                            <a class="nav-link" href="#" data-page="dashboard">
-                                <i class="bi bi-speedometer2"></i> <span class="nav-text">لوحة التحكم</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="invoice.html">
-                                <i class="bi bi-receipt"></i> <span class="nav-text">الفواتير</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="products.html">
-                                <i class="bi bi-box-seam"></i> <span class="nav-text">المنتجات</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="product-cost.html">
-                                <i class="bi bi-calculator"></i> <span class="nav-text">تكلفة المنتج</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="settings.html">
-                                <i class="bi bi-gear"></i> <span class="nav-text">الإعدادات</span>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
+<div id="settings" class="page">
+    <h2 class="mb-4">الإعدادات</h2>
+    
+    <!-- محتوى صفحة الإعدادات -->
+</div>
 
-            <!-- Main Content -->
-            <div class="col-md-10 main-content">
-                <div id="content-area">
-                    <!-- سيتم تحميل المحتوى هنا ديناميكيًا -->
-                </div>
-            </div>
-        </div>
-    </div>
+<script src="settings.js"></script>
+// الكود الخاص بصفحة الإعدادات
+document.addEventListener('DOMContentLoaded', function() {
+    // تهيئة صفحة الإعدادات
+    loadSettings();
+    loadDeliverySettings();
+    loadTaxSettings();
+    loadPaymentMethods();
+    loadInvoiceStatuses();
+    
+    // باقي الكود الخاص بالإعدادات...
+});
+:root {
+    --primary-color: #2c3e50;
+    --secondary-color: #34495e;
+}
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="script.js"></script>
-</body>
-</html>
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f5f5f5;
+}
+
+.sidebar {
+    background-color: var(--primary-color);
+    min-height: 100vh;
+    color: white;
+}
+
+/* باقي الأنماط من الكود الأصلي */
