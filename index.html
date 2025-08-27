@@ -1,3 +1,14 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="refresh" content="0; url='/SalePoint2/'" />
+    <script>window.location.href = '/SalePoint2/';</script>
+</head>
+<body>
+    <p>يتم إعادة توجيهك إلى <a href="/SalePoint2/">نقطة البيع</a>.</p>
+</body>
+</html>
 <div id="dashboard" class="page active">
     <h2 class="mb-4">لوحة التحكم</h2>
     <div class="alert alert-info">صفحة لوحة التحكم - تحت التطوير</div>
@@ -140,18 +151,6 @@
         .btn-primary:hover {
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(44, 62, 80, 0.3);
-        }
-        
-        .table th {
-            background-color: #f8f9fa;
-            font-weight: 600;
-            border-top: none;
-        }
-        
-        .content-header {
-            margin-bottom: 30px;
-            padding-bottom: 15px;
-            border-bottom: 2px solid #eee;
         }
         
         .refresh-indicator {
@@ -472,6 +471,9 @@
         function refreshData() {
             // مؤشر التحميل
             const indicator = document.getElementById('refreshIndicator');
+            const originalHtml = indicator.innerHTML;
+            const originalBg = indicator.style.backgroundColor;
+            
             indicator.innerHTML = '<i class="bi bi-arrow-repeat"></i> جاري تحديث البيانات...';
             indicator.style.backgroundColor = '#28a745';
             
@@ -493,13 +495,13 @@
                 saveData();
                 
                 // إعادة تعيين المؤشر
-                indicator.innerHTML = '<i class="bi bi-arrow-repeat"></i> <span id="refreshTimer">90</span> ثانية حتى التحديث القادم';
-                indicator.style.backgroundColor = '';
+                indicator.innerHTML = originalHtml;
+                indicator.style.backgroundColor = originalBg;
                 secondsLeft = 90;
                 
                 // إشعار بالمستخدم
                 showNotification('تم تحديث البيانات بنجاح', 'success');
-            }, 1500);
+            }, 2000); // محاكاة وقت التحديث (2 ثانية)
         }
         
         // عرض إشعار للمستخدم
@@ -586,6 +588,13 @@
         // منع إعادة تحميل الصفحة عند الضغط على الروابط
         document.addEventListener('click', function(e) {
             if (e.target.tagName === 'A' && e.target.getAttribute('href') === '#') {
+                e.preventDefault();
+            }
+        });
+        
+        // منع إعادة تحميل الصفحة عند الضغط على زر Enter في النماذج
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && e.target.tagName === 'INPUT') {
                 e.preventDefault();
             }
         });
@@ -820,14 +829,3 @@ body {
 }
 
 /* باقي الأنماط من الكود الأصلي */
-
-<!DOCTYPE html>
-<html>
-<head>
-    <meta http-equiv="refresh" content="0; url='/SalePoint2/'" />
-    <script>window.location.href = '/SalePoint2/';</script>
-</head>
-<body>
-    <p>يتم إعادة توجيهك إلى <a href="/SalePoint2/">نقطة البيع</a>.</p>
-</body>
-</html>
