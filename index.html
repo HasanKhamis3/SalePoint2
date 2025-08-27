@@ -18,7 +18,7 @@
                     <hr>
                     <ul class="nav flex-column">
                         <li class="nav-item">
-                            <a class="nav-link" href="dashboard.html">
+                            <a class="nav-link" href="#" data-page="dashboard">
                                 <i class="bi bi-speedometer2"></i> <span class="nav-text">لوحة التحكم</span>
                             </a>
                         </li>
@@ -153,6 +153,45 @@ body {
 }
 
 /* باقي الأنماط من الكود الأصلي */
+// الكود الخاص بصفحة الفواتير
+document.addEventListener('DOMContentLoaded', function() {
+    // تهيئة صفحة الفواتير
+    const invoiceDateInput = document.getElementById('invoice-date');
+    if (invoiceDateInput) {
+        invoiceDateInput.value = new Date().toISOString().split('T')[0];
+    }
+    document.getElementById('invoice-number').value = generateInvoiceNumber();
+    
+    // باقي الكود الخاص بالفاتورة...
+});
+
+function generateInvoiceNumber() {
+    return "INV-" + new Date().getFullYear() + "-" + 
+        (invoices.length + 1).toString().padStart(4, '0');
+}
+// الكود الخاص بصفحة تكلفة المنتج
+document.addEventListener('DOMContentLoaded', function() {
+    // تهيئة صفحة تكلفة المنتج
+    document.getElementById('product-code').value = generateProductCode();
+    
+    // باقي الكود الخاص بتكلفة المنتج...
+});
+
+function generateProductCode() {
+    lastProductCode++;
+    return "PRD-" + lastProductCode.toString().padStart(4, '0');
+}
+// الكود الخاص بصفحة الإعدادات
+document.addEventListener('DOMContentLoaded', function() {
+    // تهيئة صفحة الإعدادات
+    loadSettings();
+    loadDeliverySettings();
+    loadTaxSettings();
+    loadPaymentMethods();
+    loadInvoiceStatuses();
+    
+    // باقي الكود الخاص بالإعدادات...
+});
 // الكود الأساسي للتنقل بين الصفحات وإدارة الحالة العامة
 document.addEventListener('DOMContentLoaded', function() {
     // إدارة تحميل الصفحات
@@ -198,42 +237,57 @@ document.addEventListener('DOMContentLoaded', function() {
     // تحميل الصفحة الأولى افتراضيًا
     loadPage('dashboard');
 });
-// الكود الخاص بصفحة الفواتير
-document.addEventListener('DOMContentLoaded', function() {
-    // تهيئة صفحة الفواتير
-    const invoiceDateInput = document.getElementById('invoice-date');
-    if (invoiceDateInput) {
-        invoiceDateInput.value = new Date().toISOString().split('T')[0];
+
+// دالة لتحميل المحتوى ديناميكيًا
+function loadPage(page) {
+    fetch(page + '.html')
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById('content-area').innerHTML = data;
+            // تحميل الـscripts الإضافية إذا كانت موجودة
+            if (page === 'invoice') {
+                loadScript('invoice.js');
+            } else if (page === 'product-cost') {
+                loadScript('product-cost.js');
+            } else if (page === 'settings') {
+                loadScript('settings.js');
+            }
+        })
+        .catch(error => console.error('Error loading page:', error));
+}
+
+function loadScript(src) {
+    const script = document.createElement('script');
+    script.src = src;
+    document.body.appendChild(script);
+}
+
+// التنقل بين الصفحات
+document.querySelectorAll('[data-page]').forEach(link => {
+    link.addEventListener('click', function(e) {
+        e.preventDefault();
+        const page = this.getAttribute('data-page');
+        loadPage(page);
+        
+        // تحديث القائمة الجانبية
+        document.querySelectorAll('.nav-link').forEach(navLink => {
+            navLink.classList.remove('active');
+        });
+        this.classList.add('active');
+        
+        // تحديث عنوان URL دون إعادة تحميل الصفحة
+        history.pushState(null, null, '#' + page);
+    });
+});
+
+// تحميل الصفحة الأولى افتراضيًا
+window.addEventListener('load', function() {
+    const hash = window.location.hash.substring(1);
+    if (hash) {
+        loadPage(hash);
+        document.querySelector(`[data-page="${hash}"]`).classList.add('active');
+    } else {
+        loadPage('dashboard');
+        document.querySelector('[data-page="dashboard"]').classList.add('active');
     }
-    document.getElementById('invoice-number').value = generateInvoiceNumber();
-    
-    // باقي الكود الخاص بالفاتورة...
-});
-
-function generateInvoiceNumber() {
-    return "INV-" + new Date().getFullYear() + "-" + 
-        (invoices.length + 1).toString().padStart(4, '0');
-}
-// الكود الخاص بصفحة تكلفة المنتج
-document.addEventListener('DOMContentLoaded', function() {
-    // تهيئة صفحة تكلفة المنتج
-    document.getElementById('product-code').value = generateProductCode();
-    
-    // باقي الكود الخاص بتكلفة المنتج...
-});
-
-function generateProductCode() {
-    lastProductCode++;
-    return "PRD-" + lastProductCode.toString().padStart(4, '0');
-}
-// الكود الخاص بصفحة الإعدادات
-document.addEventListener('DOMContentLoaded', function() {
-    // تهيئة صفحة الإعدادات
-    loadSettings();
-    loadDeliverySettings();
-    loadTaxSettings();
-    loadPaymentMethods();
-    loadInvoiceStatuses();
-    
-    // باقي الكود الخاص بالإعدادات...
 });
