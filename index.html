@@ -59,12 +59,10 @@
     <script src="script.js"></script>
 </body>
 </html>
-
 <div id="dashboard" class="page active">
     <h2 class="mb-4">لوحة التحكم</h2>
     <div class="alert alert-info">صفحة لوحة التحكم - تحت التطوير</div>
 </div>
-
 <div id="invoice" class="page">
     <h2 class="mb-4">الفواتير</h2>
     
@@ -97,7 +95,6 @@
 </div>
 
 <script src="invoice.js"></script>
-
 <div id="products" class="page">
     <h2 class="mb-4">المنتجات</h2>
     
@@ -125,8 +122,6 @@
         </table>
     </div>
 </div>
-
-
 <div id="product-cost" class="page">
     <h2 class="mb-4">حساب تكلفة المنتج</h2>
     
@@ -134,9 +129,6 @@
 </div>
 
 <script src="product-cost.js"></script>
-
-
-
 <div id="settings" class="page">
     <h2 class="mb-4">الإعدادات</h2>
     
@@ -144,9 +136,6 @@
 </div>
 
 <script src="settings.js"></script>
-
-
-
 :root {
     --primary-color: #2c3e50;
     --secondary-color: #34495e;
@@ -164,9 +153,6 @@ body {
 }
 
 /* باقي الأنماط من الكود الأصلي */
-
-
-
 // الكود الأساسي للتنقل بين الصفحات وإدارة الحالة العامة
 document.addEventListener('DOMContentLoaded', function() {
     // إدارة تحميل الصفحات
@@ -212,11 +198,6 @@ document.addEventListener('DOMContentLoaded', function() {
     // تحميل الصفحة الأولى افتراضيًا
     loadPage('dashboard');
 });
-
-
-
-
-
 // الكود الخاص بصفحة الفواتير
 document.addEventListener('DOMContentLoaded', function() {
     // تهيئة صفحة الفواتير
@@ -233,10 +214,6 @@ function generateInvoiceNumber() {
     return "INV-" + new Date().getFullYear() + "-" + 
         (invoices.length + 1).toString().padStart(4, '0');
 }
-
-
-
-
 // الكود الخاص بصفحة تكلفة المنتج
 document.addEventListener('DOMContentLoaded', function() {
     // تهيئة صفحة تكلفة المنتج
@@ -249,14 +226,6 @@ function generateProductCode() {
     lastProductCode++;
     return "PRD-" + lastProductCode.toString().padStart(4, '0');
 }
-
-
-
-
-
-
-
-
 // الكود الخاص بصفحة الإعدادات
 document.addEventListener('DOMContentLoaded', function() {
     // تهيئة صفحة الإعدادات
