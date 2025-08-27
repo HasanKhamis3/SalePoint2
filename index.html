@@ -2,15 +2,11 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>إعادة توجيه</title>
-    <script>
-        // إعادة التوجيه إلى الصفحة الرئيسية
-        sessionStorage.redirect = location.href;
-        window.location.href = '/';
-    </script>
+    <meta http-equiv="refresh" content="0; url='/SalePoint2/'" />
+    <script>window.location.href = '/SalePoint2/';</script>
 </head>
 <body>
-    <p>إذا لم يتم إعادة توجيهك تلقائياً، <a href="/">انقر هنا</a>.</p>
+    <p>يتم إعادة توجيهك إلى <a href="/SalePoint2/">نقطة البيع</a>.</p>
 </body>
 </html>
 <div id="dashboard" class="page active">
@@ -22,11 +18,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>برنامج الحسابات</title>
+    <title>نقطة البيع - SalePoint</title>
+    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
     <style>
-        /* جميع أنماط CSS الخاصة بك هنا */
         :root {
             --primary-color: #2c3e50;
             --secondary-color: #34495e;
@@ -35,171 +32,211 @@
         body {
             font-family: 'Arial', sans-serif;
             background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
         }
+        
+        .main-container {
+            display: flex;
+            min-height: 100vh;
+        }
+        
         .sidebar {
             background-color: var(--primary-color);
-            min-height: 100vh;
+            width: 250px;
             color: white;
+            padding: 20px 0;
         }
-        /* ... استمر في وضع جميع أنماط CSS هنا ... */
+        
+        .sidebar .nav-link {
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 5px;
+            padding: 10px 20px;
+        }
+        
+        .sidebar .nav-link:hover, 
+        .sidebar .nav-link.active {
+            color: white;
+            background-color: var(--secondary-color);
+        }
+        
+        .sidebar .nav-link i {
+            margin-left: 8px;
+        }
+        
+        .main-content {
+            flex: 1;
+            padding: 20px;
+        }
+        
+        .card {
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        
+        .page {
+            display: none;
+        }
+        
+        .page.active {
+            display: block;
+        }
+        
+        .logo-preview {
+            max-width: 150px;
+            max-height: 150px;
+            margin-top: 10px;
+            display: none;
+        }
     </style>
 </head>
 <body>
-    <div class="container-fluid">
-        <div class="row">
-            <!-- Sidebar -->
-            <div class="col-md-2 sidebar p-0">
-                <div class="p-3">
-                    <h4 class="text-center" id="project-name-sidebar">برنامج الحسابات</h4>
-                    <hr>
-                    <ul class="nav flex-column">
-                        <li class="nav-item">
-                            <a class="nav-link" href="#" data-page="dashboard">
-                                <i class="bi bi-speedometer2"></i> <span class="nav-text">لوحة التحكم</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#" data-page="invoice">
-                                <i class="bi bi-receipt"></i> <span class="nav-text">الفواتير</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#" data-page="products">
-                                <i class="bi bi-box-seam"></i> <span class="nav-text">المنتجات</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#" data-page="product-cost">
-                                <i class="bi bi-calculator"></i> <span class="nav-text">تكلفة المنتج</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#" data-page="settings">
-                                <i class="bi bi-gear"></i> <span class="nav-text">الإعدادات</span>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
+    <div class="main-container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="p-3">
+                <h4 class="text-center">نقطة البيع</h4>
+                <h6 class="text-center text-muted">SalePoint System</h6>
+                <hr>
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#" data-page="dashboard">
+                            <i class="bi bi-speedometer2"></i> لوحة التحكم
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" data-page="invoice">
+                            <i class="bi bi-receipt"></i> الفواتير
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" data-page="products">
+                            <i class="bi bi-box-seam"></i> المنتجات
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" data-page="product-cost">
+                            <i class="bi bi-calculator"></i> تكلفة المنتج
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" data-page="settings">
+                            <i class="bi bi-gear"></i> الإعدادات
+                        </a>
+                    </li>
+                </ul>
             </div>
+        </div>
 
-            <!-- Main Content -->
-            <div class="col-md-10 main-content">
-                <div id="content-area">
-                    <!-- سيتم تحميل المحتوى هنا -->
+        <!-- Main Content -->
+        <div class="main-content">
+            <div id="content-area">
+                <!-- Dashboard Page -->
+                <div id="dashboard" class="page active">
+                    <h2 class="mb-4">لوحة التحكم</h2>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="card text-center p-3">
+                                <i class="bi bi-receipt fs-1 text-primary"></i>
+                                <h5 class="mt-2">الفواتير</h5>
+                                <h3 id="invoices-count">0</h3>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card text-center p-3">
+                                <i class="bi bi-box fs-1 text-success"></i>
+                                <h5 class="mt-2">المنتجات</h5>
+                                <h3 id="products-count">0</h3>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card text-center p-3">
+                                <i class="bi bi-currency-exchange fs-1 text-warning"></i>
+                                <h5 class="mt-2">الإيرادات</h5>
+                                <h3 id="revenue-count">0 د.ب</h3>
+                            </div>
+                        </div>
+                    </div>
                 </div>
+
+                <!-- سيتم تحميل باقي الصفحات هنا ديناميكيًا -->
             </div>
         </div>
     </div>
 
-    <!-- جميع modals هنا -->
-    <div class="modal fade" id="productDetailsModal" tabindex="-1" aria-hidden="true">
-        <!-- محتوى modal -->
-    </div>
-
+    <!-- Bootstrap & jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
     <script>
-        // متغيرات عامة
-        const currencySymbols = {
-            'BHD': 'د.ب',
-            'SAR': 'ر.س',
-            'AED': 'د.إ',
-            'QAR': 'ر.ق',
-            'KWD': 'د.ك',
-            'OMR': 'ر.ع',
-            'USD': '$'
+        // بيانات التطبيق
+        let appData = {
+            invoices: [],
+            products: [],
+            settings: {},
+            currentPage: 'dashboard'
         };
-        let currentCurrency = 'BHD';
-        let lastProductCode = 0;
-        let products = [];
-        let invoices = [];
-        let taxEnabled = false;
-        let taxRate = 0;
-        let taxNumber = '';
 
-        // دالة تحميل الصفحات
-        function loadPage(page) {
-            const pages = {
-                'dashboard': `
-                    <div id="dashboard" class="page active">
-                        <h2 class="mb-4">لوحة التحكم</h2>
-                        <div class="alert alert-info">صفحة لوحة التحكم - تحت التطوير</div>
-                    </div>
-                `,
-                'invoice': `
-                    <div id="invoice" class="page">
-                        <h2 class="mb-4">الفواتير</h2>
-                        <!-- محتوى صفحة الفواتير -->
-                    </div>
-                `,
-                'products': `
-                    <div id="products" class="page">
-                        <h2 class="mb-4">المنتجات</h2>
-                        <!-- محتوى صفحة المنتجات -->
-                    </div>
-                `,
-                'product-cost': `
-                    <div id="product-cost" class="page">
-                        <h2 class="mb-4">حساب تكلفة المنتج</h2>
-                        <!-- محتوى صفحة تكلفة المنتج -->
-                    </div>
-                `,
-                'settings': `
-                    <div id="settings" class="page">
-                        <h2 class="mb-4">الإعدادات</h2>
-                        <!-- محتوى صفحة الإعدادات -->
-                    </div>
-                `
+        // تحميل البيانات من localStorage
+        function loadData() {
+            const savedData = localStorage.getItem('salePointData');
+            if (savedData) {
+                appData = JSON.parse(savedData);
+            }
+            updateDashboard();
+        }
+
+        // حفظ البيانات إلى localStorage
+        function saveData() {
+            localStorage.setItem('salePointData', JSON.stringify(appData));
+            updateDashboard();
+        }
+
+        // تحديث لوحة التحكم
+        function updateDashboard() {
+            $('#invoices-count').text(appData.invoices.length);
+            $('#products-count').text(appData.products.length);
+            
+            const revenue = appData.invoices.reduce((total, invoice) => total + invoice.total, 0);
+            $('#revenue-count').text(revenue.toFixed(3) + ' د.ب');
+        }
+
+        // تحميل الصفحة
+        function loadPage(pageId) {
+            $('.page').removeClass('active');
+            $('.nav-link').removeClass('active');
+            
+            $(`#${pageId}`).addClass('active');
+            $(`[data-page="${pageId}"]`).addClass('active');
+            
+            appData.currentPage = pageId;
+            saveData();
+        }
+
+        // تحميل محتوى الصفحات
+        function loadPageContent() {
+            // سيتم تحميل محتوى الصفحات هنا
+            const pagesContent = {
+                // ... محتوى الصفحات الأخرى
             };
-
-            document.getElementById('content-area').innerHTML = pages[page] || pages['dashboard'];
             
-            // تهيئة الصفحة بعد تحميلها
-            if (page === 'invoice') initInvoicePage();
-            if (page === 'product-cost') initProductCostPage();
-            if (page === 'settings') initSettingsPage();
-            if (page === 'products') initProductsPage();
+            $('#content-area').append(pagesContent[appData.currentPage] || pagesContent.dashboard);
         }
 
-        // تهيئة الصفحات
-        function initInvoicePage() {
-            // تهيئة صفحة الفواتير
-            console.log("تهيئة صفحة الفواتير");
-        }
-
-        function initProductCostPage() {
-            // تهيئة صفحة تكلفة المنتج
-            console.log("تهيئة صفحة تكلفة المنتج");
-        }
-
-        function initSettingsPage() {
-            // تهيئة صفحة الإعدادات
-            console.log("تهيئة صفحة الإعدادات");
-        }
-
-        function initProductsPage() {
-            // تهيئة صفحة المنتجات
-            console.log("تهيئة صفحة المنتجات");
-        }
-
-        // تحميل الصفحة الأولى عند البدء
-        document.addEventListener('DOMContentLoaded', function() {
-            // تحميل صفحة لوحة التحكم افتراضيًا
-            loadPage('dashboard');
+        // عند تحميل الصفحة
+        $(document).ready(function() {
+            loadData();
             
-            // إضافة event listeners للقائمة الجانبية
-            document.querySelectorAll('.sidebar .nav-link').forEach(link => {
-                link.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const page = this.getAttribute('data-page');
-                    loadPage(page);
-                    
-                    // تحديث القائمة الجانبية
-                    document.querySelectorAll('.sidebar .nav-link').forEach(navLink => {
-                        navLink.classList.remove('active');
-                    });
-                    this.classList.add('active');
-                });
+            // أحداث القائمة الجانبية
+            $('.nav-link').click(function(e) {
+                e.preventDefault();
+                const pageId = $(this).data('page');
+                loadPage(pageId);
             });
+            
+            // تحميل محتوى الصفحة الأولى
+            loadPage('dashboard');
         });
     </script>
 </body>
