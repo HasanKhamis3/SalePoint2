@@ -32,6 +32,7 @@
             background-color: #f8f9fa;
             margin: 0;
             padding: 0;
+            overflow-x: hidden;
         }
         
         .main-container {
@@ -44,6 +45,9 @@
             width: 250px;
             color: white;
             padding: 20px 0;
+            position: fixed;
+            height: 100vh;
+            z-index: 1000;
         }
         
         .sidebar .nav-link {
@@ -52,6 +56,9 @@
             padding: 10px 20px;
             border-radius: 5px;
             transition: all 0.3s;
+            cursor: pointer;
+            text-decoration: none;
+            display: block;
         }
         
         .sidebar .nav-link:hover, 
@@ -64,6 +71,8 @@
             flex: 1;
             padding: 20px;
             background-color: white;
+            margin-right: 250px;
+            min-height: 100vh;
         }
         
         .welcome-card {
@@ -79,10 +88,25 @@
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             transition: transform 0.3s;
             height: 100%;
+            border: none;
         }
         
         .stats-card:hover {
             transform: translateY(-5px);
+        }
+        
+        .page {
+            display: none;
+        }
+        
+        .page.active {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
     </style>
 </head>
@@ -94,34 +118,34 @@
                 <h4 class="text-center">نظام نقطة البيع</h4>
                 <h6 class="text-center text-light mb-4">SalePoint System</h6>
                 <hr>
-                <ul class="nav flex-column">
+                <ul class="nav flex-column" id="sidebar-nav">
                     <li class="nav-item">
-                        <a class="nav-link active" href="#">
+                        <a class="nav-link active" data-page="dashboard">
                             <i class="bi bi-speedometer2 me-2"></i> لوحة التحكم
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">
+                        <a class="nav-link" data-page="invoices">
                             <i class="bi bi-receipt me-2"></i> إدارة الفواتير
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">
+                        <a class="nav-link" data-page="products">
                             <i class="bi bi-box me-2"></i> المنتجات
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">
+                        <a class="nav-link" data-page="customers">
                             <i class="bi bi-people me-2"></i> العملاء
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">
+                        <a class="nav-link" data-page="reports">
                             <i class="bi bi-graph-up me-2"></i> التقارير
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">
+                        <a class="nav-link" data-page="settings">
                             <i class="bi bi-gear me-2"></i> الإعدادات
                         </a>
                     </li>
@@ -131,50 +155,140 @@
 
         <!-- Main Content -->
         <div class="main-content">
-            <div class="welcome-card">
-                <h2>مرحباً بك في نظام نقطة البيع</h2>
-                <p>نظام متكامل لإدارة المبيعات والمخزون والفواتير</p>
+            <!-- Dashboard Page -->
+            <div id="dashboard" class="page active">
+                <div class="welcome-card">
+                    <h2>مرحباً بك في نظام نقطة البيع</h2>
+                    <p>نظام متكامل لإدارة المبيعات والمخزون والفواتير</p>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-3 mb-4">
+                        <div class="stats-card text-center p-4 bg-primary text-white">
+                            <i class="bi bi-receipt fs-1"></i>
+                            <h4 class="mt-3">الفواتير</h4>
+                            <h2 id="invoices-count">0</h2>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-4">
+                        <div class="stats-card text-center p-4 bg-success text-white">
+                            <i class="bi bi-box fs-1"></i>
+                            <h4 class="mt-3">المنتجات</h4>
+                            <h2 id="products-count">0</h2>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-4">
+                        <div class="stats-card text-center p-4 bg-warning text-white">
+                            <i class="bi bi-currency-exchange fs-1"></i>
+                            <h4 class="mt-3">المبيعات</h4>
+                            <h2 id="sales-count">0 د.ب</h2>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-4">
+                        <div class="stats-card text-center p-4 bg-info text-white">
+                            <i class="bi bi-people fs-1"></i>
+                            <h4 class="mt-3">العملاء</h4>
+                            <h2 id="customers-count">0</h2>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card p-4">
+                    <h4>آخر الفواتير</h4>
+                    <p class="text-muted">لا توجد فواتير مسجلة بعد</p>
+                </div>
             </div>
-            
-            <div class="row">
-                <div class="col-md-3 mb-4">
-                    <div class="stats-card text-center p-4 bg-primary text-white">
-                        <i class="bi bi-receipt fs-1"></i>
-                        <h4 class="mt-3">الفواتير</h4>
-                        <h2>0</h2>
-                    </div>
-                </div>
-                <div class="col-md-3 mb-4">
-                    <div class="stats-card text-center p-4 bg-success text-white">
-                        <i class="bi bi-box fs-1"></i>
-                        <h4 class="mt-3">المنتجات</h4>
-                        <h2>0</h2>
-                    </div>
-                </div>
-                <div class="col-md-3 mb-4">
-                    <div class="stats-card text-center p-4 bg-warning text-white">
-                        <i class="bi bi-currency-exchange fs-1"></i>
-                        <h4 class="mt-3">المبيعات</h4>
-                        <h2>0 د.ب</h2>
-                    </div>
-                </div>
-                <div class="col-md-3 mb-4">
-                    <div class="stats-card text-center p-4 bg-info text-white">
-                        <i class="bi bi-people fs-1"></i>
-                        <h4 class="mt-3">العملاء</h4>
-                        <h2>0</h2>
-                    </div>
-                </div>
+
+            <!-- Other pages will be loaded here -->
+            <div id="invoices" class="page">
+                <h2>إدارة الفواتير</h2>
+                <p>صفحة إدارة الفواتير - تحت التطوير</p>
             </div>
-            
-            <div class="card p-4">
-                <h4>آخر الفواتير</h4>
-                <p class="text-muted">لا توجد فواتير مسجلة بعد</p>
+
+            <div id="products" class="page">
+                <h2>إدارة المنتجات</h2>
+                <p>صفحة إدارة المنتجات - تحت التطوير</p>
+            </div>
+
+            <div id="customers" class="page">
+                <h2>إدارة العملاء</h2>
+                <p>صفحة إدارة العملاء - تحت التطوير</p>
+            </div>
+
+            <div id="reports" class="page">
+                <h2>التقارير</h2>
+                <p>صفحة التقارير - تحت التطوير</p>
+            </div>
+
+            <div id="settings" class="page">
+                <h2>الإعدادات</h2>
+                <p>صفحة الإعدادات - تحت التطوير</p>
             </div>
         </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // منع السلوك الافتراضي للروابط
+        document.addEventListener('DOMContentLoaded', function() {
+            // منع التحديث التلقائي للصفحة
+            document.getElementById('sidebar-nav').addEventListener('click', function(e) {
+                if (e.target.tagName === 'A' || e.target.parentElement.tagName === 'A') {
+                    e.preventDefault();
+                    
+                    const link = e.target.tagName === 'A' ? e.target : e.target.parentElement;
+                    const pageId = link.getAttribute('data-page');
+                    
+                    if (pageId) {
+                        // إزالة النشط من جميع الروابط
+                        document.querySelectorAll('.nav-link').forEach(navLink => {
+                            navLink.classList.remove('active');
+                        });
+                        
+                        // إضافة النشط للرابط الحالي
+                        link.classList.add('active');
+                        
+                        // إخفاء جميع الصفحات
+                        document.querySelectorAll('.page').forEach(page => {
+                            page.classList.remove('active');
+                        });
+                        
+                        // إظهار الصفحة المحددة
+                        const targetPage = document.getElementById(pageId);
+                        if (targetPage) {
+                            targetPage.classList.add('active');
+                        }
+                    }
+                }
+            });
+
+            // تحميل البيانات من localStorage
+            loadData();
+        });
+
+        // تحميل البيانات
+        function loadData() {
+            const savedData = localStorage.getItem('salePointData');
+            if (savedData) {
+                const data = JSON.parse(savedData);
+                document.getElementById('invoices-count').textContent = data.invoices || 0;
+                document.getElementById('products-count').textContent = data.products || 0;
+                document.getElementById('sales-count').textContent = (data.sales || 0) + ' د.ب';
+                document.getElementById('customers-count').textContent = data.customers || 0;
+            }
+        }
+
+        // حفظ البيانات
+        function saveData() {
+            const data = {
+                invoices: parseInt(document.getElementById('invoices-count').textContent) || 0,
+                products: parseInt(document.getElementById('products-count').textContent) || 0,
+                sales: parseInt(document.getElementById('sales-count').textContent) || 0,
+                customers: parseInt(document.getElementById('customers-count').textContent) || 0
+            };
+            localStorage.setItem('salePointData', JSON.stringify(data));
+        }
+    </script>
 </body>
 </html>
 <div id="invoice" class="page">
