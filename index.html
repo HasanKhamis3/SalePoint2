@@ -114,43 +114,16 @@
         
         .page {
             display: none;
-            animation: fadeIn 0.4s ease;
         }
         
         .page.active {
             display: block;
+            animation: fadeIn 0.4s ease;
         }
         
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
-        }
-        
-        .card {
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-            border: none;
-            margin-bottom: 25px;
-        }
-        
-        .card-header {
-            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-            border-bottom: 1px solid #eee;
-            font-weight: 600;
-            padding: 15px 20px;
-        }
-        
-        .btn-primary {
-            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
-            border: none;
-            border-radius: 8px;
-            padding: 10px 20px;
-            transition: all 0.3s;
-        }
-        
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(44, 62, 80, 0.3);
         }
         
         .refresh-indicator {
@@ -159,48 +132,17 @@
             right: 20px;
             background-color: var(--primary-color);
             color: white;
-            padding: 10px 15px;
-            border-radius: 50px;
+            padding: 8px 15px;
+            border-radius: 20px;
             box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
             z-index: 1000;
             display: flex;
             align-items: center;
-            font-size: 14px;
+            font-size: 13px;
         }
         
         .refresh-indicator i {
             margin-left: 5px;
-        }
-        
-        /* Responsive design */
-        @media (max-width: 992px) {
-            .sidebar {
-                width: 230px;
-            }
-            .main-content {
-                margin-right: 230px;
-            }
-        }
-        
-        @media (max-width: 768px) {
-            .sidebar {
-                width: 100%;
-                position: relative;
-                height: auto;
-            }
-            .main-content {
-                margin-right: 0;
-            }
-            .main-container {
-                flex-direction: column;
-            }
-            
-            .refresh-indicator {
-                bottom: 10px;
-                right: 10px;
-                left: 10px;
-                justify-content: center;
-            }
         }
     </style>
 </head>
@@ -212,41 +154,38 @@
                 <h4 class="text-center mb-1">نظام نقطة البيع</h4>
                 <h6 class="text-center text-light mb-4" style="opacity: 0.8;">SalePoint System</h6>
                 <hr>
-                <ul class="nav flex-column" id="sidebar-nav">
+                <ul class="nav flex-column">
                     <li class="nav-item">
-                        <a class="nav-link active" data-page="dashboard">
+                        <a class="nav-link active" onclick="switchPage('dashboard')">
                             <i class="bi bi-speedometer2"></i> لوحة التحكم
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" data-page="invoices">
+                        <a class="nav-link" onclick="switchPage('invoices')">
                             <i class="bi bi-receipt"></i> إدارة الفواتير
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" data-page="products">
+                        <a class="nav-link" onclick="switchPage('products')">
                             <i class="bi bi-box"></i> المنتجات
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" data-page="customers">
+                        <a class="nav-link" onclick="switchPage('customers')">
                             <i class="bi bi-people"></i> العملاء
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" data-page="reports">
+                        <a class="nav-link" onclick="switchPage('reports')">
                             <i class="bi bi-graph-up"></i> التقارير
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" data-page="settings">
+                        <a class="nav-link" onclick="switchPage('settings')">
                             <i class="bi bi-gear"></i> الإعدادات
                         </a>
                     </li>
                 </ul>
-                <div class="mt-4 p-3 text-center" style="border-top: 1px solid rgba(255,255,255,0.1);">
-                    <small class="text-light" style="opacity: 0.6;">الإصدار 1.0</small>
-                </div>
             </div>
         </div>
 
@@ -256,7 +195,7 @@
             <div id="dashboard" class="page active">
                 <div class="welcome-card">
                     <h2><i class="bi bi-shop-window me-2"></i>مرحباً بك في نظام نقطة البيع</h2>
-                    <p class="mb-0">نظام متكامل لإدارة المبيعات والمخزون والفواتير والمحاسبة</p>
+                    <p class="mb-0">نظام متكامل لإدارة المبيعات والمخزون والفواتير</p>
                 </div>
                 
                 <div class="row">
@@ -293,169 +232,59 @@
                         </div>
                     </div>
                 </div>
-                
-                <div class="row">
-                    <div class="col-md-8">
-                        <div class="card">
-                            <div class="card-header d-flex justify-content-between align-items-center">
-                                <h5 class="mb-0">آخر الفواتير</h5>
-                                <button class="btn btn-sm btn-outline-primary" data-page="invoices">عرض الكل</button>
-                            </div>
-                            <div class="card-body">
-                                <div class="text-center py-4">
-                                    <i class="bi bi-receipt text-muted" style="font-size: 3rem;"></i>
-                                    <p class="text-muted mt-3">لا توجد فواتير مسجلة بعد</p>
-                                    <button class="btn btn-primary mt-2" data-page="invoices">إنشاء فاتورة جديدة</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="col-md-4">
-                        <div class="card">
-                            <div class="card-header">
-                                <h5 class="mb-0">الإشعارات</h5>
-                            </div>
-                            <div class="card-body">
-                                <div class="alert alert-info">
-                                    <i class="bi bi-info-circle me-2"></i>مرحباً بك في النظام الجديد
-                                </div>
-                                <div class="alert alert-warning">
-                                    <i class="bi bi-exclamation-triangle me-2"></i>لم تقم بإعداد بيانات الشركة بعد
-                                </div>
-                                <div class="alert alert-light">
-                                    <i class="bi bi-arrow-repeat me-2"></i>سيتم تحديث البيانات تلقائياً كل 90 ثانية
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Invoices Page -->
-            <div id="invoices" class="page">
-                <div class="content-header">
-                    <h2><i class="bi bi-receipt me-2"></i>إدارة الفواتير</h2>
-                    <p class="text-muted">إدارة فواتير المبيعات والمشتريات</p>
-                </div>
-                
-                <div class="card">
-                    <div class="card-header d-flex justify-content-between align-items-center">
-                        <h5 class="mb-0">قائمة الفواتير</h5>
-                        <button class="btn btn-primary">فاتورة جديدة</button>
-                    </div>
-                    <div class="card-body">
-                        <div class="text-center py-5">
-                            <i class="bi bi-receipt text-muted" style="font-size: 3rem;"></i>
-                            <p class="text-muted mt-3">لا توجد فواتير مسجلة بعد</p>
-                            <button class="btn btn-primary mt-2">إنشاء فاتورة جديدة</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Products Page -->
-            <div id="products" class="page">
-                <div class="content-header">
-                    <h2><i class="bi bi-box me-2"></i>إدارة المنتجات</h2>
-                    <p class="text-muted">إدارة منتجات المخزون والفئات</p>
-                </div>
-                
-                <div class="card">
-                    <div class="card-header d-flex justify-content-between align-items-center">
-                        <h5 class="mb-0">قائمة المنتجات</h5>
-                        <button class="btn btn-primary">إضافة منتج</button>
-                    </div>
-                    <div class="card-body">
-                        <div class="text-center py-5">
-                            <i class="bi bi-box text-muted" style="font-size: 3rem;"></i>
-                            <p class="text-muted mt-3">لا توجد منتجات مسجلة بعد</p>
-                            <button class="btn btn-primary mt-2">إضافة منتج جديد</button>
-                        </div>
-                    </div>
-                </div>
             </div>
 
             <!-- Other pages -->
+            <div id="invoices" class="page">
+                <h2>إدارة الفواتير</h2>
+                <p>صفحة إدارة الفواتير - تحت التطوير</p>
+            </div>
+
+            <div id="products" class="page">
+                <h2>إدارة المنتجات</h2>
+                <p>صفحة إدارة المنتجات - تحت التطوير</p>
+            </div>
+
             <div id="customers" class="page">
-                <div class="content-header">
-                    <h2><i class="bi bi-people me-2"></i>إدارة العملاء</h2>
-                    <p class="text-muted">إدارة عملاء النظام</p>
-                </div>
+                <h2>إدارة العملاء</h2>
                 <p>صفحة إدارة العملاء - تحت التطوير</p>
             </div>
 
             <div id="reports" class="page">
-                <div class="content-header">
-                    <h2><i class="bi bi-graph-up me-2"></i>التقارير</h2>
-                    <p class="text-muted">تقارير المبيعات والمشتريات</p>
-                </div>
+                <h2>التقارير</h2>
                 <p>صفحة التقارير - تحت التطوير</p>
             </div>
 
             <div id="settings" class="page">
-                <div class="content-header">
-                    <h2><i class="bi bi-gear me-2"></i>الإعدادات</h2>
-                    <p class="text-muted">إعدادات النظام العامة</p>
-                </div>
+                <h2>الإعدادات</h2>
                 <p>صفحة الإعدادات - تحت التطوير</p>
             </div>
         </div>
     </div>
 
     <!-- مؤشر التحديث -->
-    <div class="refresh-indicator" id="refreshIndicator">
+    <div class="refresh-indicator">
         <i class="bi bi-arrow-repeat"></i>
         <span id="refreshTimer">90</span> ثانية حتى التحديث القادم
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // منع التحديث التلقائي للصفحة
-        document.addEventListener('DOMContentLoaded', function() {
-            // تحميل البيانات من localStorage
-            loadData();
-            
-            // إضافة event listener للروابط
-            document.getElementById('sidebar-nav').addEventListener('click', function(e) {
-                // منع السلوك الافتراضي للرابط
-                e.preventDefault();
-                
-                // البحث عن الرابط الذي تم النقر عليه
-                let target = e.target;
-                while (target && !target.getAttribute('data-page')) {
-                    target = target.parentElement;
-                }
-                
-                if (target && target.getAttribute('data-page')) {
-                    const pageId = target.getAttribute('data-page');
-                    switchPage(pageId);
-                }
-            });
-            
-            // إضافة event listener لأزرار الصفحات
-            document.addEventListener('click', function(e) {
-                if (e.target.getAttribute('data-page')) {
-                    e.preventDefault();
-                    const pageId = e.target.getAttribute('data-page');
-                    switchPage(pageId);
-                }
-            });
-            
-            // تهيئة الصفحة الأولى
-            switchPage('dashboard');
-            
-            // بدء مؤقت التحديث التلقائي (90 ثانية)
-            startAutoRefreshTimer();
-        });
-        
-        // مؤقت التحديث التلقائي
-        let refreshTimer;
+        // منع أي تحديث تلقائي للصفحة
+        window.onbeforeunload = function() {
+            return "هل أنت متأكد من أنك تريد المغادرة؟";
+        }
+
+        // تهيئة المتغيرات
+        let refreshInterval;
         let secondsLeft = 90;
         
-        function startAutoRefreshTimer() {
-            // تحديث العداد كل ثانية
-            refreshTimer = setInterval(function() {
+        // بدء مؤقت التحديث بعد 90 ثانية
+        function startRefreshTimer() {
+            // إلغاء أي مؤقت سابق
+            if (refreshInterval) clearInterval(refreshInterval);
+            
+            // تعيين المؤقت الجديد
+            refreshInterval = setInterval(function() {
                 secondsLeft--;
                 document.getElementById('refreshTimer').textContent = secondsLeft;
                 
@@ -464,70 +293,27 @@
                     refreshData();
                     secondsLeft = 90;
                 }
-            }, 1000);
+            }, 1000); // تحديث كل ثانية واحدة فقط
         }
         
-        // تحديث البيانات (بدون إعادة تحميل الصفحة)
+        // تحديث البيانات
         function refreshData() {
-            // مؤشر التحميل
-            const indicator = document.getElementById('refreshIndicator');
-            const originalHtml = indicator.innerHTML;
-            const originalBg = indicator.style.backgroundColor;
+            console.log("تم تحديث البيانات في: " + new Date().toLocaleTimeString());
             
-            indicator.innerHTML = '<i class="bi bi-arrow-repeat"></i> جاري تحديث البيانات...';
-            indicator.style.backgroundColor = '#28a745';
+            // زيادة الأرقام عشوائياً لمحاكاة التحديث
+            const invoicesCount = Math.floor(Math.random() * 10) + 1;
+            const productsCount = Math.floor(Math.random() * 50) + 10;
+            const salesCount = (Math.random() * 1000 + 100).toFixed(2);
+            const customersCount = Math.floor(Math.random() * 20) + 5;
             
-            // محاكاة عملية التحديث
-            setTimeout(function() {
-                // زيادة الأرقام عشوائياً لمحاكاة التحديث
-                const invoicesCount = Math.floor(Math.random() * 10) + 1;
-                const productsCount = Math.floor(Math.random() * 50) + 10;
-                const salesCount = (Math.random() * 1000 + 100).toFixed(2);
-                const customersCount = Math.floor(Math.random() * 20) + 5;
-                
-                // تحديث واجهة المستخدم
-                document.getElementById('invoices-count').textContent = invoicesCount;
-                document.getElementById('products-count').textContent = productsCount;
-                document.getElementById('sales-count').textContent = salesCount + ' د.ب';
-                document.getElementById('customers-count').textContent = customersCount;
-                
-                // حفظ البيانات
-                saveData();
-                
-                // إعادة تعيين المؤشر
-                indicator.innerHTML = originalHtml;
-                indicator.style.backgroundColor = originalBg;
-                secondsLeft = 90;
-                
-                // إشعار بالمستخدم
-                showNotification('تم تحديث البيانات بنجاح', 'success');
-            }, 2000); // محاكاة وقت التحديث (2 ثانية)
-        }
-        
-        // عرض إشعار للمستخدم
-        function showNotification(message, type) {
-            // إنشاء عنصر الإشعار
-            const notification = document.createElement('div');
-            notification.className = `alert alert-${type} alert-dismissible fade show`;
-            notification.style.position = 'fixed';
-            notification.style.top = '20px';
-            notification.style.right = '20px';
-            notification.style.zIndex = '2000';
-            notification.style.minWidth = '300px';
-            notification.innerHTML = `
-                ${message}
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-            `;
+            // تحديث واجهة المستخدم
+            document.getElementById('invoices-count').textContent = invoicesCount;
+            document.getElementById('products-count').textContent = productsCount;
+            document.getElementById('sales-count').textContent = salesCount + ' د.ب';
+            document.getElementById('customers-count').textContent = customersCount;
             
-            // إضافة الإشعار إلى الصفحة
-            document.body.appendChild(notification);
-            
-            // إزالة الإشعار تلقائياً بعد 5 ثوان
-            setTimeout(() => {
-                if (notification.parentNode) {
-                    notification.parentNode.removeChild(notification);
-                }
-            }, 5000);
+            // حفظ البيانات
+            saveData();
         }
         
         // تبديل الصفحات
@@ -538,40 +324,13 @@
             });
             
             // إظهار الصفحة المحددة
-            const targetPage = document.getElementById(pageId);
-            if (targetPage) {
-                targetPage.classList.add('active');
-            }
+            document.getElementById(pageId).classList.add('active');
             
             // تحديث القائمة الجانبية
             document.querySelectorAll('.nav-link').forEach(link => {
                 link.classList.remove('active');
-                if (link.getAttribute('data-page') === pageId) {
-                    link.classList.add('active');
-                }
             });
-            
-            // حفظ الصفحة النشطة
-            localStorage.setItem('activePage', pageId);
-        }
-        
-        // تحميل البيانات
-        function loadData() {
-            // تحميل الصفحة النشطة
-            const activePage = localStorage.getItem('activePage');
-            if (activePage) {
-                switchPage(activePage);
-            }
-            
-            // تحميل بيانات التطبيق
-            const appData = localStorage.getItem('salePointData');
-            if (appData) {
-                const data = JSON.parse(appData);
-                document.getElementById('invoices-count').textContent = data.invoices || 0;
-                document.getElementById('products-count').textContent = data.products || 0;
-                document.getElementById('sales-count').textContent = (data.sales || 0) + ' د.ب';
-                document.getElementById('customers-count').textContent = data.customers || 0;
-            }
+            event.target.classList.add('active');
         }
         
         // حفظ البيانات
@@ -585,18 +344,32 @@
             localStorage.setItem('salePointData', JSON.stringify(data));
         }
         
-        // منع إعادة تحميل الصفحة عند الضغط على الروابط
-        document.addEventListener('click', function(e) {
-            if (e.target.tagName === 'A' && e.target.getAttribute('href') === '#') {
-                e.preventDefault();
+        // تحميل البيانات
+        function loadData() {
+            const appData = localStorage.getItem('salePointData');
+            if (appData) {
+                const data = JSON.parse(appData);
+                document.getElementById('invoices-count').textContent = data.invoices || 0;
+                document.getElementById('products-count').textContent = data.products || 0;
+                document.getElementById('sales-count').textContent = (data.sales || 0) + ' د.ب';
+                document.getElementById('customers-count').textContent = data.customers || 0;
             }
-        });
+        }
         
-        // منع إعادة تحميل الصفحة عند الضغط على زر Enter في النماذج
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Enter' && e.target.tagName === 'INPUT') {
-                e.preventDefault();
-            }
+        // تهيئة التطبيق عند التحميل
+        document.addEventListener('DOMContentLoaded', function() {
+            // تحميل البيانات
+            loadData();
+            
+            // بدء مؤقت التحديث
+            startRefreshTimer();
+            
+            // منع السلوك الافتراضي لجميع الروابط
+            document.querySelectorAll('a').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                });
+            });
         });
     </script>
 </body>
