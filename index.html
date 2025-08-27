@@ -291,3 +291,16 @@ window.addEventListener('load', function() {
         document.querySelector('[data-page="dashboard"]').classList.add('active');
     }
 });
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>إعادة توجيه</title>
+    <script>
+        sessionStorage.redirect = location.href;
+    </script>
+    <meta http-equiv="refresh" content="0;URL='/'">
+</head>
+<body>
+</body>
+</html>
