@@ -1,4 +1,58 @@
+<div id="product-cost" class="page">
+    <h2 class="mb-4">حساب تكلفة المنتج</h2>
+    
+    <!-- محتوى صفحة حساب تكلفة المنتج -->
+</div>
 
+<script src="product-cost.js"></script>
+// الكود الخاص بصفحة الفواتير
+document.addEventListener('DOMContentLoaded', function() {
+    // تهيئة صفحة الفواتير
+    const invoiceDateInput = document.getElementById('invoice-date');
+    if (invoiceDateInput) {
+        invoiceDateInput.value = new Date().toISOString().split('T')[0];
+    }
+    document.getElementById('invoice-number').value = generateInvoiceNumber();
+    
+    // باقي الكود الخاص بالفاتورة...
+});
+
+function generateInvoiceNumber() {
+    return "INV-" + new Date().getFullYear() + "-" + 
+        (invoices.length + 1).toString().padStart(4, '0');
+}
+<div id="invoice" class="page">
+    <h2 class="mb-4">الفواتير</h2>
+    
+    <ul class="nav nav-tabs mb-4">
+        <li class="nav-item">
+            <a class="nav-link active" href="#" data-tab="new-invoice">فاتورة جديدة</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#" data-tab="manage-invoices">إدارة الفواتير</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#" data-tab="track-invoices">تتبع الفواتير</a>
+        </li>
+    </ul>
+    
+    <!-- New Invoice Tab -->
+    <div id="new-invoice" class="invoice-tab active">
+        <!-- محتوى فاتورة جديدة -->
+    </div>
+    
+    <!-- Manage Invoices Tab -->
+    <div id="manage-invoices" class="invoice-tab">
+        <!-- محتوى إدارة الفواتير -->
+    </div>
+    
+    <!-- Track Invoices Tab -->
+    <div id="track-invoices" class="invoice-tab">
+        <!-- محتوى تتبع الفواتير -->
+    </div>
+</div>
+
+<script src="invoice.js"></script>
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -364,100 +418,56 @@
     </script>
 </body>
 </html>
-<div id="invoice" class="page">
-    <h2 class="mb-4">الفواتير</h2>
-    
-    <ul class="nav nav-tabs mb-4">
-        <li class="nav-item">
-            <a class="nav-link active" href="#" data-tab="new-invoice">فاتورة جديدة</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="#" data-tab="manage-invoices">إدارة الفواتير</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="#" data-tab="track-invoices">تتبع الفواتير</a>
-        </li>
-    </ul>
-    
-    <!-- New Invoice Tab -->
-    <div id="new-invoice" class="invoice-tab active">
-        <!-- محتوى فاتورة جديدة -->
-    </div>
-    
-    <!-- Manage Invoices Tab -->
-    <div id="manage-invoices" class="invoice-tab">
-        <!-- محتوى إدارة الفواتير -->
-    </div>
-    
-    <!-- Track Invoices Tab -->
-    <div id="track-invoices" class="invoice-tab">
-        <!-- محتوى تتبع الفواتير -->
-    </div>
+<div id="dashboard" class="page active">
+    <h2 class="mb-4">لوحة التحكم</h2>
+    <div class="alert alert-info">صفحة لوحة التحكم - تحت التطوير</div>
 </div>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="refresh" content="0; url='/SalePoint2/'" />
+    <script>window.location.href = '/SalePoint2/';</script>
+</head>
+<body>
+    <p>يتم إعادة توجيهك إلى <a href="/SalePoint2/">نقطة البيع</a>.</p>
+</body>
+</html>
 
-<script src="invoice.js"></script>
-// الكود الخاص بصفحة الفواتير
-document.addEventListener('DOMContentLoaded', function() {
-    // تهيئة صفحة الفواتير
-    const invoiceDateInput = document.getElementById('invoice-date');
-    if (invoiceDateInput) {
-        invoiceDateInput.value = new Date().toISOString().split('T')[0];
-    }
-    document.getElementById('invoice-number').value = generateInvoiceNumber();
-    
-    // باقي الكود الخاص بالفاتورة...
-});
-
-function generateInvoiceNumber() {
-    return "INV-" + new Date().getFullYear() + "-" + 
-        (invoices.length + 1).toString().padStart(4, '0');
+:root {
+    --primary-color: #2c3e50;
+    --secondary-color: #34495e;
 }
-<div id="product-cost" class="page">
-    <h2 class="mb-4">حساب تكلفة المنتج</h2>
-    
-    <!-- محتوى صفحة حساب تكلفة المنتج -->
-</div>
 
-<script src="product-cost.js"></script>
-// الكود الخاص بصفحة تكلفة المنتج
-document.addEventListener('DOMContentLoaded', function() {
-    // تهيئة صفحة تكلفة المنتج
-    document.getElementById('product-code').value = generateProductCode();
-    
-    // باقي الكود الخاص بتكلفة المنتج...
-});
-
-function generateProductCode() {
-    lastProductCode++;
-    return "PRD-" + lastProductCode.toString().padStart(4, '0');
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f5f5f5;
 }
-<div id="products" class="page">
-    <h2 class="mb-4">المنتجات</h2>
+
+.sidebar {
+    background-color: var(--primary-color);
+    min-height: 100vh;
+    color: white;
+}
+
+/* باقي الأنماط من الكود الأصلي */
+// الكود الخاص بصفحة الإعدادات
+document.addEventListener('DOMContentLoaded', function() {
+    // تهيئة صفحة الإعدادات
+    loadSettings();
+    loadDeliverySettings();
+    loadTaxSettings();
+    loadPaymentMethods();
+    loadInvoiceStatuses();
     
-    <div class="table-responsive">
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th>رمز المنتج</th>
-                    <th>اسم المنتج</th>
-                    <th>عدد القطع في العلبة</th>
-                    <th>إجمالي تكلفة العلبة</th>
-                    <th>سعر البيع النهائي</th>
-                    <th>نسبة الربح</th>
-                    <th>هامش الربح</th>
-                    <th>تكلفة اليد العاملة للعلبة</th>
-                    <th>قيمة إهلاك المعدات</th>
-                    <th>الإجراءات</th>
-                </tr>
-            </thead>
-            <tbody id="products-list">
-                <tr>
-                    <td colspan="10" class="text-center">لا توجد منتجات مسجلة بعد</td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
+    // باقي الكود الخاص بالإعدادات...
+});
+<div id="settings" class="page">
+    <h2 class="mb-4">الإعدادات</h2>
+    
+    <!-- محتوى صفحة الإعدادات -->
 </div>
+
+<script src="settings.js"></script>
 // الكود الأساسي للتنقل بين الصفحات وإدارة الحالة العامة
 document.addEventListener('DOMContentLoaded', function() {
     // إدارة تحميل الصفحات
@@ -557,38 +567,42 @@ window.addEventListener('load', function() {
         document.querySelector('[data-page="dashboard"]').classList.add('active');
     }
 });
-<div id="settings" class="page">
-    <h2 class="mb-4">الإعدادات</h2>
+<div id="products" class="page">
+    <h2 class="mb-4">المنتجات</h2>
     
-    <!-- محتوى صفحة الإعدادات -->
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>رمز المنتج</th>
+                    <th>اسم المنتج</th>
+                    <th>عدد القطع في العلبة</th>
+                    <th>إجمالي تكلفة العلبة</th>
+                    <th>سعر البيع النهائي</th>
+                    <th>نسبة الربح</th>
+                    <th>هامش الربح</th>
+                    <th>تكلفة اليد العاملة للعلبة</th>
+                    <th>قيمة إهلاك المعدات</th>
+                    <th>الإجراءات</th>
+                </tr>
+            </thead>
+            <tbody id="products-list">
+                <tr>
+                    <td colspan="10" class="text-center">لا توجد منتجات مسجلة بعد</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 </div>
-
-<script src="settings.js"></script>
-// الكود الخاص بصفحة الإعدادات
+// الكود الخاص بصفحة تكلفة المنتج
 document.addEventListener('DOMContentLoaded', function() {
-    // تهيئة صفحة الإعدادات
-    loadSettings();
-    loadDeliverySettings();
-    loadTaxSettings();
-    loadPaymentMethods();
-    loadInvoiceStatuses();
+    // تهيئة صفحة تكلفة المنتج
+    document.getElementById('product-code').value = generateProductCode();
     
-    // باقي الكود الخاص بالإعدادات...
+    // باقي الكود الخاص بتكلفة المنتج...
 });
-:root {
-    --primary-color: #2c3e50;
-    --secondary-color: #34495e;
-}
 
-body {
-    font-family: 'Arial', sans-serif;
-    background-color: #f5f5f5;
+function generateProductCode() {
+    lastProductCode++;
+    return "PRD-" + lastProductCode.toString().padStart(4, '0');
 }
-
-.sidebar {
-    background-color: var(--primary-color);
-    min-height: 100vh;
-    color: white;
-}
-
-/* باقي الأنماط من الكود الأصلي */
