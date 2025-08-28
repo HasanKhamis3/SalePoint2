@@ -1,13 +1,3 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta http-equiv="refresh" content="0; url='/SalePoint2/'" />
-    <script>window.location.href = '/SalePoint2/';</script>
-</head>
-<body>
-    <p>يتم إعادة توجيهك إلى <a href="/SalePoint2/">نقطة البيع</a>.</p>
-</body>
-</html>
 <div id="dashboard" class="page active">
     <h2 class="mb-4">لوحة التحكم</h2>
     <div class="alert alert-info">صفحة لوحة التحكم - تحت التطوير</div>
@@ -18,12 +8,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>نظام نقطة البيع - SalePoint</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
     <style>
+        /* أنماط مبسطة لتحسين الأداء */
         :root {
             --primary-color: #2c3e50;
             --secondary-color: #34495e;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
         
         body {
@@ -47,7 +42,6 @@
             position: fixed;
             height: 100vh;
             z-index: 1000;
-            box-shadow: 3px 0 10px rgba(0, 0, 0, 0.1);
         }
         
         .sidebar .nav-link {
@@ -55,7 +49,6 @@
             margin: 8px 15px;
             padding: 12px 20px;
             border-radius: 8px;
-            transition: all 0.3s;
             cursor: pointer;
             text-decoration: none;
             display: flex;
@@ -66,12 +59,10 @@
         .sidebar .nav-link.active {
             color: white;
             background-color: rgba(255, 255, 255, 0.15);
-            transform: translateX(5px);
         }
         
         .sidebar .nav-link i {
             margin-left: 10px;
-            font-size: 1.2rem;
         }
         
         .main-content {
@@ -88,22 +79,16 @@
             border-radius: 15px;
             padding: 30px;
             margin-bottom: 30px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         }
         
         .stats-card {
             border-radius: 12px;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-            transition: all 0.3s;
             height: 100%;
             border: none;
             text-align: center;
             padding: 25px 15px;
-        }
-        
-        .stats-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            background: white;
         }
         
         .stats-card i {
@@ -117,12 +102,6 @@
         
         .page.active {
             display: block;
-            animation: fadeIn 0.4s ease;
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
         }
         
         .refresh-control {
@@ -138,10 +117,6 @@
             box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
         }
         
-        .refresh-toggle {
-            margin-left: 10px;
-        }
-        
         .refresh-timer {
             background-color: var(--primary-color);
             color: white;
@@ -150,51 +125,126 @@
             font-size: 12px;
             min-width: 80px;
             text-align: center;
+            margin-left: 10px;
         }
         
-        .switch {
-            position: relative;
-            display: inline-block;
+        .btn-refresh {
+            background: #28a745;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+        
+        .btn-toggle {
+            background: #ddd;
             width: 50px;
             height: 24px;
-        }
-        
-        .switch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-        
-        .slider {
-            position: absolute;
+            border-radius: 12px;
+            position: relative;
             cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: #ccc;
-            transition: .4s;
-            border-radius: 24px;
         }
         
-        .slider:before {
+        .btn-toggle.active {
+            background: #28a745;
+        }
+        
+        .toggle-handle {
             position: absolute;
-            content: "";
-            height: 16px;
-            width: 16px;
-            left: 4px;
-            bottom: 4px;
-            background-color: white;
-            transition: .4s;
+            top: 2px;
+            left: 2px;
+            width: 20px;
+            height: 20px;
+            background: white;
             border-radius: 50%;
+            transition: all 0.3s;
         }
         
-        input:checked + .slider {
-            background-color: #28a745;
+        .btn-toggle.active .toggle-handle {
+            left: 28px;
         }
         
-        input:checked + .slider:before {
-            transform: translateX(26px);
+        /* تحسينات للأداء */
+        .hidden {
+            display: none !important;
+        }
+        
+        /* أنماط Bootstrap بديلة */
+        .alert {
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        
+        .alert-info {
+            background-color: #d1ecf1;
+            border: 1px solid #bee5eb;
+            color: #0c5460;
+        }
+        
+        .bg-primary { background-color: #007bff !important; color: white; }
+        .bg-success { background-color: #28a745 !important; color: white; }
+        .bg-warning { background-color: #ffc107 !important; color: black; }
+        .bg-info { background-color: #17a2b8 !important; color: white; }
+        
+        .row {
+            display: flex;
+            flex-wrap: wrap;
+            margin-right: -15px;
+            margin-left: -15px;
+        }
+        
+        .col-xl-3, .col-md-6 {
+            position: relative;
+            width: 100%;
+            padding-right: 15px;
+            padding-left: 15px;
+        }
+        
+        @media (min-width: 768px) {
+            .col-md-6 {
+                flex: 0 0 50%;
+                max-width: 50%;
+            }
+        }
+        
+        @media (min-width: 1200px) {
+            .col-xl-3 {
+                flex: 0 0 25%;
+                max-width: 25%;
+            }
+        }
+        
+        .mb-4 {
+            margin-bottom: 1.5rem !important;
+        }
+        
+        .mt-3 {
+            margin-top: 1rem !important;
+        }
+        
+        .mt-4 {
+            margin-top: 1.5rem !important;
+        }
+        
+        .text-center {
+            text-align: center !important;
+        }
+        
+        .text-white {
+            color: white !important;
+        }
+        
+        /* رفع أداء الصفحة */
+        .optimized-render {
+            content-visibility: auto;
+            contain-intrinsic-size: 1px 500px;
         }
     </style>
 </head>
@@ -202,117 +252,105 @@
     <div class="main-container">
         <!-- Sidebar -->
         <div class="sidebar">
-            <div class="p-3">
-                <h4 class="text-center mb-1">نظام نقطة البيع</h4>
-                <h6 class="text-center text-light mb-4" style="opacity: 0.8;">SalePoint System</h6>
+            <div style="padding: 15px;">
+                <h4 style="text-align: center; margin-bottom: 5px;">نظام نقطة البيع</h4>
+                <h6 style="text-align: center; color: rgba(255,255,255,0.8); margin-bottom: 20px;">SalePoint System</h6>
                 <hr>
-                <ul class="nav flex-column">
-                    <li class="nav-item">
-                        <div class="nav-link active" onclick="switchPage('dashboard')">
-                            <i class="bi bi-speedometer2"></i> لوحة التحكم
-                        </div>
-                    </li>
-                    <li class="nav-item">
-                        <div class="nav-link" onclick="switchPage('invoices')">
-                            <i class="bi bi-receipt"></i> إدارة الفواتير
-                        </div>
-                    </li>
-                    <li class="nav-item">
-                        <div class="nav-link" onclick="switchPage('products')">
-                            <i class="bi bi-box"></i> المنتجات
-                        </div>
-                    </li>
-                    <li class="nav-item">
-                        <div class="nav-link" onclick="switchPage('customers')">
-                            <i class="bi bi-people"></i> العملاء
-                        </div>
-                    </li>
-                    <li class="nav-item">
-                        <div class="nav-link" onclick="switchPage('reports')">
-                            <i class="bi bi-graph-up"></i> التقارير
-                        </div>
-                    </li>
-                    <li class="nav-item">
-                        <div class="nav-link" onclick="switchPage('settings')">
-                            <i class="bi bi-gear"></i> الإعدادات
-                        </div>
-                    </li>
-                </ul>
+                <div>
+                    <div class="nav-link active" onclick="switchPage('dashboard')">
+                        <span>📊</span> لوحة التحكم
+                    </div>
+                    <div class="nav-link" onclick="switchPage('invoices')">
+                        <span>🧾</span> إدارة الفواتير
+                    </div>
+                    <div class="nav-link" onclick="switchPage('products')">
+                        <span>📦</span> المنتجات
+                    </div>
+                    <div class="nav-link" onclick="switchPage('customers')">
+                        <span>👥</span> العملاء
+                    </div>
+                    <div class="nav-link" onclick="switchPage('reports')">
+                        <span>📈</span> التقارير
+                    </div>
+                    <div class="nav-link" onclick="switchPage('settings')">
+                        <span>⚙️</span> الإعدادات
+                    </div>
+                </div>
             </div>
         </div>
 
         <!-- Main Content -->
-        <div class="main-content">
+        <div class="main-content optimized-render">
             <!-- Dashboard Page -->
             <div id="dashboard" class="page active">
                 <div class="welcome-card">
-                    <h2><i class="bi bi-shop-window me-2"></i>مرحباً بك في نظام نقطة البيع</h2>
-                    <p class="mb-0">نظام متكامل لإدارة المبيعات والمخزون والفواتير</p>
+                    <h2>📊 مرحباً بك في نظام نقطة البيع</h2>
+                    <p style="margin-bottom: 0;">نظام متكامل لإدارة المبيعات والمخزون والفواتير</p>
                 </div>
                 
                 <div class="row">
                     <div class="col-xl-3 col-md-6 mb-4">
-                        <div class="stats-card text-center p-4 bg-primary text-white">
-                            <i class="bi bi-receipt"></i>
-                            <h4 class="mt-3">الفواتير</h4>
+                        <div class="stats-card bg-primary">
+                            <span style="font-size: 2.5rem; margin-bottom: 15px; display: block;">🧾</span>
+                            <h4 style="margin-top: 1rem;">الفواتير</h4>
                             <h2 id="invoices-count">0</h2>
-                            <p class="mb-0">فواتير هذا الشهر</p>
+                            <p style="margin-bottom: 0;">فواتير هذا الشهر</p>
                         </div>
                     </div>
                     <div class="col-xl-3 col-md-6 mb-4">
-                        <div class="stats-card text-center p-4 bg-success text-white">
-                            <i class="bi bi-box"></i>
-                            <h4 class="mt-3">المنتجات</h4>
+                        <div class="stats-card bg-success">
+                            <span style="font-size: 2.5rem; margin-bottom: 15px; display: block;">📦</span>
+                            <h4 style="margin-top: 1rem;">المنتجات</h4>
                             <h2 id="products-count">0</h2>
-                            <p class="mb-0">منتج في المخزون</p>
+                            <p style="margin-bottom: 0;">منتج في المخزون</p>
                         </div>
                     </div>
                     <div class="col-xl-3 col-md-6 mb-4">
-                        <div class="stats-card text-center p-4 bg-warning text-white">
-                            <i class="bi bi-currency-exchange"></i>
-                            <h4 class="mt-3">المبيعات</h4>
+                        <div class="stats-card bg-warning">
+                            <span style="font-size: 2.5rem; margin-bottom: 15px; display: block;">💰</span>
+                            <h4 style="margin-top: 1rem;">المبيعات</h4>
                             <h2 id="sales-count">0 د.ب</h2>
-                            <p class="mb-0">إجمالي المبيعات</p>
+                            <p style="margin-bottom: 0;">إجمالي المبيعات</p>
                         </div>
                     </div>
                     <div class="col-xl-3 col-md-6 mb-4">
-                        <div class="stats-card text-center p-4 bg-info text-white">
-                            <i class="bi bi-people"></i>
-                            <h4 class="mt-3">العملاء</h4>
+                        <div class="stats-card bg-info">
+                            <span style="font-size: 2.5rem; margin-bottom: 15px; display: block;">👥</span>
+                            <h4 style="margin-top: 1rem;">العملاء</h4>
                             <h2 id="customers-count">0</h2>
-                            <p class="mb-0">عميل مسجل</p>
+                            <p style="margin-bottom: 0;">عميل مسجل</p>
                         </div>
                     </div>
                 </div>
                 
                 <div class="alert alert-info mt-4">
-                    <i class="bi bi-info-circle me-2"></i>
+                    <span>ℹ️</span>
                     التحديث التلقائي معطل حالياً. يمكنك تفعيله باستخدام الزر في الزاوية اليمنى السفلية.
                 </div>
             </div>
 
             <!-- Other pages -->
-            <div id="invoices" class="page">
+            <div id="invoices" class="page optimized-render">
                 <h2>إدارة الفواتير</h2>
                 <p>صفحة إدارة الفواتير - تحت التطوير</p>
             </div>
 
-            <div id="products" class="page">
+            <div id="products" class="page optimized-render">
                 <h2>إدارة المنتجات</h2>
                 <p>صفحة إدارة المنتجات - تحت التطوير</p>
             </div>
 
-            <div id="customers" class="page">
+            <div id="customers" class="page optimized-render">
                 <h2>إدارة العملاء</h2>
                 <p>صفحة إدارة العملاء - تحت التطوير</p>
             </div>
 
-            <div id="reports" class="page">
+            <div id="reports" class="page optimized-render">
                 <h2>التقارير</h2>
                 <p>صفحة التقارير - تحت التطوير</p>
             </div>
 
-            <div id="settings" class="page">
+            <div id="settings" class="page optimized-render">
                 <h2>الإعدادات</h2>
                 <p>صفحة الإعدادات - تحت التطوير</p>
             </div>
@@ -321,24 +359,21 @@
 
     <!-- زر التحكم في التحديث -->
     <div class="refresh-control">
-        <div class="refresh-timer" id="refreshTimer">
-            <i class="bi bi-clock"></i> <span id="timerValue">--:--</span>
+        <div class="btn-toggle" id="autoRefreshToggle" onclick="toggleAutoRefresh()">
+            <div class="toggle-handle"></div>
         </div>
-        <div class="refresh-toggle">
-            <label class="switch">
-                <input type="checkbox" id="autoRefreshToggle">
-                <span class="slider"></span>
-            </label>
+        <div class="refresh-timer">
+            <span id="timerValue">--:--</span>
         </div>
-        <button class="btn btn-sm btn-outline-primary ms-2" onclick="manualRefresh()" title="تحديث الآن">
-            <i class="bi bi-arrow-repeat"></i>
+        <button class="btn-refresh" onclick="manualRefresh()" title="تحديث الآن">
+            🔄
         </button>
     </div>
 
     <script>
         // حالة التحديث التلقائي
         let autoRefreshEnabled = false;
-        let refreshTimer = null;
+        let refreshInterval = null;
         let secondsUntilRefresh = 90;
         
         // تحميل الإعدادات من localStorage
@@ -347,11 +382,12 @@
             autoRefreshEnabled = settings.autoRefreshEnabled || false;
             
             // تحديث حالة التبديل
-            document.getElementById('autoRefreshToggle').checked = autoRefreshEnabled;
-            
+            const toggle = document.getElementById('autoRefreshToggle');
             if (autoRefreshEnabled) {
+                toggle.classList.add('active');
                 startAutoRefresh();
             } else {
+                toggle.classList.remove('active');
                 updateTimerDisplay('--:--');
             }
             
@@ -370,15 +406,15 @@
         // بدء التحديث التلقائي
         function startAutoRefresh() {
             // إلغاء أي مؤقت سابق
-            if (refreshTimer) {
-                clearInterval(refreshTimer);
+            if (refreshInterval) {
+                clearInterval(refreshInterval);
             }
             
             secondsUntilRefresh = 90;
             updateTimerDisplay(formatTime(secondsUntilRefresh));
             
             // بدء المؤقت الجديد
-            refreshTimer = setInterval(function() {
+            refreshInterval = setInterval(function() {
                 secondsUntilRefresh--;
                 updateTimerDisplay(formatTime(secondsUntilRefresh));
                 
@@ -392,9 +428,9 @@
         
         // إيقاف التحديث التلقائي
         function stopAutoRefresh() {
-            if (refreshTimer) {
-                clearInterval(refreshTimer);
-                refreshTimer = null;
+            if (refreshInterval) {
+                clearInterval(refreshInterval);
+                refreshInterval = null;
             }
             updateTimerDisplay('--:--');
         }
@@ -430,11 +466,14 @@
         
         // تبديل حالة التحديث التلقائي
         function toggleAutoRefresh() {
+            const toggle = document.getElementById('autoRefreshToggle');
             autoRefreshEnabled = !autoRefreshEnabled;
             
             if (autoRefreshEnabled) {
+                toggle.classList.add('active');
                 startAutoRefresh();
             } else {
+                toggle.classList.remove('active');
                 stopAutoRefresh();
             }
             
@@ -497,34 +536,6 @@
         document.addEventListener('DOMContentLoaded', function() {
             // تحميل الإعدادات
             loadSettings();
-            
-            // إعداد event listener للتبديل
-            document.getElementById('autoRefreshToggle').addEventListener('change', toggleAutoRefresh);
-            
-            // منع أي سلوك افتراضي قد يسبب التحديث
-            document.addEventListener('click', function(e) {
-                if (e.target.tagName === 'A' || e.target.closest('a')) {
-                    e.preventDefault();
-                }
-            });
-            
-            // منع إعادة تحميل الصفحة بأي طريقة
-            window.addEventListener('beforeunload', function(e) {
-                if (!confirm('هل أنت متأكد من أنك تريد مغادرة هذه الصفحة؟')) {
-                    e.preventDefault();
-                    return e.returnValue = '';
-                }
-            });
-            
-            // منع إعادة التحميل باستخدام مفاتيح الاختصار
-            document.addEventListener('keydown', function(e) {
-                if (e.key === 'F5' || (e.ctrlKey && e.key === 'r') || (e.metaKey && e.key === 'r')) {
-                    e.preventDefault();
-                    if (confirm('هل تريد تحديث الصفحة؟ سيتم فقدان أي بيانات غير محفوظة.')) {
-                        window.location.reload();
-                    }
-                }
-            });
         });
     </script>
 </body>
@@ -757,3 +768,14 @@ body {
 }
 
 /* باقي الأنماط من الكود الأصلي */
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="refresh" content="0; url='/SalePoint2/'" />
+    <script>window.location.href = '/SalePoint2/';</script>
+</head>
+<body>
+    <p>يتم إعادة توجيهك إلى <a href="/SalePoint2/">نقطة البيع</a>.</p>
+</body>
+</html>
