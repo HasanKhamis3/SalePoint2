@@ -208,34 +208,34 @@
                 <hr>
                 <ul class="nav flex-column">
                     <li class="nav-item">
-                        <a class="nav-link active" onclick="switchPage('dashboard')">
+                        <div class="nav-link active" onclick="switchPage('dashboard')">
                             <i class="bi bi-speedometer2"></i> لوحة التحكم
-                        </a>
+                        </div>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" onclick="switchPage('invoices')">
+                        <div class="nav-link" onclick="switchPage('invoices')">
                             <i class="bi bi-receipt"></i> إدارة الفواتير
-                        </a>
+                        </div>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" onclick="switchPage('products')">
+                        <div class="nav-link" onclick="switchPage('products')">
                             <i class="bi bi-box"></i> المنتجات
-                        </a>
+                        </div>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" onclick="switchPage('customers')">
+                        <div class="nav-link" onclick="switchPage('customers')">
                             <i class="bi bi-people"></i> العملاء
-                        </a>
+                        </div>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" onclick="switchPage('reports')">
+                        <div class="nav-link" onclick="switchPage('reports')">
                             <i class="bi bi-graph-up"></i> التقارير
-                        </a>
+                        </div>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" onclick="switchPage('settings')">
+                        <div class="nav-link" onclick="switchPage('settings')">
                             <i class="bi bi-gear"></i> الإعدادات
-                        </a>
+                        </div>
                     </li>
                 </ul>
             </div>
@@ -330,7 +330,7 @@
                 <span class="slider"></span>
             </label>
         </div>
-        <button class="btn btn-sm btn-outline-primary ms-2" onclick="manualRefresh()" titleتحديث الآن">
+        <button class="btn btn-sm btn-outline-primary ms-2" onclick="manualRefresh()" title="تحديث الآن">
             <i class="bi bi-arrow-repeat"></i>
         </button>
     </div>
@@ -467,7 +467,7 @@
             document.querySelectorAll('.nav-link').forEach(link => {
                 link.classList.remove('active');
             });
-            event.target.classList.add('active');
+            event.currentTarget.classList.add('active');
         }
         
         // حفظ البيانات
@@ -501,18 +501,28 @@
             // إعداد event listener للتبديل
             document.getElementById('autoRefreshToggle').addEventListener('change', toggleAutoRefresh);
             
-            // منع السلوك الافتراضي لجميع الروابط
-            document.querySelectorAll('a').forEach(link => {
-                link.addEventListener('click', function(e) {
+            // منع أي سلوك افتراضي قد يسبب التحديث
+            document.addEventListener('click', function(e) {
+                if (e.target.tagName === 'A' || e.target.closest('a')) {
                     e.preventDefault();
-                });
+                }
             });
             
-            // منع إعادة تحميل الصفحة
+            // منع إعادة تحميل الصفحة بأي طريقة
             window.addEventListener('beforeunload', function(e) {
                 if (!confirm('هل أنت متأكد من أنك تريد مغادرة هذه الصفحة؟')) {
                     e.preventDefault();
-                    e.returnValue = '';
+                    return e.returnValue = '';
+                }
+            });
+            
+            // منع إعادة التحميل باستخدام مفاتيح الاختصار
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'F5' || (e.ctrlKey && e.key === 'r') || (e.metaKey && e.key === 'r')) {
+                    e.preventDefault();
+                    if (confirm('هل تريد تحديث الصفحة؟ سيتم فقدان أي بيانات غير محفوظة.')) {
+                        window.location.reload();
+                    }
                 }
             });
         });
