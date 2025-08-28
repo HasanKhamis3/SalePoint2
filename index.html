@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -126,23 +125,76 @@
             to { opacity: 1; transform: translateY(0); }
         }
         
-        .refresh-indicator {
+        .refresh-control {
             position: fixed;
             bottom: 20px;
             right: 20px;
-            background-color: var(--primary-color);
-            color: white;
-            padding: 8px 15px;
-            border-radius: 20px;
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
             z-index: 1000;
             display: flex;
             align-items: center;
-            font-size: 13px;
+            background: white;
+            padding: 10px 15px;
+            border-radius: 25px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
         }
         
-        .refresh-indicator i {
-            margin-left: 5px;
+        .refresh-toggle {
+            margin-left: 10px;
+        }
+        
+        .refresh-timer {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 12px;
+            min-width: 80px;
+            text-align: center;
+        }
+        
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+        }
+        
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 24px;
+        }
+        
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        
+        input:checked + .slider {
+            background-color: #28a745;
+        }
+        
+        input:checked + .slider:before {
+            transform: translateX(26px);
         }
     </style>
 </head>
@@ -232,6 +284,11 @@
                         </div>
                     </div>
                 </div>
+                
+                <div class="alert alert-info mt-4">
+                    <i class="bi bi-info-circle me-2"></i>
+                    التحديث التلقائي معطل حالياً. يمكنك تفعيله باستخدام الزر في الزاوية اليمنى السفلية.
+                </div>
             </div>
 
             <!-- Other pages -->
@@ -262,38 +319,84 @@
         </div>
     </div>
 
-    <!-- مؤشر التحديث -->
-    <div class="refresh-indicator">
-        <i class="bi bi-arrow-repeat"></i>
-        <span id="refreshTimer">90</span> ثانية حتى التحديث القادم
+    <!-- زر التحكم في التحديث -->
+    <div class="refresh-control">
+        <div class="refresh-timer" id="refreshTimer">
+            <i class="bi bi-clock"></i> <span id="timerValue">--:--</span>
+        </div>
+        <div class="refresh-toggle">
+            <label class="switch">
+                <input type="checkbox" id="autoRefreshToggle">
+                <span class="slider"></span>
+            </label>
+        </div>
+        <button class="btn btn-sm btn-outline-primary ms-2" onclick="manualRefresh()" titleتحديث الآن">
+            <i class="bi bi-arrow-repeat"></i>
+        </button>
     </div>
 
     <script>
-        // منع أي تحديث تلقائي للصفحة
-        window.onbeforeunload = function() {
-            return "هل أنت متأكد من أنك تريد المغادرة؟";
-        }
-
-        // تهيئة المتغيرات
-        let refreshInterval;
-        let secondsLeft = 90;
+        // حالة التحديث التلقائي
+        let autoRefreshEnabled = false;
+        let refreshTimer = null;
+        let secondsUntilRefresh = 90;
         
-        // بدء مؤقت التحديث بعد 90 ثانية
-        function startRefreshTimer() {
-            // إلغاء أي مؤقت سابق
-            if (refreshInterval) clearInterval(refreshInterval);
+        // تحميل الإعدادات من localStorage
+        function loadSettings() {
+            const settings = JSON.parse(localStorage.getItem('appSettings')) || {};
+            autoRefreshEnabled = settings.autoRefreshEnabled || false;
             
-            // تعيين المؤقت الجديد
-            refreshInterval = setInterval(function() {
-                secondsLeft--;
-                document.getElementById('refreshTimer').textContent = secondsLeft;
+            // تحديث حالة التبديل
+            document.getElementById('autoRefreshToggle').checked = autoRefreshEnabled;
+            
+            if (autoRefreshEnabled) {
+                startAutoRefresh();
+            } else {
+                updateTimerDisplay('--:--');
+            }
+            
+            // تحميل البيانات
+            loadData();
+        }
+        
+        // حفظ الإعدادات في localStorage
+        function saveSettings() {
+            const settings = {
+                autoRefreshEnabled: autoRefreshEnabled
+            };
+            localStorage.setItem('appSettings', JSON.stringify(settings));
+        }
+        
+        // بدء التحديث التلقائي
+        function startAutoRefresh() {
+            // إلغاء أي مؤقت سابق
+            if (refreshTimer) {
+                clearInterval(refreshTimer);
+            }
+            
+            secondsUntilRefresh = 90;
+            updateTimerDisplay(formatTime(secondsUntilRefresh));
+            
+            // بدء المؤقت الجديد
+            refreshTimer = setInterval(function() {
+                secondsUntilRefresh--;
+                updateTimerDisplay(formatTime(secondsUntilRefresh));
                 
-                if (secondsLeft <= 0) {
-                    // تحديث البيانات بعد 90 ثانية
+                if (secondsUntilRefresh <= 0) {
+                    // تحديث البيانات
                     refreshData();
-                    secondsLeft = 90;
+                    secondsUntilRefresh = 90;
                 }
-            }, 1000); // تحديث كل ثانية واحدة فقط
+            }, 1000);
+        }
+        
+        // إيقاف التحديث التلقائي
+        function stopAutoRefresh() {
+            if (refreshTimer) {
+                clearInterval(refreshTimer);
+                refreshTimer = null;
+            }
+            updateTimerDisplay('--:--');
         }
         
         // تحديث البيانات
@@ -314,6 +417,40 @@
             
             // حفظ البيانات
             saveData();
+        }
+        
+        // تحديث يدوي للبيانات
+        function manualRefresh() {
+            refreshData();
+            if (autoRefreshEnabled) {
+                secondsUntilRefresh = 90;
+                updateTimerDisplay(formatTime(secondsUntilRefresh));
+            }
+        }
+        
+        // تبديل حالة التحديث التلقائي
+        function toggleAutoRefresh() {
+            autoRefreshEnabled = !autoRefreshEnabled;
+            
+            if (autoRefreshEnabled) {
+                startAutoRefresh();
+            } else {
+                stopAutoRefresh();
+            }
+            
+            saveSettings();
+        }
+        
+        // تحديث عرض المؤقت
+        function updateTimerDisplay(time) {
+            document.getElementById('timerValue').textContent = time;
+        }
+        
+        // تنسيق الوقت
+        function formatTime(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = seconds % 60;
+            return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
         }
         
         // تبديل الصفحات
@@ -358,17 +495,25 @@
         
         // تهيئة التطبيق عند التحميل
         document.addEventListener('DOMContentLoaded', function() {
-            // تحميل البيانات
-            loadData();
+            // تحميل الإعدادات
+            loadSettings();
             
-            // بدء مؤقت التحديث
-            startRefreshTimer();
+            // إعداد event listener للتبديل
+            document.getElementById('autoRefreshToggle').addEventListener('change', toggleAutoRefresh);
             
             // منع السلوك الافتراضي لجميع الروابط
             document.querySelectorAll('a').forEach(link => {
                 link.addEventListener('click', function(e) {
                     e.preventDefault();
                 });
+            });
+            
+            // منع إعادة تحميل الصفحة
+            window.addEventListener('beforeunload', function(e) {
+                if (!confirm('هل أنت متأكد من أنك تريد مغادرة هذه الصفحة؟')) {
+                    e.preventDefault();
+                    e.returnValue = '';
+                }
             });
         });
     </script>
