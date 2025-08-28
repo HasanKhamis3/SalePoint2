@@ -36,7 +36,6 @@
             padding: 20px 0;
             position: fixed;
             height: 100vh;
-            z-index: 1000;
         }
         
         .sidebar .nav-link {
@@ -47,13 +46,11 @@
             cursor: pointer;
             display: flex;
             align-items: center;
-            transition: all 0.3s ease;
         }
         
         .sidebar .nav-link:hover, 
         .sidebar .nav-link.active {
             background-color: rgba(255, 255, 255, 0.15);
-            transform: translateX(-5px);
         }
         
         .main-content {
@@ -90,14 +87,11 @@
         
         .page {
             display: none;
-            opacity: 0;
-            transition: opacity 0.3s ease;
         }
         
         .page.active {
             display: block;
-            opacity: 1;
-            animation: fadeIn 0.5s ease;
+            animation: fadeIn 0.4s ease;
         }
         
         @keyframes fadeIn {
@@ -169,62 +163,6 @@
         
         .text-white {
             color: white !important;
-        }
-
-        /* أنماط الجداول */
-        .table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 1rem;
-            background-color: white;
-        }
-        
-        .table th,
-        .table td {
-            padding: 12px;
-            text-align: right;
-            border: 1px solid #dee2e6;
-        }
-        
-        .table th {
-            background-color: #f8f9fa;
-            font-weight: bold;
-        }
-        
-        .table-striped tbody tr:nth-of-type(odd) {
-            background-color: rgba(0, 0, 0, 0.05);
-        }
-
-        /* أنماط التنقل الداخلي */
-        .nav-tabs {
-            border-bottom: 1px solid #dee2e6;
-            margin-bottom: 1rem;
-        }
-        
-        .nav-tabs .nav-item {
-            margin-bottom: -1px;
-        }
-        
-        .nav-tabs .nav-link {
-            border: 1px solid transparent;
-            border-top-left-radius: 0.25rem;
-            border-top-right-radius: 0.25rem;
-            padding: 0.5rem 1rem;
-            color: #495057;
-        }
-        
-        .nav-tabs .nav-link.active {
-            color: #495057;
-            background-color: #fff;
-            border-color: #dee2e6 #dee2e6 #fff;
-        }
-
-        .invoice-tab {
-            display: none;
-        }
-        
-        .invoice-tab.active {
-            display: block;
         }
     </style>
 </head>
@@ -309,101 +247,30 @@
                 </div>
             </div>
 
-            <!-- Invoices Page -->
+            <!-- Other pages -->
             <div id="invoices" class="page">
-                <h2 class="mb-4">الفواتير</h2>
-                
-                <ul class="nav nav-tabs mb-4">
-                    <li class="nav-item">
-                        <a class="nav-link active" href="#" data-tab="new-invoice">فاتورة جديدة</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#" data-tab="manage-invoices">إدارة الفواتير</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#" data-tab="track-invoices">تتبع الفواتير</a>
-                    </li>
-                </ul>
-                
-                <!-- New Invoice Tab -->
-                <div id="new-invoice" class="invoice-tab active">
-                    <div class="alert alert-info">
-                        <span>ℹ️</span>
-                        صفحة فاتورة جديدة - تحت التطوير
-                    </div>
-                </div>
-                
-                <!-- Manage Invoices Tab -->
-                <div id="manage-invoices" class="invoice-tab">
-                    <div class="alert alert-info">
-                        <span>ℹ️</span>
-                        صفحة إدارة الفواتير - تحت التطوير
-                    </div>
-                </div>
-                
-                <!-- Track Invoices Tab -->
-                <div id="track-invoices" class="invoice-tab">
-                    <div class="alert alert-info">
-                        <span>ℹ️</span>
-                        صفحة تتبع الفواتير - تحت التطوير
-                    </div>
-                </div>
+                <h2>إدارة الفواتير</h2>
+                <p>صفحة إدارة الفواتير - تحت التطوير</p>
             </div>
 
-            <!-- Products Page -->
             <div id="products" class="page">
-                <h2 class="mb-4">المنتجات</h2>
-                
-                <div class="table-responsive">
-                    <table class="table table-striped">
-                        <thead>
-                            <tr>
-                                <th>رمز المنتج</th>
-                                <th>اسم المنتج</th>
-                                <th>عدد القطع في العلبة</th>
-                                <th>إجمالي تكلفة العلبة</th>
-                                <th>سعر البيع النهائي</th>
-                                <th>نسبة الربح</th>
-                                <th>هامش الربح</th>
-                                <th>تكلفة اليد العاملة للعلبة</th>
-                                <th>قيمة إهلاك المعدات</th>
-                                <th>الإجراءات</th>
-                            </tr>
-                        </thead>
-                        <tbody id="products-list">
-                            <tr>
-                                <td colspan="10" class="text-center">لا توجد منتجات مسجلة بعد</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+                <h2>إدارة المنتجات</h2>
+                <p>صفحة إدارة المنتجات - تحت التطوير</p>
             </div>
 
-            <!-- Customers Page -->
             <div id="customers" class="page">
                 <h2>إدارة العملاء</h2>
-                <div class="alert alert-info">
-                    <span>ℹ️</span>
-                    صفحة إدارة العملاء - تحت التطوير
-                </div>
+                <p>صفحة إدارة العملاء - تحت التطوير</p>
             </div>
 
-            <!-- Reports Page -->
             <div id="reports" class="page">
                 <h2>التقارير</h2>
-                <div class="alert alert-info">
-                    <span>ℹ️</span>
-                    صفحة التقارير - تحت التطوير
-                </div>
+                <p>صفحة التقارير - تحت التطوير</p>
             </div>
 
-            <!-- Settings Page -->
             <div id="settings" class="page">
                 <h2>الإعدادات</h2>
-                <div class="alert alert-info">
-                    <span>ℹ️</span>
-                    صفحة الإعدادات - تحت التطوير
-                </div>
+                <p>صفحة الإعدادات - تحت التطوير</p>
             </div>
         </div>
     </div>
@@ -439,104 +306,96 @@
             document.getElementById('customers-count').textContent = appData.customers;
         }
         
-        // 🔥 الوظيفة الرئيسية للتبديل بين الصفحات
+        // تبديل الصفحات
         function switchPage(pageId) {
-            console.log('جاري التبديل إلى:', pageId);
-            
-            // 1. إخفاء جميع الصفحات
-            const allPages = document.querySelectorAll('.page');
-            allPages.forEach(page => {
+            // إخفاء جميع الصفحات
+            document.querySelectorAll('.page').forEach(page => {
                 page.classList.remove('active');
-                page.style.display = 'none';
             });
             
-            // 2. إظهار الصفحة المطلوبة فقط
-            const targetPage = document.getElementById(pageId);
-            if (targetPage) {
-                targetPage.classList.add('active');
-                targetPage.style.display = 'block';
-                console.log('تم عرض الصفحة:', pageId);
-            } else {
-                console.error('الصفحة غير موجودة:', pageId);
-            }
+            // إظهار الصفحة المحددة
+            document.getElementById(pageId).classList.add('active');
             
-            // 3. تحديث القائمة الجانبية
+            // تحديث القائمة الجانبية
             document.querySelectorAll('.nav-link').forEach(link => {
                 link.classList.remove('active');
             });
             
+            // البحث عن الرابط المناسب وتفعيله
             const activeLink = document.querySelector(`.nav-link[data-page="${pageId}"]`);
             if (activeLink) {
                 activeLink.classList.add('active');
             }
-            
-            // 4. حفظ الصفحة الحالية
-            localStorage.setItem('currentPage', pageId);
         }
-
-        // تبديل التبويبات الداخلية
-        function switchTab(tabId) {
-            console.log('جاري التبديل إلى التبويب:', tabId);
-            
-            // إخفاء جميع التبويبات
-            document.querySelectorAll('.invoice-tab').forEach(tab => {
-                tab.classList.remove('active');
-                tab.style.display = 'none';
-            });
-            
-            // إظهار التبويب المطلوب
-            const targetTab = document.getElementById(tabId);
-            if (targetTab) {
-                targetTab.classList.add('active');
-                targetTab.style.display = 'block';
+        
+        // منع التحديث التلقائي
+        function preventAutoRefresh() {
+            // منع إعادة تحميل الصفحة
+            window.onbeforeunload = function() {
+                return "هل أنت متأكد من أنك تريد مغادرة هذه الصفحة؟";
             }
             
-            // تحديث روابط التبويبات
-            document.querySelectorAll('.nav-link').forEach(link => {
-                link.classList.remove('active');
+            // منع مفاتيح التحديث
+            document.addEventListener('keydown', function(e) {
+                // منع F5
+                if (e.key === 'F5') e.preventDefault();
+                // منع Ctrl+R
+                if (e.ctrlKey && e.key === 'r') e.preventDefault();
             });
-            
-            const activeTabLink = document.querySelector(`.nav-link[data-tab="${tabId}"]`);
-            if (activeTabLink) {
-                activeTabLink.classList.add('active');
-            }
         }
         
         // تهيئة التطبيق عند التحميل
         document.addEventListener('DOMContentLoaded', function() {
-            console.log('تم تحميل النظام');
+            // منع التحديث التلقائي
+            preventAutoRefresh();
             
             // تحميل البيانات
             loadData();
             
-            // إعداد event listeners للروابط الرئيسية
-            document.querySelectorAll('.sidebar .nav-link').forEach(link => {
-                link.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const pageId = this.getAttribute('data-page');
-                    console.log('نقر على:', pageId);
-                    switchPage(pageId);
+            // إعداد event listeners للروابط
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.addEventListener('click', function() {
+                    switchPage(this.getAttribute('data-page'));
                 });
             });
             
-            // إعداد event listeners للتبويبات الداخلية
-            document.querySelectorAll('.nav-tabs .nav-link').forEach(link => {
-                link.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const tabId = this.getAttribute('data-tab');
-                    switchTab(tabId);
-                });
-            });
-            
-            // تحميل الصفحة الأخيرة التي تم زيارتها
-            const lastPage = localStorage.getItem('currentPage') || 'dashboard';
-            switchPage(lastPage);
-            
-            console.log('التنقل جاهز للعمل');
+            console.log('تم تحميل النظام بنجاح - لا يوجد تحديث تلقائي');
         });
     </script>
 </body>
 </html>
+<div id="invoice" class="page">
+    <h2 class="mb-4">الفواتير</h2>
+    
+    <ul class="nav nav-tabs mb-4">
+        <li class="nav-item">
+            <a class="nav-link active" href="#" data-tab="new-invoice">فاتورة جديدة</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#" data-tab="manage-invoices">إدارة الفواتير</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#" data-tab="track-invoices">تتبع الفواتير</a>
+        </li>
+    </ul>
+    
+    <!-- New Invoice Tab -->
+    <div id="new-invoice" class="invoice-tab active">
+        <!-- محتوى فاتورة جديدة -->
+    </div>
+    
+    <!-- Manage Invoices Tab -->
+    <div id="manage-invoices" class="invoice-tab">
+        <!-- محتوى إدارة الفواتير -->
+    </div>
+    
+    <!-- Track Invoices Tab -->
+    <div id="track-invoices" class="invoice-tab">
+        <!-- محتوى تتبع الفواتير -->
+    </div>
+</div>
+
+<script src="invoice.js"></script>
 // الكود الخاص بصفحة الفواتير
 document.addEventListener('DOMContentLoaded', function() {
     // تهيئة صفحة الفواتير
