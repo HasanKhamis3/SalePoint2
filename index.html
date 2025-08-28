@@ -1,559 +1,3 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نظام إدارة المبيعات</title>
-    <style>
-        /* أنماط مبسطة */
-        :root {
-            --primary: #2c3e50;
-            --secondary: #34495e;
-            --accent: #3498db;
-        }
-        
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: 'Segoe UI', Tahoma, sans-serif;
-            background: #f5f7f9;
-            line-height: 1.6;
-            color: #333;
-        }
-        
-        .header {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: white;
-            padding: 1rem 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-        
-        .nav {
-            display: flex;
-            gap: 1rem;
-        }
-        
-        .nav-btn {
-            background: rgba(255,255,255,0.1);
-            border: none;
-            color: white;
-            padding: 0.5rem 1rem;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
-        
-        .nav-btn:hover, .nav-btn.active {
-            background: rgba(255,255,255,0.2);
-        }
-        
-        .container {
-            max-width: 1200px;
-            margin: 2rem auto;
-            padding: 0 1rem;
-        }
-        
-        .dashboard {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 2rem;
-        }
-        
-        .card {
-            background: white;
-            border-radius: 10px;
-            padding: 1.5rem;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-            text-align: center;
-        }
-        
-        .card-icon {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
-        }
-        
-        .card h3 {
-            margin-bottom: 0.5rem;
-            color: var(--primary);
-        }
-        
-        .card-value {
-            font-size: 2rem;
-            font-weight: bold;
-            color: var(--accent);
-            margin: 0.5rem 0;
-        }
-        
-        .refresh-control {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: white;
-            padding: 10px 15px;
-            border-radius: 25px;
-            box-shadow: 0 3px 15px rgba(0,0,0,0.2);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            z-index: 1000;
-        }
-        
-        .toggle-btn {
-            width: 50px;
-            height: 25px;
-            background: #ddd;
-            border-radius: 25px;
-            position: relative;
-            cursor: pointer;
-        }
-        
-        .toggle-btn.active {
-            background: #4CAF50;
-        }
-        
-        .toggle-btn::before {
-            content: '';
-            position: absolute;
-            width: 21px;
-            height: 21px;
-            background: white;
-            border-radius: 50%;
-            top: 2px;
-            left: 2px;
-            transition: all 0.3s;
-        }
-        
-        .toggle-btn.active::before {
-            left: 27px;
-        }
-        
-        .timer {
-            background: var(--primary);
-            color: white;
-            padding: 5px 10px;
-            border-radius: 15px;
-            font-size: 0.9rem;
-            min-width: 60px;
-            text-align: center;
-        }
-        
-        .manual-refresh {
-            background: var(--accent);
-            color: white;
-            border: none;
-            width: 35px;
-            height: 35px;
-            border-radius: 50%;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.2rem;
-        }
-        
-        .page {
-            display: none;
-        }
-        
-        .page.active {
-            display: block;
-            animation: fadeIn 0.3s ease;
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-        
-        .alert {
-            background: #e3f2fd;
-            border-left: 4px solid var(--accent);
-            padding: 1rem;
-            margin: 1rem 0;
-            border-radius: 4px;
-        }
-        
-        @media (max-width: 768px) {
-            .header {
-                flex-direction: column;
-                gap: 1rem;
-                padding: 1rem;
-            }
-            
-            .nav {
-                flex-wrap: wrap;
-                justify-content: center;
-            }
-            
-            .dashboard {
-                grid-template-columns: 1fr;
-            }
-            
-            .refresh-control {
-                bottom: 10px;
-                right: 10px;
-                left: 10px;
-                justify-content: center;
-            }
-        }
-    </style>
-</head>
-<body>
-    <!-- شريط العنوان -->
-    <div class="header">
-        <h1>نظام إدارة المبيعات</h1>
-        <div class="nav">
-            <button class="nav-btn active" data-page="dashboard">لوحة التحكم</button>
-            <button class="nav-btn" data-page="invoices">الفواتير</button>
-            <button class="nav-btn" data-page="products">المنتجات</button>
-            <button class="nav-btn" data-page="customers">العملاء</button>
-        </div>
-    </div>
-
-    <!-- المحتوى الرئيسي -->
-    <div class="container">
-        <!-- لوحة التحكم -->
-        <div id="dashboard" class="page active">
-            <div class="alert">
-                التحديث التلقائي معطل. يمكنك تفعيله باستخدام الزر في الزاوية اليمنى السفلية.
-            </div>
-            
-            <div class="dashboard">
-                <div class="card">
-                    <div class="card-icon">🧾</div>
-                    <h3>الفواتير</h3>
-                    <div class="card-value" id="invoices-count">0</div>
-                    <p>فواتير هذا الشهر</p>
-                </div>
-                
-                <div class="card">
-                    <div class="card-icon">📦</div>
-                    <h3>المنتجات</h3>
-                    <div class="card-value" id="products-count">0</div>
-                    <p>منتج في المخزون</p>
-                </div>
-                
-                <div class="card">
-                    <div class="card-icon">💰</div>
-                    <h3>المبيعات</h3>
-                    <div class="card-value" id="sales-count">0 د.ب</div>
-                    <p>إجمالي المبيعات</p>
-                </div>
-                
-                <div class="card">
-                    <div class="card-icon">👥</div>
-                    <h3>العملاء</h3>
-                    <div class="card-value" id="customers-count">0</div>
-                    <p>عميل مسجل</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- الفواتير -->
-        <div id="invoices" class="page">
-            <h2>إدارة الفواتير</h2>
-            <p>صفحة إدارة الفواتير - تحت التطوير</p>
-        </div>
-
-        <!-- المنتجات -->
-        <div id="products" class="page">
-            <h2>إدارة المنتجات</h2>
-            <p>صفحة إدارة المنتجات - تحت التطوير</p>
-        </div>
-
-        <!-- العملاء -->
-        <div id="customers" class="page">
-            <h2>إدارة العملاء</h2>
-            <p>صفحة إدارة العملاء - تحت التطوير</p>
-        </div>
-    </div>
-
-    <!-- عنصر التحكم في التحديث -->
-    <div class="refresh-control">
-        <div class="toggle-btn" id="autoRefreshToggle"></div>
-        <div class="timer" id="refreshTimer">--:--</div>
-        <button class="manual-refresh" id="manualRefreshBtn">↻</button>
-    </div>
-
-    <script>
-        // حالة التطبيق
-        const state = {
-            autoRefresh: false,
-            refreshInterval: null,
-            secondsLeft: 90,
-            data: {
-                invoices: 0,
-                products: 0,
-                sales: 0,
-                customers: 0
-            }
-        };
-
-        // منع جميع أشكال التحديث التلقائي
-        function preventAutoRefresh() {
-            // منع مفاتيح التحديث
-            document.addEventListener('keydown', (e) => {
-                if (e.key === 'F5' || (e.ctrlKey && e.key === 'r')) {
-                    e.preventDefault();
-                    showMessage('تم منع التحديث التلقائي');
-                }
-            });
-
-            // منع إعادة التحميل عن طريق السحب (على الهواتف)
-            let touchStartY = 0;
-            document.addEventListener('touchstart', (e) => {
-                touchStartY = e.touches[0].clientY;
-            });
-
-            document.addEventListener('touchmove', (e) => {
-                const touchY = e.touches[0].clientY;
-                // إذا كان المستخدم يسحب لأسفل من أعلى الصفحة
-                if (touchY - touchStartY > 100 && window.scrollY === 0) {
-                    e.preventDefault();
-                    showMessage('تم منع التحديث بالسحب');
-                }
-            });
-
-            console.log('تم تفعيل الحماية من التحديث التلقائي');
-        }
-
-        // عرض رسالة للمستخدم
-        function showMessage(text) {
-            // إنشاء عنصر الرسالة
-            const message = document.createElement('div');
-            message.textContent = text;
-            message.style.cssText = `
-                position: fixed;
-                top: 20px;
-                left: 50%;
-                transform: translateX(-50%);
-                background: #333;
-                color: white;
-                padding: 10px 20px;
-                border-radius: 5px;
-                z-index: 10000;
-                opacity: 0;
-                transition: opacity 0.3s;
-            `;
-            
-            document.body.appendChild(message);
-            
-            // إظهار الرسالة
-            setTimeout(() => message.style.opacity = '1', 10);
-            
-            // إخفاء الرسالة بعد 3 ثوان
-            setTimeout(() => {
-                message.style.opacity = '0';
-                setTimeout(() => message.remove(), 300);
-            }, 3000);
-        }
-
-        // تحميل البيانات المحفوظة
-        function loadData() {
-            const saved = localStorage.getItem('appData');
-            if (saved) {
-                state.data = JSON.parse(saved);
-                updateUI();
-            }
-        }
-
-        // حفظ البيانات
-        function saveData() {
-            localStorage.setItem('appData', JSON.stringify(state.data));
-        }
-
-        // تحديث واجهة المستخدم
-        function updateUI() {
-            document.getElementById('invoices-count').textContent = state.data.invoices;
-            document.getElementById('products-count').textContent = state.data.products;
-            document.getElementById('sales-count').textContent = state.data.sales + ' د.ب';
-            document.getElementById('customers-count').textContent = state.data.customers;
-        }
-
-        // تحديث البيانات (محاكاة)
-        function refreshData() {
-            console.log('تحديث البيانات في:', new Date().toLocaleTimeString());
-            
-            // زيادة البيانات عشوائياً
-            state.data.invoices += Math.floor(Math.random() * 3);
-            state.data.products += Math.floor(Math.random() * 5);
-            state.data.sales += Math.floor(Math.random() * 50);
-            state.data.customers += Math.floor(Math.random() * 2);
-            
-            // تحديث الواجهة وحفظ البيانات
-            updateUI();
-            saveData();
-            
-            showMessage('تم تحديث البيانات');
-        }
-
-        // بدء التحديث التلقائي
-        function startAutoRefresh() {
-            // إلغاء أي مؤقت سابق
-            if (state.refreshInterval) {
-                clearInterval(state.refreshInterval);
-            }
-            
-            state.autoRefresh = true;
-            state.secondsLeft = 90;
-            updateTimer();
-            
-            // بدء المؤقت
-            state.refreshInterval = setInterval(() => {
-                state.secondsLeft--;
-                updateTimer();
-                
-                if (state.secondsLeft <= 0) {
-                    refreshData();
-                    state.secondsLeft = 90;
-                }
-            }, 1000);
-            
-            showMessage('تم تفعيل التحديث التلقائي كل 90 ثانية');
-        }
-
-        // إيقاف التحديث التلقائي
-        function stopAutoRefresh() {
-            if (state.refreshInterval) {
-                clearInterval(state.refreshInterval);
-                state.refreshInterval = null;
-            }
-            
-            state.autoRefresh = false;
-            document.getElementById('refreshTimer').textContent = '--:--';
-            
-            showMessage('تم إيقاف التحديث التلقائي');
-        }
-
-        // تحديث العداد
-        function updateTimer() {
-            const minutes = Math.floor(state.secondsLeft / 60);
-            const seconds = state.secondsLeft % 60;
-            document.getElementById('refreshTimer').textContent = 
-                `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-        }
-
-        // التبديل بين الصفحات
-        function switchPage(pageId) {
-            // إخفاء جميع الصفحات
-            document.querySelectorAll('.page').forEach(page => {
-                page.classList.remove('active');
-            });
-            
-            // إظهار الصفحة المحددة
-            document.getElementById(pageId).classList.add('active');
-            
-            // تحديث أزرار التنقل
-            document.querySelectorAll('.nav-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            
-            document.querySelector(`[data-page="${pageId}"]`).classList.add('active');
-        }
-
-        // التهيئة عند تحميل الصفحة
-        document.addEventListener('DOMContentLoaded', () => {
-            // منع التحديث التلقائي
-            preventAutoRefresh();
-            
-            // تحميل البيانات
-            loadData();
-            
-            // إعداد أزرار التنقل
-            document.querySelectorAll('.nav-btn').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    switchPage(btn.dataset.page);
-                });
-            });
-            
-            // إعداد زر التبديل
-            document.getElementById('autoRefreshToggle').addEventListener('click', () => {
-                if (state.autoRefresh) {
-                    stopAutoRefresh();
-                    document.getElementById('autoRefreshToggle').classList.remove('active');
-                } else {
-                    startAutoRefresh();
-                    document.getElementById('autoRefreshToggle').classList.add('active');
-                }
-            });
-            
-            // إعداد زر التحديث اليدوي
-            document.getElementById('manualRefreshBtn').addEventListener('click', () => {
-                refreshData();
-                if (state.autoRefresh) {
-                    state.secondsLeft = 90;
-                    updateTimer();
-                }
-            });
-            
-            console.log('تم تحميل النظام بنجاح');
-        });
-    </script>
-</body>
-</html>
-<div id="invoice" class="page">
-    <h2 class="mb-4">الفواتير</h2>
-    
-    <ul class="nav nav-tabs mb-4">
-        <li class="nav-item">
-            <a class="nav-link active" href="#" data-tab="new-invoice">فاتورة جديدة</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="#" data-tab="manage-invoices">إدارة الفواتير</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="#" data-tab="track-invoices">تتبع الفواتير</a>
-        </li>
-    </ul>
-    
-    <!-- New Invoice Tab -->
-    <div id="new-invoice" class="invoice-tab active">
-        <!-- محتوى فاتورة جديدة -->
-    </div>
-    
-    <!-- Manage Invoices Tab -->
-    <div id="manage-invoices" class="invoice-tab">
-        <!-- محتوى إدارة الفواتير -->
-    </div>
-    
-    <!-- Track Invoices Tab -->
-    <div id="track-invoices" class="invoice-tab">
-        <!-- محتوى تتبع الفواتير -->
-    </div>
-</div>
-
-<script src="invoice.js"></script>
-// الكود الخاص بصفحة الفواتير
-document.addEventListener('DOMContentLoaded', function() {
-    // تهيئة صفحة الفواتير
-    const invoiceDateInput = document.getElementById('invoice-date');
-    if (invoiceDateInput) {
-        invoiceDateInput.value = new Date().toISOString().split('T')[0];
-    }
-    document.getElementById('invoice-number').value = generateInvoiceNumber();
-    
-    // باقي الكود الخاص بالفاتورة...
-});
-
-function generateInvoiceNumber() {
-    return "INV-" + new Date().getFullYear() + "-" + 
-        (invoices.length + 1).toString().padStart(4, '0');
-}
-<div id="product-cost" class="page">
-    <h2 class="mb-4">حساب تكلفة المنتج</h2>
-    
-    <!-- محتوى صفحة حساب تكلفة المنتج -->
-</div>
-
-<script src="product-cost.js"></script>
 // الكود الخاص بصفحة تكلفة المنتج
 document.addEventListener('DOMContentLoaded', function() {
     // تهيئة صفحة تكلفة المنتج
@@ -742,3 +186,423 @@ body {
     <h2 class="mb-4">لوحة التحكم</h2>
     <div class="alert alert-info">صفحة لوحة التحكم - تحت التطوير</div>
 </div>
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نظام نقطة البيع - SalePoint</title>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #34495e;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .main-container {
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        .sidebar {
+            background: linear-gradient(to bottom, var(--primary-color), var(--secondary-color));
+            width: 280px;
+            color: white;
+            padding: 20px 0;
+            position: fixed;
+            height: 100vh;
+        }
+        
+        .sidebar .nav-link {
+            color: rgba(255, 255, 255, 0.9);
+            margin: 8px 15px;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+        }
+        
+        .sidebar .nav-link:hover, 
+        .sidebar .nav-link.active {
+            background-color: rgba(255, 255, 255, 0.15);
+        }
+        
+        .main-content {
+            flex: 1;
+            padding: 30px;
+            background-color: #f8f9fa;
+            margin-right: 280px;
+            min-height: 100vh;
+        }
+        
+        .welcome-card {
+            background: linear-gradient(135deg, #2c3e50 0%, #4ca1af 100%);
+            color: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .stats-card {
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            height: 100%;
+            text-align: center;
+            padding: 25px 15px;
+            background: white;
+            margin-bottom: 20px;
+        }
+        
+        .stats-card span {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            display: block;
+        }
+        
+        .page {
+            display: none;
+        }
+        
+        .page.active {
+            display: block;
+            animation: fadeIn 0.4s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* أنماط Bootstrap بديلة */
+        .alert {
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        
+        .alert-info {
+            background-color: #d1ecf1;
+            border: 1px solid #bee5eb;
+            color: #0c5460;
+        }
+        
+        .bg-primary { background-color: #007bff !important; color: white; }
+        .bg-success { background-color: #28a745 !important; color: white; }
+        .bg-warning { background-color: #ffc107 !important; color: black; }
+        .bg-info { background-color: #17a2b8 !important; color: white; }
+        
+        .row {
+            display: flex;
+            flex-wrap: wrap;
+            margin-right: -15px;
+            margin-left: -15px;
+        }
+        
+        .col-xl-3, .col-md-6 {
+            position: relative;
+            width: 100%;
+            padding-right: 15px;
+            padding-left: 15px;
+        }
+        
+        @media (min-width: 768px) {
+            .col-md-6 {
+                flex: 0 0 50%;
+                max-width: 50%;
+            }
+        }
+        
+        @media (min-width: 1200px) {
+            .col-xl-3 {
+                flex: 0 0 25%;
+                max-width: 25%;
+            }
+        }
+        
+        .mb-4 {
+            margin-bottom: 1.5rem !important;
+        }
+        
+        .mt-3 {
+            margin-top: 1rem !important;
+        }
+        
+        .mt-4 {
+            margin-top: 1.5rem !important;
+        }
+        
+        .text-center {
+            text-align: center !important;
+        }
+        
+        .text-white {
+            color: white !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div style="padding: 15px;">
+                <h4 style="text-align: center; margin-bottom: 5px;">نظام نقطة البيع</h4>
+                <h6 style="text-align: center; color: rgba(255,255,255,0.8); margin-bottom: 20px;">SalePoint System</h6>
+                <hr>
+                <div>
+                    <div class="nav-link active" data-page="dashboard">
+                        <span>📊</span> لوحة التحكم
+                    </div>
+                    <div class="nav-link" data-page="invoices">
+                        <span>🧾</span> إدارة الفواتير
+                    </div>
+                    <div class="nav-link" data-page="products">
+                        <span>📦</span> المنتجات
+                    </div>
+                    <div class="nav-link" data-page="customers">
+                        <span>👥</span> العملاء
+                    </div>
+                    <div class="nav-link" data-page="reports">
+                        <span>📈</span> التقارير
+                    </div>
+                    <div class="nav-link" data-page="settings">
+                        <span>⚙️</span> الإعدادات
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Dashboard Page -->
+            <div id="dashboard" class="page active">
+                <div class="welcome-card">
+                    <h2>📊 مرحباً بك في نظام نقطة البيع</h2>
+                    <p style="margin-bottom: 0;">نظام متكامل لإدارة المبيعات والمخزون والفواتير</p>
+                </div>
+                
+                <div class="row">
+                    <div class="col-xl-3 col-md-6 mb-4">
+                        <div class="stats-card bg-primary">
+                            <span>🧾</span>
+                            <h4 style="margin-top: 1rem;">الفواتير</h4>
+                            <h2 id="invoices-count">0</h2>
+                            <p style="margin-bottom: 0;">فواتير هذا الشهر</p>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-md-6 mb-4">
+                        <div class="stats-card bg-success">
+                            <span>📦</span>
+                            <h4 style="margin-top: 1rem;">المنتجات</h4>
+                            <h2 id="products-count">0</h2>
+                            <p style="margin-bottom: 0;">منتج في المخزون</p>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-md-6 mb-4">
+                        <div class="stats-card bg-warning">
+                            <span>💰</span>
+                            <h4 style="margin-top: 1rem;">المبيعات</h4>
+                            <h2 id="sales-count">0 د.ب</h2>
+                            <p style="margin-bottom: 0;">إجمالي المبيعات</p>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-md-6 mb-4">
+                        <div class="stats-card bg-info">
+                            <span>👥</span>
+                            <h4 style="margin-top: 1rem;">العملاء</h4>
+                            <h2 id="customers-count">0</h2>
+                            <p style="margin-bottom: 0;">عميل مسجل</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="alert alert-info mt-4">
+                    <span>ℹ️</span>
+                    نظام إدارة المبيعات - الإصدار 1.0
+                </div>
+            </div>
+
+            <!-- Other pages -->
+            <div id="invoices" class="page">
+                <h2>إدارة الفواتير</h2>
+                <p>صفحة إدارة الفواتير - تحت التطوير</p>
+            </div>
+
+            <div id="products" class="page">
+                <h2>إدارة المنتجات</h2>
+                <p>صفحة إدارة المنتجات - تحت التطوير</p>
+            </div>
+
+            <div id="customers" class="page">
+                <h2>إدارة العملاء</h2>
+                <p>صفحة إدارة العملاء - تحت التطوير</p>
+            </div>
+
+            <div id="reports" class="page">
+                <h2>التقارير</h2>
+                <p>صفحة التقارير - تحت التطوير</p>
+            </div>
+
+            <div id="settings" class="page">
+                <h2>الإعدادات</h2>
+                <p>صفحة الإعدادات - تحت التطوير</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // حالة التطبيق
+        let appData = {
+            invoices: 0,
+            products: 0,
+            sales: 0,
+            customers: 0
+        };
+        
+        // تحميل البيانات
+        function loadData() {
+            const savedData = localStorage.getItem('salePointData');
+            if (savedData) {
+                appData = JSON.parse(savedData);
+                updateUI();
+            }
+        }
+        
+        // حفظ البيانات
+        function saveData() {
+            localStorage.setItem('salePointData', JSON.stringify(appData));
+        }
+        
+        // تحديث واجهة المستخدم
+        function updateUI() {
+            document.getElementById('invoices-count').textContent = appData.invoices;
+            document.getElementById('products-count').textContent = appData.products;
+            document.getElementById('sales-count').textContent = appData.sales + ' د.ب';
+            document.getElementById('customers-count').textContent = appData.customers;
+        }
+        
+        // تبديل الصفحات
+        function switchPage(pageId) {
+            // إخفاء جميع الصفحات
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+            
+            // إظهار الصفحة المحددة
+            document.getElementById(pageId).classList.add('active');
+            
+            // تحديث القائمة الجانبية
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('active');
+            });
+            
+            // البحث عن الرابط المناسب وتفعيله
+            const activeLink = document.querySelector(`.nav-link[data-page="${pageId}"]`);
+            if (activeLink) {
+                activeLink.classList.add('active');
+            }
+        }
+        
+        // منع التحديث التلقائي
+        function preventAutoRefresh() {
+            // منع إعادة تحميل الصفحة
+            window.onbeforeunload = function() {
+                return "هل أنت متأكد من أنك تريد مغادرة هذه الصفحة؟";
+            }
+            
+            // منع مفاتيح التحديث
+            document.addEventListener('keydown', function(e) {
+                // منع F5
+                if (e.key === 'F5') e.preventDefault();
+                // منع Ctrl+R
+                if (e.ctrlKey && e.key === 'r') e.preventDefault();
+            });
+        }
+        
+        // تهيئة التطبيق عند التحميل
+        document.addEventListener('DOMContentLoaded', function() {
+            // منع التحديث التلقائي
+            preventAutoRefresh();
+            
+            // تحميل البيانات
+            loadData();
+            
+            // إعداد event listeners للروابط
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.addEventListener('click', function() {
+                    switchPage(this.getAttribute('data-page'));
+                });
+            });
+            
+            console.log('تم تحميل النظام بنجاح - لا يوجد تحديث تلقائي');
+        });
+    </script>
+</body>
+</html>
+<div id="invoice" class="page">
+    <h2 class="mb-4">الفواتير</h2>
+    
+    <ul class="nav nav-tabs mb-4">
+        <li class="nav-item">
+            <a class="nav-link active" href="#" data-tab="new-invoice">فاتورة جديدة</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#" data-tab="manage-invoices">إدارة الفواتير</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#" data-tab="track-invoices">تتبع الفواتير</a>
+        </li>
+    </ul>
+    
+    <!-- New Invoice Tab -->
+    <div id="new-invoice" class="invoice-tab active">
+        <!-- محتوى فاتورة جديدة -->
+    </div>
+    
+    <!-- Manage Invoices Tab -->
+    <div id="manage-invoices" class="invoice-tab">
+        <!-- محتوى إدارة الفواتير -->
+    </div>
+    
+    <!-- Track Invoices Tab -->
+    <div id="track-invoices" class="invoice-tab">
+        <!-- محتوى تتبع الفواتير -->
+    </div>
+</div>
+
+<script src="invoice.js"></script>
+// الكود الخاص بصفحة الفواتير
+document.addEventListener('DOMContentLoaded', function() {
+    // تهيئة صفحة الفواتير
+    const invoiceDateInput = document.getElementById('invoice-date');
+    if (invoiceDateInput) {
+        invoiceDateInput.value = new Date().toISOString().split('T')[0];
+    }
+    document.getElementById('invoice-number').value = generateInvoiceNumber();
+    
+    // باقي الكود الخاص بالفاتورة...
+});
+
+function generateInvoiceNumber() {
+    return "INV-" + new Date().getFullYear() + "-" + 
+        (invoices.length + 1).toString().padStart(4, '0');
+}
+<div id="product-cost" class="page">
+    <h2 class="mb-4">حساب تكلفة المنتج</h2>
+    
+    <!-- محتوى صفحة حساب تكلفة المنتج -->
+</div>
+
+<script src="product-cost.js"></script>
