@@ -1,3 +1,14 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="refresh" content="0; url='/SalePoint2/'" />
+    <script>window.location.href = '/SalePoint2/';</script>
+</head>
+<body>
+    <p>يتم إعادة توجيهك إلى <a href="/SalePoint2/">نقطة البيع</a>.</p>
+</body>
+</html>
 <div id="dashboard" class="page active">
     <h2 class="mb-4">لوحة التحكم</h2>
     <div class="alert alert-info">صفحة لوحة التحكم - تحت التطوير</div>
@@ -9,7 +20,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>نظام نقطة البيع - SalePoint</title>
     <style>
-        /* أنماط مبسطة لتحسين الأداء */
+        /* أنماط مبسطة */
         :root {
             --primary-color: #2c3e50;
             --secondary-color: #34495e;
@@ -26,7 +37,6 @@
             background-color: #f8f9fa;
             margin: 0;
             padding: 0;
-            overflow-x: hidden;
         }
         
         .main-container {
@@ -41,7 +51,6 @@
             padding: 20px 0;
             position: fixed;
             height: 100vh;
-            z-index: 1000;
         }
         
         .sidebar .nav-link {
@@ -50,19 +59,13 @@
             padding: 12px 20px;
             border-radius: 8px;
             cursor: pointer;
-            text-decoration: none;
             display: flex;
             align-items: center;
         }
         
         .sidebar .nav-link:hover, 
         .sidebar .nav-link.active {
-            color: white;
             background-color: rgba(255, 255, 255, 0.15);
-        }
-        
-        .sidebar .nav-link i {
-            margin-left: 10px;
         }
         
         .main-content {
@@ -85,15 +88,16 @@
             border-radius: 12px;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
             height: 100%;
-            border: none;
             text-align: center;
             padding: 25px 15px;
             background: white;
+            margin-bottom: 20px;
         }
         
-        .stats-card i {
+        .stats-card span {
             font-size: 2.5rem;
             margin-bottom: 15px;
+            display: block;
         }
         
         .page {
@@ -170,11 +174,6 @@
             left: 28px;
         }
         
-        /* تحسينات للأداء */
-        .hidden {
-            display: none !important;
-        }
-        
         /* أنماط Bootstrap بديلة */
         .alert {
             padding: 15px;
@@ -240,12 +239,6 @@
         .text-white {
             color: white !important;
         }
-        
-        /* رفع أداء الصفحة */
-        .optimized-render {
-            content-visibility: auto;
-            contain-intrinsic-size: 1px 500px;
-        }
     </style>
 </head>
 <body>
@@ -257,22 +250,22 @@
                 <h6 style="text-align: center; color: rgba(255,255,255,0.8); margin-bottom: 20px;">SalePoint System</h6>
                 <hr>
                 <div>
-                    <div class="nav-link active" onclick="switchPage('dashboard')">
+                    <div class="nav-link active" data-page="dashboard">
                         <span>📊</span> لوحة التحكم
                     </div>
-                    <div class="nav-link" onclick="switchPage('invoices')">
+                    <div class="nav-link" data-page="invoices">
                         <span>🧾</span> إدارة الفواتير
                     </div>
-                    <div class="nav-link" onclick="switchPage('products')">
+                    <div class="nav-link" data-page="products">
                         <span>📦</span> المنتجات
                     </div>
-                    <div class="nav-link" onclick="switchPage('customers')">
+                    <div class="nav-link" data-page="customers">
                         <span>👥</span> العملاء
                     </div>
-                    <div class="nav-link" onclick="switchPage('reports')">
+                    <div class="nav-link" data-page="reports">
                         <span>📈</span> التقارير
                     </div>
-                    <div class="nav-link" onclick="switchPage('settings')">
+                    <div class="nav-link" data-page="settings">
                         <span>⚙️</span> الإعدادات
                     </div>
                 </div>
@@ -280,7 +273,7 @@
         </div>
 
         <!-- Main Content -->
-        <div class="main-content optimized-render">
+        <div class="main-content">
             <!-- Dashboard Page -->
             <div id="dashboard" class="page active">
                 <div class="welcome-card">
@@ -291,7 +284,7 @@
                 <div class="row">
                     <div class="col-xl-3 col-md-6 mb-4">
                         <div class="stats-card bg-primary">
-                            <span style="font-size: 2.5rem; margin-bottom: 15px; display: block;">🧾</span>
+                            <span>🧾</span>
                             <h4 style="margin-top: 1rem;">الفواتير</h4>
                             <h2 id="invoices-count">0</h2>
                             <p style="margin-bottom: 0;">فواتير هذا الشهر</p>
@@ -299,7 +292,7 @@
                     </div>
                     <div class="col-xl-3 col-md-6 mb-4">
                         <div class="stats-card bg-success">
-                            <span style="font-size: 2.5rem; margin-bottom: 15px; display: block;">📦</span>
+                            <span>📦</span>
                             <h4 style="margin-top: 1rem;">المنتجات</h4>
                             <h2 id="products-count">0</h2>
                             <p style="margin-bottom: 0;">منتج في المخزون</p>
@@ -307,7 +300,7 @@
                     </div>
                     <div class="col-xl-3 col-md-6 mb-4">
                         <div class="stats-card bg-warning">
-                            <span style="font-size: 2.5rem; margin-bottom: 15px; display: block;">💰</span>
+                            <span>💰</span>
                             <h4 style="margin-top: 1rem;">المبيعات</h4>
                             <h2 id="sales-count">0 د.ب</h2>
                             <p style="margin-bottom: 0;">إجمالي المبيعات</p>
@@ -315,7 +308,7 @@
                     </div>
                     <div class="col-xl-3 col-md-6 mb-4">
                         <div class="stats-card bg-info">
-                            <span style="font-size: 2.5rem; margin-bottom: 15px; display: block;">👥</span>
+                            <span>👥</span>
                             <h4 style="margin-top: 1rem;">العملاء</h4>
                             <h2 id="customers-count">0</h2>
                             <p style="margin-bottom: 0;">عميل مسجل</p>
@@ -330,27 +323,27 @@
             </div>
 
             <!-- Other pages -->
-            <div id="invoices" class="page optimized-render">
+            <div id="invoices" class="page">
                 <h2>إدارة الفواتير</h2>
                 <p>صفحة إدارة الفواتير - تحت التطوير</p>
             </div>
 
-            <div id="products" class="page optimized-render">
+            <div id="products" class="page">
                 <h2>إدارة المنتجات</h2>
                 <p>صفحة إدارة المنتجات - تحت التطوير</p>
             </div>
 
-            <div id="customers" class="page optimized-render">
+            <div id="customers" class="page">
                 <h2>إدارة العملاء</h2>
                 <p>صفحة إدارة العملاء - تحت التطوير</p>
             </div>
 
-            <div id="reports" class="page optimized-render">
+            <div id="reports" class="page">
                 <h2>التقارير</h2>
                 <p>صفحة التقارير - تحت التطوير</p>
             </div>
 
-            <div id="settings" class="page optimized-render">
+            <div id="settings" class="page">
                 <h2>الإعدادات</h2>
                 <p>صفحة الإعدادات - تحت التطوير</p>
             </div>
@@ -359,13 +352,13 @@
 
     <!-- زر التحكم في التحديث -->
     <div class="refresh-control">
-        <div class="btn-toggle" id="autoRefreshToggle" onclick="toggleAutoRefresh()">
+        <div class="btn-toggle" id="autoRefreshToggle">
             <div class="toggle-handle"></div>
         </div>
         <div class="refresh-timer">
             <span id="timerValue">--:--</span>
         </div>
-        <button class="btn-refresh" onclick="manualRefresh()" title="تحديث الآن">
+        <button class="btn-refresh" id="manualRefreshBtn" title="تحديث الآن">
             🔄
         </button>
     </div>
@@ -375,6 +368,43 @@
         let autoRefreshEnabled = false;
         let refreshInterval = null;
         let secondsUntilRefresh = 90;
+        
+        // منع جميع أشكال التحديث التلقائي
+        function preventAllAutoRefresh() {
+            // منع إعادة التحميل بالكيبورد
+            document.addEventListener('keydown', function(e) {
+                // منع F5
+                if (e.key === 'F5') e.preventDefault();
+                // منع Ctrl+R
+                if (e.ctrlKey && e.key === 'r') e.preventDefault();
+                // منع Ctrl+F5
+                if (e.ctrlKey && e.key === 'F5') e.preventDefault();
+            });
+            
+            // منع القائمة السياقية (النقر بزر الماوس الأيمن)
+            document.addEventListener('contextmenu', function(e) {
+                e.preventDefault();
+            });
+            
+            // منع سحب وإفلات الصور والروابط
+            document.addEventListener('dragstart', function(e) {
+                e.preventDefault();
+            });
+            
+            // منع إعادة التحميل عند سحب لتحديث على الهواتف
+            let touchStartY = 0;
+            document.addEventListener('touchstart', function(e) {
+                touchStartY = e.touches[0].clientY;
+            });
+            
+            document.addEventListener('touchmove', function(e) {
+                const touchY = e.touches[0].clientY;
+                // إذا كان المستخدم يسحب لأسفل من أعلى الصفحة
+                if (touchY - touchStartY > 100 && window.scrollY === 0) {
+                    e.preventDefault();
+                }
+            });
+        }
         
         // تحميل الإعدادات من localStorage
         function loadSettings() {
@@ -534,8 +564,29 @@
         
         // تهيئة التطبيق عند التحميل
         document.addEventListener('DOMContentLoaded', function() {
+            // منع جميع أشكال التحديث التلقائي
+            preventAllAutoRefresh();
+            
             // تحميل الإعدادات
             loadSettings();
+            
+            // إعداد event listeners
+            document.getElementById('autoRefreshToggle').addEventListener('click', toggleAutoRefresh);
+            document.getElementById('manualRefreshBtn').addEventListener('click', manualRefresh);
+            
+            // إعداد event listeners للروابط
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.addEventListener('click', function() {
+                    switchPage(this.getAttribute('data-page'));
+                });
+            });
+            
+            // منع أي سلوك افتراضي لجميع الروابط
+            document.addEventListener('click', function(e) {
+                if (e.target.tagName === 'A') {
+                    e.preventDefault();
+                }
+            });
         });
     </script>
 </body>
@@ -768,14 +819,3 @@ body {
 }
 
 /* باقي الأنماط من الكود الأصلي */
-
-<!DOCTYPE html>
-<html>
-<head>
-    <meta http-equiv="refresh" content="0; url='/SalePoint2/'" />
-    <script>window.location.href = '/SalePoint2/';</script>
-</head>
-<body>
-    <p>يتم إعادة توجيهك إلى <a href="/SalePoint2/">نقطة البيع</a>.</p>
-</body>
-</html>
