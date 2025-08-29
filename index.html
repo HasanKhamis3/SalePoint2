@@ -625,15 +625,18 @@
             const allPages = document.querySelectorAll('.page');
             allPages.forEach(page => {
                 page.classList.remove('active');
-                page.style.display = 'none';
             });
             
             // 2. إظهار الصفحة المطلوبة فقط
             const targetPage = document.getElementById(pageId);
             if (targetPage) {
                 targetPage.classList.add('active');
-                targetPage.style.display = 'block';
                 console.log('تم عرض الصفحة:', pageId);
+                
+                // تهيئة الصفحة إذا لزم الأمر
+                if (pageId === 'invoices') {
+                    initInvoicePage();
+                }
             } else {
                 console.error('الصفحة غير موجودة:', pageId);
             }
@@ -659,14 +662,12 @@
             // إخفاء جميع التبويبات
             document.querySelectorAll('.invoice-tab').forEach(tab => {
                 tab.classList.remove('active');
-                tab.style.display = 'none';
             });
             
             // إظهار التبويب المطلوب
             const targetTab = document.getElementById(tabId);
             if (targetTab) {
                 targetTab.classList.add('active');
-                targetTab.style.display = 'block';
             }
             
             // تحديث روابط التبويبات
@@ -674,65 +675,85 @@
                 link.classList.remove('active');
             });
             
-            const activeTabLink = document.querySelector(`.nav-tabs .nav-link[data-tab="${tabId}"]`);
+            const activeTabLink = document.querySelector(`.nav-tabs .nav-link[href="#"][data-tab="${tabId}"]`);
             if (activeTabLink) {
                 activeTabLink.classList.add('active');
             }
         }
         
-        // إدارة عناصر الفاتورة
-        function setupInvoiceHandlers() {
+        // تهيئة صفحة الفاتورة
+        function initInvoicePage() {
+            // توليد رقم فاتورة تلقائي
+            document.getElementById('invoice-number').value = 'INV-' + new Date().getTime();
+            document.getElementById('invoice-date').valueAsDate = new Date();
+            
+            // إعداد معالج الحدث لإضافة العناصر
             const addItemBtn = document.getElementById('add-item-btn');
             if (addItemBtn) {
-                addItemBtn.addEventListener('click', function() {
-                    const tbody = document.querySelector('#invoice-items tbody');
-                    
-                    // إذا كان الجدول فارغاً، قم بإزالة الصف الفارغ
-                    if (tbody.innerHTML.includes('لا توجد عناصر')) {
-                        tbody.innerHTML = '';
-                    }
-                    
-                    // إضافة صف جديد
-                    const newRow = document.createElement('tr');
-                    newRow.innerHTML = `
-                        <td>
-                            <select class="form-control product-select">
-                                <option value="">اختر المنتج</option>
-                            </select>
-                        </td>
-                        <td>
-                            <input type="number" class="form-control quantity" min="1" value="1">
-                        </td>
-                        <td>
-                            <input type="number" class="form-control price" step="0.01" min="0" value="0">
-                        </td>
-                        <td class="item-total">0.00 د.ب</td>
-                        <td>
-                            <button class="btn btn-sm btn-danger remove-item">حذف</button>
-                        </td>
-                    `;
-                    
-                    tbody.appendChild(newRow);
-                    
-                    // ملء قائمة المنتجات
-                    fillProductSelect(newRow.querySelector('.product-select'));
-                    
-                    // إضافة مستمعي الأحداث
-                    newRow.querySelector('.quantity').addEventListener('input', updateItemTotal);
-                    newRow.querySelector('.price').addEventListener('input', updateItemTotal);
-                    newRow.querySelector('.remove-item').addEventListener('click', function() {
-                        newRow.remove();
-                        updateInvoiceTotal();
-                        
-                        // إذا لم يتبق أي عناصر، أضف رسالة "لا توجد عناصر"
-                        if (tbody.querySelectorAll('tr').length === 0) {
-                            tbody.innerHTML = '<tr><td colspan="5" class="text-center">لا توجد عناصر</td></tr>';
-                        }
-                    });
-                });
+                addItemBtn.onclick = addInvoiceItem;
+            }
+            
+            // إعداد معالج الحدث لحفظ الفاتورة
+            const saveInvoiceBtn = document.getElementById('save-invoice-btn');
+            if (saveInvoiceBtn) {
+                saveInvoiceBtn.onclick = saveInvoice;
             }
         }
-
+        
+        // إضافة عنصر إلى الفاتورة
+        function addInvoiceItem() {
+            const tbody = document.querySelector('#invoice-items tbody');
+            
+            // إذا كان الجدول فارغاً، قم بإزالة الصف الفارغ
+            if (tbody.innerHTML.includes('لا توجد عناصر')) {
+                tbody.innerHTML = '';
+            }
+            
+            // إضافة صف جديد
+            const newRow = document.createElement('tr');
+            newRow.innerHTML = `
+                <td>
+                    <select class="form-control product-select">
+                        <option value="">اختر المنتج</option>
+                        <option value="1">منتج 1 - 10.50 د.ب</option>
+                        <option value="2">منتج 2 - 15.75 د.ب</option>
+                        <option value="3">منتج 3 - 20.00 د.ب</option>
+                    </select>
+                </td>
+                <td>
+                    <input type="number" class="form-control quantity" min="1" value="1">
+                </td>
+                <td>
+                    <input type="number" class="form-control price" step="0.01" min="0" value="0">
+                </td>
+                <td class="item-total">0.00 د.ب</td>
+                <td>
+                    <button class="btn btn-sm btn-danger remove-item">حذف</button>
+                </td>
+            `;
+            
+            tbody.appendChild(newRow);
+            
+            // إضافة مستمعي الأحداث
+            newRow.querySelector('.quantity').addEventListener('input', updateItemTotal);
+            newRow.querySelector('.price').addEventListener('input', updateItemTotal);
+            newRow.querySelector('.product-select').addEventListener('change', function() {
+                const price = this.value === '1' ? 10.50 : this.value === '2' ? 15.75 : this.value === '3' ? 20.00 : 0;
+                newRow.querySelector('.price').value = price;
+                updateItemTotal.call(newRow.querySelector('.price'));
+            });
+            
+            newRow.querySelector('.remove-item').addEventListener('click', function() {
+                newRow.remove();
+                updateInvoiceTotal();
+                
+                // إذا لم يتبق أي عناصر، أضف رسالة "لا توجد عناصر"
+                if (tbody.querySelectorAll('tr').length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="5" class="text-center">لا توجد عناصر</td></tr>';
+                }
+            });
+        }
+        
         // تحديث الإجمالي للعنصر
         function updateItemTotal() {
             const row = this.closest('tr');
@@ -743,7 +764,7 @@
             row.querySelector('.item-total').textContent = total.toFixed(2) + ' د.ب';
             updateInvoiceTotal();
         }
-
+        
         // تحديث الإجمالي للفاتورة
         function updateInvoiceTotal() {
             let total = 0;
@@ -754,33 +775,11 @@
             
             document.getElementById('invoice-total').textContent = total.toFixed(2) + ' د.ب';
         }
-
-        // ملء قائمة المنتجات
-        function fillProductSelect(selectElement) {
-            // هذه البيانات مؤقتة - يمكن استبدالها ببيانات حقيقية من قاعدة البيانات
-            const products = [
-                { id: 1, name: "منتج 1", price: 10.5 },
-                { id: 2, name: "منتج 2", price: 15.75 },
-                { id: 3, name: "منتج 3", price: 20.0 }
-            ];
-            
-            products.forEach(product => {
-                const option = document.createElement('option');
-                option.value = product.id;
-                option.textContent = `${product.name} - ${product.price.toFixed(2)} د.ب`;
-                option.dataset.price = product.price;
-                selectElement.appendChild(option);
-            });
-            
-            // عند تغيير المنتج، تحديث السعر تلقائياً
-            selectElement.addEventListener('change', function() {
-                if (this.value) {
-                    const price = this.options[this.selectedIndex].dataset.price;
-                    const row = this.closest('tr');
-                    row.querySelector('.price').value = price;
-                    updateItemTotal.call(row.querySelector('.price'));
-                }
-            });
+        
+        // حفظ الفاتورة
+        function saveInvoice() {
+            alert('تم حفظ الفاتورة بنجاح!');
+            // هنا يمكنك إضافة كود لحفظ الفاتورة في قاعدة البيانات أو التخزين المحلي
         }
         
         // تهيئة التطبيق عند التحميل
@@ -808,13 +807,6 @@
                     switchTab(tabId);
                 });
             });
-            
-            // إعداد معالجين للفاتورة
-            setupInvoiceHandlers();
-            
-            // توليد رقم فاتورة تلقائي
-            document.getElementById('invoice-number').value = 'INV-' + new Date().getTime();
-            document.getElementById('invoice-date').valueAsDate = new Date();
             
             // تحميل الصفحة الأخيرة التي تم زيارتها
             const lastPage = localStorage.getItem('currentPage') || 'dashboard';
