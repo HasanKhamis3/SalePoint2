@@ -1,58 +1,17 @@
-<div id="product-cost" class="page">
-    <h2 class="mb-4">حساب تكلفة المنتج</h2>
-    
-    <!-- محتوى صفحة حساب تكلفة المنتج -->
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="refresh" content="0; url='/SalePoint2/'" />
+    <script>window.location.href = '/SalePoint2/';</script>
+</head>
+<body>
+    <p>يتم إعادة توجيهك إلى <a href="/SalePoint2/">نقطة البيع</a>.</p>
+</body>
+</html>
+<div id="dashboard" class="page active">
+    <h2 class="mb-4">لوحة التحكم</h2>
+    <div class="alert alert-info">صفحة لوحة التحكم - تحت التطوير</div>
 </div>
-
-<script src="product-cost.js"></script>
-// الكود الخاص بصفحة الفواتير
-document.addEventListener('DOMContentLoaded', function() {
-    // تهيئة صفحة الفواتير
-    const invoiceDateInput = document.getElementById('invoice-date');
-    if (invoiceDateInput) {
-        invoiceDateInput.value = new Date().toISOString().split('T')[0];
-    }
-    document.getElementById('invoice-number').value = generateInvoiceNumber();
-    
-    // باقي الكود الخاص بالفاتورة...
-});
-
-function generateInvoiceNumber() {
-    return "INV-" + new Date().getFullYear() + "-" + 
-        (invoices.length + 1).toString().padStart(4, '0');
-}
-<div id="invoice" class="page">
-    <h2 class="mb-4">الفواتير</h2>
-    
-    <ul class="nav nav-tabs mb-4">
-        <li class="nav-item">
-            <a class="nav-link active" href="#" data-tab="new-invoice">فاتورة جديدة</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="#" data-tab="manage-invoices">إدارة الفواتير</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="#" data-tab="track-invoices">تتبع الفواتير</a>
-        </li>
-    </ul>
-    
-    <!-- New Invoice Tab -->
-    <div id="new-invoice" class="invoice-tab active">
-        <!-- محتوى فاتورة جديدة -->
-    </div>
-    
-    <!-- Manage Invoices Tab -->
-    <div id="manage-invoices" class="invoice-tab">
-        <!-- محتوى إدارة الفواتير -->
-    </div>
-    
-    <!-- Track Invoices Tab -->
-    <div id="track-invoices" class="invoice-tab">
-        <!-- محتوى تتبع الفواتير -->
-    </div>
-</div>
-
-<script src="invoice.js"></script>
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -418,56 +377,123 @@ function generateInvoiceNumber() {
     </script>
 </body>
 </html>
-<div id="dashboard" class="page active">
-    <h2 class="mb-4">لوحة التحكم</h2>
-    <div class="alert alert-info">صفحة لوحة التحكم - تحت التطوير</div>
+
+<!-- في قسم القائمة الجانبية -->
+<div class="nav-link" data-page="invoice">
+    <i class="bi bi-receipt"></i> الفواتير
 </div>
-<!DOCTYPE html>
-<html>
-<head>
-    <meta http-equiv="refresh" content="0; url='/SalePoint2/'" />
-    <script>window.location.href = '/SalePoint2/';</script>
-</head>
-<body>
-    <p>يتم إعادة توجيهك إلى <a href="/SalePoint2/">نقطة البيع</a>.</p>
-</body>
-</html>
+<div class="nav-link" data-page="product-cost">
+    <i class="bi bi-calculator"></i> تكلفة المنتج
+</div>
+<div id="invoice" class="page">
+    <h2 class="mb-4"><i class="bi bi-receipt"></i> الفواتير</h2>
+    
+    <ul class="nav nav-tabs mb-4">
+        <li class="nav-item">
+            <a class="nav-link active" href="#" data-tab="new-invoice">فاتورة جديدة</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#" data-tab="manage-invoices">إدارة الفواتير</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#" data-tab="track-invoices">تتبع الفواتير</a>
+        </li>
+    </ul>
+    
+    <!-- محتوى الفواتير -->
+    <div id="new-invoice" class="invoice-tab active">
+        <!-- محتوى فاتورة جديدة -->
+    </div>
+    
+    <div id="manage-invoices" class="invoice-tab">
+        <!-- محتوى إدارة الفواتير -->
+    </div>
+    
+    <div id="track-invoices" class="invoice-tab">
+        <!-- محتوى تتبع الفواتير -->
+    </div>
+</div>
 
-:root {
-    --primary-color: #2c3e50;
-    --secondary-color: #34495e;
-}
-
-body {
-    font-family: 'Arial', sans-serif;
-    background-color: #f5f5f5;
-}
-
-.sidebar {
-    background-color: var(--primary-color);
-    min-height: 100vh;
-    color: white;
-}
-
-/* باقي الأنماط من الكود الأصلي */
-// الكود الخاص بصفحة الإعدادات
+<script src="invoice.js"></script>
+// الكود الخاص بصفحة الفواتير
 document.addEventListener('DOMContentLoaded', function() {
-    // تهيئة صفحة الإعدادات
-    loadSettings();
-    loadDeliverySettings();
-    loadTaxSettings();
-    loadPaymentMethods();
-    loadInvoiceStatuses();
+    // تهيئة صفحة الفواتير
+    const invoiceDateInput = document.getElementById('invoice-date');
+    if (invoiceDateInput) {
+        invoiceDateInput.value = new Date().toISOString().split('T')[0];
+    }
+    document.getElementById('invoice-number').value = generateInvoiceNumber();
     
-    // باقي الكود الخاص بالإعدادات...
+    // باقي الكود الخاص بالفاتورة...
 });
-<div id="settings" class="page">
-    <h2 class="mb-4">الإعدادات</h2>
+
+function generateInvoiceNumber() {
+    const savedInvoices = JSON.parse(localStorage.getItem('invoices')) || [];
+    return "INV-" + new Date().getFullYear() + "-" + 
+        (savedInvoices.length + 1).toString().padStart(4, '0');
+}
+
+// دالة لإضافة عنصر جديد للفاتورة
+function addInvoiceItem() {
+    // كود إضافة عنصر
+}
+
+// دالة لحساب إجمالي الفاتورة
+function calculateInvoiceTotal() {
+    // كود حساب الإجمالي
+}
+
+// دالة لحفظ الفاتورة
+function saveInvoice() {
+    // كود حفظ الفاتورة
+}
+<div id="product-cost" class="page">
+    <h2 class="mb-4"><i class="bi bi-calculator"></i> حساب تكلفة المنتج</h2>
     
-    <!-- محتوى صفحة الإعدادات -->
+    <!-- محتوى حساب تكلفة المنتج -->
+    <div class="product-info-section">
+        <h5>معلومات المنتج</h5>
+        <!-- نموذج إدخال بيانات المنتج -->
+    </div>
+    
+    <div class="row">
+        <div class="col-md-6">
+            <!-- تكاليف المواد -->
+        </div>
+        <div class="col-md-6">
+            <!-- تكاليف العمالة والمعدات -->
+        </div>
+    </div>
 </div>
 
-<script src="settings.js"></script>
+<script src="product-cost.js"></script>
+<div id="products" class="page">
+    <h2 class="mb-4">المنتجات</h2>
+    
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>رمز المنتج</th>
+                    <th>اسم المنتج</th>
+                    <th>عدد القطع في العلبة</th>
+                    <th>إجمالي تكلفة العلبة</th>
+                    <th>سعر البيع النهائي</th>
+                    <th>نسبة الربح</th>
+                    <th>هامش الربح</th>
+                    <th>تكلفة اليد العاملة للعلبة</th>
+                    <th>قيمة إهلاك المعدات</th>
+                    <th>الإجراءات</th>
+                </tr>
+            </thead>
+            <tbody id="products-list">
+                <tr>
+                    <td colspan="10" class="text-center">لا توجد منتجات مسجلة بعد</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
 // الكود الأساسي للتنقل بين الصفحات وإدارة الحالة العامة
 document.addEventListener('DOMContentLoaded', function() {
     // إدارة تحميل الصفحات
@@ -567,42 +593,107 @@ window.addEventListener('load', function() {
         document.querySelector('[data-page="dashboard"]').classList.add('active');
     }
 });
-<div id="products" class="page">
-    <h2 class="mb-4">المنتجات</h2>
-    
-    <div class="table-responsive">
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th>رمز المنتج</th>
-                    <th>اسم المنتج</th>
-                    <th>عدد القطع في العلبة</th>
-                    <th>إجمالي تكلفة العلبة</th>
-                    <th>سعر البيع النهائي</th>
-                    <th>نسبة الربح</th>
-                    <th>هامش الربح</th>
-                    <th>تكلفة اليد العاملة للعلبة</th>
-                    <th>قيمة إهلاك المعدات</th>
-                    <th>الإجراءات</th>
-                </tr>
-            </thead>
-            <tbody id="products-list">
-                <tr>
-                    <td colspan="10" class="text-center">لا توجد منتجات مسجلة بعد</td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-</div>
-// الكود الخاص بصفحة تكلفة المنتج
-document.addEventListener('DOMContentLoaded', function() {
-    // تهيئة صفحة تكلفة المنتج
-    document.getElementById('product-code').value = generateProductCode();
-    
-    // باقي الكود الخاص بتكلفة المنتج...
-});
 
-function generateProductCode() {
-    lastProductCode++;
-    return "PRD-" + lastProductCode.toString().padStart(4, '0');
+// في دالة loadPage
+function loadPage(page) {
+    fetch(page + '.html')
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById('content-area').innerHTML = data;
+            
+            // تحميل الـscripts الإضافية إذا كانت موجودة
+            if (page === 'invoice') {
+                loadScript('invoice.js');
+            } else if (page === 'product-cost') {
+                loadScript('product-cost.js');
+            }
+        })
+        .catch(error => console.error('Error loading page:', error));
+}
+<div id="settings" class="page">
+    <h2 class="mb-4">الإعدادات</h2>
+    
+    <!-- محتوى صفحة الإعدادات -->
+</div>
+
+<script src="settings.js"></script>
+// الكود الخاص بصفحة الإعدادات
+document.addEventListener('DOMContentLoaded', function() {
+    // تهيئة صفحة الإعدادات
+    loadSettings();
+    loadDeliverySettings();
+    loadTaxSettings();
+    loadPaymentMethods();
+    loadInvoiceStatuses();
+    
+    // باقي الكود الخاص بالإعدادات...
+});
+:root {
+    --primary-color: #2c3e50;
+    --secondary-color: #34495e;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f5f5f5;
+}
+
+.sidebar {
+    background-color: var(--primary-color);
+    min-height: 100vh;
+    color: white;
+}
+
+/* باقي الأنماط من الكود الأصلي */
+
+/* أنماط الفواتير */
+.invoice-tab {
+    display: none;
+}
+
+.invoice-tab.active {
+    display: block;
+}
+
+.payment-status {
+    display: inline-block;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.payment-status.paid {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.payment-status.unpaid {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+/* أنماط حساب تكلفة المنتج */
+.product-info-section {
+    background-color: #f8f9fa;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.summary-container {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    gap: 15px;
+    padding: 10px 0;
+}
+
+.summary-box {
+    min-width: 200px;
+    background-color: white;
+    border-radius: 8px;
+    padding: 15px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    border-left: 4px solid #3498db;
 }
