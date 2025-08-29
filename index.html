@@ -1,631 +1,90 @@
-
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نظام نقطة البيع - SalePoint</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
-    <style>
-        :root {
-            --primary-color: #2c3e50;
-            --secondary-color: #34495e;
-        }
-        
-        body {
-            font-family: 'Arial', sans-serif;
-            background-color: #f5f5f5;
-        }
-        
-        .sidebar {
-            background-color: var(--primary-color);
-            min-height: 100vh;
-            color: white;
-            width: 250px;
-            position: fixed;
-            top: 0;
-            right: 0;
-        }
-        
-        .sidebar .nav-link {
-            color: rgba(255, 255, 255, 0.8);
-            margin-bottom: 5px;
-            padding: 10px 15px;
-        }
-        
-        .sidebar .nav-link:hover, .sidebar .nav-link.active {
-            color: white;
-            background-color: var(--secondary-color);
-        }
-        
-        .sidebar .nav-link i {
-            margin-left: 8px;
-        }
-        
-        .main-content {
-            margin-right: 250px;
-            padding: 20px;
-            min-height: 100vh;
-        }
-        
-        .page {
-            display: none;
-        }
-        
-        .page.active {
-            display: block;
-            animation: fadeIn 0.5s;
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-        
-        .stats-card {
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-            margin-bottom: 20px;
-            text-align: center;
-            color: white;
-        }
-        
-        .stats-card i {
-            font-size: 2.5rem;
-            margin-bottom: 10px;
-        }
-        
-        .bg-primary { background: linear-gradient(45deg, #007bff, #0056b3); }
-        .bg-success { background: linear-gradient(45deg, #28a745, #1e7e34); }
-        .bg-warning { background: linear-gradient(45deg, #ffc107, #d39e00); }
-        .bg-info { background: linear-gradient(45deg, #17a2b8, #138496); }
-        
-        .welcome-card {
-            background: linear-gradient(45deg, #2c3e50, #4ca1af);
-            color: white;
-            border-radius: 10px;
-            padding: 25px;
-            margin-bottom: 30px;
-        }
-    </style>
-</head>
-<body>
-    <div class="container-fluid">
-        <div class="row">
-            <!-- Sidebar -->
-            <div class="sidebar p-0">
-                <div class="p-3">
-                    <h4 class="text-center">نظام نقطة البيع</h4>
-                    <h6 class="text-center text-white-50">SalePoint System</h6>
-                    <hr>
-                    <ul class="nav flex-column">
-                        <li class="nav-item">
-                            <a class="nav-link active" href="#" data-page="dashboard">
-                                <i class="bi bi-speedometer2"></i> لوحة التحكم
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#" data-page="invoice">
-                                <i class="bi bi-receipt"></i> الفواتير
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#" data-page="products">
-                                <i class="bi bi-box-seam"></i> المنتجات
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#" data-page="product-cost">
-                                <i class="bi bi-calculator"></i> تكلفة المنتج
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#" data-page="customers">
-                                <i class="bi bi-people"></i> العملاء
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#" data-page="reports">
-                                <i class="bi bi-graph-up"></i> التقارير
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#" data-page="settings">
-                                <i class="bi bi-gear"></i> الإعدادات
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-
-            <!-- Main Content -->
-            <div class="main-content">
-                <!-- Dashboard Page -->
-                <div id="dashboard" class="page active">
-                    <div class="welcome-card">
-                        <h2><i class="bi bi-speedometer2"></i> مرحباً بك في نظام نقطة البيع</h2>
-                        <p class="mb-0">نظام متكامل لإدارة المبيعات والمخزون والفواتير</p>
-                    </div>
-                    
-                    <div class="row">
-                        <div class="col-xl-3 col-md-6 mb-4">
-                            <div class="stats-card bg-primary">
-                                <i class="bi bi-receipt"></i>
-                                <h4>الفواتير</h4>
-                                <h2 id="invoices-count">0</h2>
-                                <p class="mb-0">فواتير هذا الشهر</p>
-                            </div>
-                        </div>
-                        <div class="col-xl-3 col-md-6 mb-4">
-                            <div class="stats-card bg-success">
-                                <i class="bi bi-box-seam"></i>
-                                <h4>المنتجات</h4>
-                                <h2 id="products-count">0</h2>
-                                <p class="mb-0">منتج في المخزون</p>
-                            </div>
-                        </div>
-                        <div class="col-xl-3 col-md-6 mb-4">
-                            <div class="stats-card bg-warning">
-                                <i class="bi bi-currency-exchange"></i>
-                                <h4>المبيعات</h4>
-                                <h2 id="sales-count">0 د.ب</h2>
-                                <p class="mb-0">إجمالي المبيعات</p>
-                            </div>
-                        </div>
-                        <div class="col-xl-3 col-md-6 mb-4">
-                            <div class="stats-card bg-info">
-                                <i class="bi bi-people"></i>
-                                <h4>العملاء</h4>
-                                <h2 id="customers-count">0</h2>
-                                <p class="mb-0">عميل مسجل</p>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="alert alert-info mt-4">
-                        <i class="bi bi-info-circle"></i>
-                        نظام إدارة المبيعات - الإصدار 1.0
-                    </div>
-                </div>
-
-                <!-- Invoice Page -->
-                <div id="invoice" class="page">
-                    <h2 class="mb-4"><i class="bi bi-receipt"></i> الفواتير</h2>
-                    <div class="alert alert-warning">يتم تحميل محتوى الفواتير...</div>
-                </div>
-
-                <!-- Products Page -->
-                <div id="products" class="page">
-                    <h2 class="mb-4"><i class="bi bi-box-seam"></i> المنتجات</h2>
-                    <div class="alert alert-warning">يتم تحميل محتوى المنتجات...</div>
-                </div>
-
-                <!-- Product Cost Page -->
-                <div id="product-cost" class="page">
-                    <h2 class="mb-4"><i class="bi bi-calculator"></i> حساب تكلفة المنتج</h2>
-                    <div class="alert alert-warning">يتم تحميل محتوى حساب التكلفة...</div>
-                </div>
-
-                <!-- Other pages -->
-                <div id="customers" class="page">
-                    <h2 class="mb-4"><i class="bi bi-people"></i> العملاء</h2>
-                    <div class="alert alert-warning">يتم تحميل محتوى العملاء...</div>
-                </div>
-
-                <div id="reports" class="page">
-                    <h2 class="mb-4"><i class="bi bi-graph-up"></i> التقارير</h2>
-                    <div class="alert alert-warning">يتم تحميل محتوى التقارير...</div>
-                </div>
-
-                <div id="settings" class="page">
-                    <h2 class="mb-4"><i class="bi bi-gear"></i> الإعدادات</h2>
-                    <div class="alert alert-warning">يتم تحميل محتوى الإعدادات...</div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        // حالة التطبيق
-        let appData = {
-            invoices: 0,
-            products: 0,
-            sales: 0,
-            customers: 0
-        };
-        
-        // تحميل البيانات
-        function loadData() {
-            const savedData = localStorage.getItem('salePointData');
-            if (savedData) {
-                appData = JSON.parse(savedData);
-                updateUI();
-            }
-            
-            // تحميل المنتجات
-            const savedProducts = localStorage.getItem('products');
-            if (savedProducts) {
-                const products = JSON.parse(savedProducts);
-                appData.products = products.length;
-            }
-            
-            // تحميل الفواتير
-            const savedInvoices = localStorage.getItem('invoices');
-            if (savedInvoices) {
-                const invoices = JSON.parse(savedInvoices);
-                appData.invoices = invoices.length;
-                
-                // حساب إجمالي المبيعات
-                appData.sales = invoices.reduce((total, invoice) => {
-                    return total + (parseFloat(invoice.total) || 0);
-                }, 0);
-            }
-            
-            updateUI();
-        }
-        
-        // حفظ البيانات
-        function saveData() {
-            localStorage.setItem('salePointData', JSON.stringify(appData));
-        }
-        
-        // تحديث واجهة المستخدم
-        function updateUI() {
-            document.getElementById('invoices-count').textContent = appData.invoices;
-            document.getElementById('products-count').textContent = appData.products;
-            document.getElementById('sales-count').textContent = appData.sales.toFixed(3) + ' د.ب';
-            document.getElementById('customers-count').textContent = appData.customers;
-        }
-        
-        // تبديل الصفحات
-        function switchPage(pageId) {
-            // إخفاء جميع الصفحات
-            document.querySelectorAll('.page').forEach(page => {
-                page.classList.remove('active');
-            });
-            
-            // إظهار الصفحة المحددة
-            document.getElementById(pageId).classList.add('active');
-            
-            // تحديث القائمة الجانبية
-            document.querySelectorAll('.nav-link').forEach(link => {
-                link.classList.remove('active');
-            });
-            
-            // تفعيل الرابط المناسب
-            const activeLink = document.querySelector(`.nav-link[data-page="${pageId}"]`);
-            if (activeLink) {
-                activeLink.classList.add('active');
-            }
-            
-            // إذا كانت صفحة الفواتير أو المنتجات، تحميل المحتوى
-            if (pageId === 'invoice' || pageId === 'products' || pageId === 'product-cost') {
-                loadPageContent(pageId);
-            }
-        }
-        
-        // تحميل محتوى الصفحة
-        function loadPageContent(pageId) {
-            const pageElement = document.getElementById(pageId);
-            
-            // محاكاة تحميل المحتوى (في الواقع، ستقوم بجلب المحتوى من ملف منفصل)
-            setTimeout(() => {
-                if (pageId === 'invoice') {
-                    pageElement.innerHTML = `
-                        <h2 class="mb-4"><i class="bi bi-receipt"></i> الفواتير</h2>
-                        <div class="alert alert-info">محتوى الفواتير سيتم تحميله هنا</div>
-                        <p>هذه هي صفحة إدارة الفواتير حيث يمكنك:</p>
-                        <ul>
-                            <li>إنشاء فواتير جديدة</li>
-                            <li>عرض الفواتير السابقة</li>
-                            <li>تتبع حالة الفواتير</li>
-                            <li>إدارة طرق الدفع</li>
-                        </ul>
-                    `;
-                } else if (pageId === 'products') {
-                    pageElement.innerHTML = `
-                        <h2 class="mb-4"><i class="bi bi-box-seam"></i> المنتجات</h2>
-                        <div class="alert alert-info">محتوى المنتجات سيتم تحميله هنا</div>
-                        <p>هذه هي صفحة إدارة المنتجات حيث يمكنك:</p>
-                        <ul>
-                            <li>إضافة منتجات جديدة</li>
-                            <li>تعديل المنتجات الحالية</li>
-                            <li>إدارة المخزون</li>
-                            <li>عرض تقارير المنتجات</li>
-                        </ul>
-                    `;
-                } else if (pageId === 'product-cost') {
-                    pageElement.innerHTML = `
-                        <h2 class="mb-4"><i class="bi bi-calculator"></i> حساب تكلفة المنتج</h2>
-                        <div class="alert alert-info">محتوى حساب التكلفة سيتم تحميله هنا</div>
-                        <p>هذه هي صفحة حساب تكلفة المنتج حيث يمكنك:</p>
-                        <ul>
-                            <li>حساب تكلفة المواد الخام</li>
-                            <li>حساب تكلفة العمالة</li>
-                            <li>حساب التكاليف الإضافية</li>
-                            <li>تحديد سعر البيع المناسب</li>
-                        </ul>
-                    `;
-                }
-            }, 500);
-        }
-        
-        // تهيئة التطبيق
-        document.addEventListener('DOMContentLoaded', function() {
-            // تحميل البيانات
-            loadData();
-            
-            // إعداد event listeners للروابط
-            document.querySelectorAll('.nav-link').forEach(link => {
-                link.addEventListener('click', function() {
-                    switchPage(this.getAttribute('data-page'));
-                });
-            });
-            
-            console.log('تم تحميل النظام بنجاح');
-        });
-    </script>
-</body>
-</html>
-<div id="invoice" class="page">
-    <h2 class="mb-4"><i class="bi bi-receipt"></i> الفواتير</h2>
-    
-    <ul class="nav nav-tabs mb-4">
-        <li class="nav-item">
-            <a class="nav-link active" href="#" data-tab="new-invoice">فاتورة جديدة</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="#" data-tab="manage-invoices">إدارة الفواتير</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="#" data-tab="track-invoices">تتبع الفواتير</a>
-        </li>
-    </ul>
-    
-    <!-- محتوى الفواتير -->
-    <div id="new-invoice" class="invoice-tab active">
-        <!-- محتوى فاتورة جديدة -->
-    </div>
-    
-    <div id="manage-invoices" class="invoice-tab">
-        <!-- محتوى إدارة الفواتير -->
-    </div>
-    
-    <div id="track-invoices" class="invoice-tab">
-        <!-- محتوى تتبع الفواتير -->
-    </div>
-</div>
-
-<script src="invoice.js"></script>
-
-<div class="card">
-    <div class="card-body">
-        <h5 class="card-title">بيانات الفاتورة</h5>
-        <!-- محتوى الفاتورة -->
-    </div>
-</div>
-// الكود الخاص بصفحة الفواتير
-document.addEventListener('DOMContentLoaded', function() {
-    // تهيئة صفحة الفواتير
-    const invoiceDateInput = document.getElementById('invoice-date');
-    if (invoiceDateInput) {
-        invoiceDateInput.value = new Date().toISOString().split('T')[0];
-    }
-    document.getElementById('invoice-number').value = generateInvoiceNumber();
-    
-    // باقي الكود الخاص بالفاتورة...
-});
-
-function generateInvoiceNumber() {
-    const savedInvoices = JSON.parse(localStorage.getItem('invoices')) || [];
-    return "INV-" + new Date().getFullYear() + "-" + 
-        (savedInvoices.length + 1).toString().padStart(4, '0');
+/* أنماط خاصة بصفحة المنتجات */
+.product-info-section {
+    background-color: #f8f9fa;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
 }
 
-// دالة لإضافة عنصر جديد للفاتورة
-function addInvoiceItem() {
-    // كود إضافة عنصر
+.product-info-section h5 {
+    margin-bottom: 15px;
+    color: #2c3e50;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 8px;
 }
 
-// دالة لحساب إجمالي الفاتورة
-function calculateInvoiceTotal() {
-    // كود حساب الإجمالي
+.action-buttons {
+    white-space: nowrap;
+}
+/* أنماط خاصة بصفحة الإعدادات */
+.settings-section {
+    background-color: white;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
-// دالة لحفظ الفاتورة
-function saveInvoice() {
-    // كود حفظ الفاتورة
-}
-<div id="product-cost" class="page">
-    <h2 class="mb-4"><i class="bi bi-calculator"></i> حساب تكلفة المنتج</h2>
-    
-    <!-- محتوى حساب تكلفة المنتج -->
-    <div class="product-info-section">
-        <h5>معلومات المنتج</h5>
-        <!-- نموذج إدخال بيانات المنتج -->
-    </div>
-    
-    <div class="row">
-        <div class="col-md-6">
-            <!-- تكاليف المواد -->
-        </div>
-        <div class="col-md-6">
-            <!-- تكاليف العمالة والمعدات -->
-        </div>
-    </div>
-</div>
-
-<script src="product-cost.js"></script>
-
-<div class="card">
-    <div class="card-body">
-        <h5 class="card-title">حساب تكلفة المنتج</h5>
-        <!-- محتوى حساب التكلفة -->
-    </div>
-</div>
-<div id="products" class="page">
-    <h2 class="mb-4">المنتجات</h2>
-    
-    <div class="table-responsive">
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th>رمز المنتج</th>
-                    <th>اسم المنتج</th>
-                    <th>عدد القطع في العلبة</th>
-                    <th>إجمالي تكلفة العلبة</th>
-                    <th>سعر البيع النهائي</th>
-                    <th>نسبة الربح</th>
-                    <th>هامش الربح</th>
-                    <th>تكلفة اليد العاملة للعلبة</th>
-                    <th>قيمة إهلاك المعدات</th>
-                    <th>الإجراءات</th>
-                </tr>
-            </thead>
-            <tbody id="products-list">
-                <tr>
-                    <td colspan="10" class="text-center">لا توجد منتجات مسجلة بعد</td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-</div>
-// الكود الأساسي للتنقل بين الصفحات وإدارة الحالة العامة
-document.addEventListener('DOMContentLoaded', function() {
-    // إدارة تحميل الصفحات
-    function loadPage(page) {
-        fetch(page + '.html')
-            .then(response => response.text())
-            .then(data => {
-                document.getElementById('content-area').innerHTML = data;
-                
-                // تحميل الـscripts الإضافية إذا كانت موجودة
-                if (page === 'invoice') {
-                    loadScript('invoice.js');
-                } else if (page === 'product-cost') {
-                    loadScript('product-cost.js');
-                } else if (page === 'settings') {
-                    loadScript('settings.js');
-                }
-            })
-            .catch(error => console.error('Error loading page:', error));
-    }
-    
-    function loadScript(src) {
-        const script = document.createElement('script');
-        script.src = src;
-        document.body.appendChild(script);
-    }
-    
-    // التنقل بين الصفحات
-    document.querySelectorAll('.sidebar .nav-link').forEach(link => {
-        link.addEventListener('click', function(e) {
-            e.preventDefault();
-            const page = this.getAttribute('href').replace('.html', '');
-            loadPage(page);
-            
-            // تحديث القائمة الجانبية
-            document.querySelectorAll('.sidebar .nav-link').forEach(navLink => {
-                navLink.classList.remove('active');
-            });
-            this.classList.add('active');
-        });
-    });
-    
-    // تحميل الصفحة الأولى افتراضيًا
-    loadPage('dashboard');
-});
-
-// دالة لتحميل المحتوى ديناميكيًا
-function loadPage(page) {
-    fetch(page + '.html')
-        .then(response => response.text())
-        .then(data => {
-            document.getElementById('content-area').innerHTML = data;
-            // تحميل الـscripts الإضافية إذا كانت موجودة
-            if (page === 'invoice') {
-                loadScript('invoice.js');
-            } else if (page === 'product-cost') {
-                loadScript('product-cost.js');
-            } else if (page === 'settings') {
-                loadScript('settings.js');
-            }
-        })
-        .catch(error => console.error('Error loading page:', error));
+.settings-section h4 {
+    color: #2c3e50;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
 }
 
-function loadScript(src) {
-    const script = document.createElement('script');
-    script.src = src;
-    document.body.appendChild(script);
+.social-icon {
+    font-size: 24px;
+    margin-left: 10px;
 }
 
-// التنقل بين الصفحات
-document.querySelectorAll('[data-page]').forEach(link => {
-    link.addEventListener('click', function(e) {
-        e.preventDefault();
-        const page = this.getAttribute('data-page');
-        loadPage(page);
-        
-        // تحديث القائمة الجانبية
-        document.querySelectorAll('.nav-link').forEach(navLink => {
-            navLink.classList.remove('active');
-        });
-        this.classList.add('active');
-        
-        // تحديث عنوان URL دون إعادة تحميل الصفحة
-        history.pushState(null, null, '#' + page);
-    });
-});
-
-// تحميل الصفحة الأولى افتراضيًا
-window.addEventListener('load', function() {
-    const hash = window.location.hash.substring(1);
-    if (hash) {
-        loadPage(hash);
-        document.querySelector(`[data-page="${hash}"]`).classList.add('active');
-    } else {
-        loadPage('dashboard');
-        document.querySelector('[data-page="dashboard"]').classList.add('active');
-    }
-});
-
-// في دالة loadPage
-function loadPage(page) {
-    fetch(page + '.html')
-        .then(response => response.text())
-        .then(data => {
-            document.getElementById('content-area').innerHTML = data;
-            
-            // تحميل الـscripts الإضافية إذا كانت موجودة
-            if (page === 'invoice') {
-                loadScript('invoice.js');
-            } else if (page === 'product-cost') {
-                loadScript('product-cost.js');
-            }
-        })
-        .catch(error => console.error('Error loading page:', error));
+.logo-preview {
+    max-width: 150px;
+    max-height: 150px;
+    margin-top: 10px;
+    border: 1px dashed #ccc;
+    padding: 5px;
+    display: none;
 }
-<div id="settings" class="page">
-    <h2 class="mb-4">الإعدادات</h2>
-    
-    <!-- محتوى صفحة الإعدادات -->
-</div>
 
-<script src="settings.js"></script>
-// الكود الخاص بصفحة الإعدادات
-document.addEventListener('DOMContentLoaded', function() {
-    // تهيئة صفحة الإعدادات
-    loadSettings();
-    loadDeliverySettings();
-    loadTaxSettings();
-    loadPaymentMethods();
-    loadInvoiceStatuses();
-    
-    // باقي الكود الخاص بالإعدادات...
-});
+.color-option {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: inline-block;
+    margin: 5px;
+    cursor: pointer;
+    border: 2px solid transparent;
+}
+
+.color-option.selected {
+    border-color: #000;
+}
+
+.delivery-areas-table th, 
+.delivery-areas-table td,
+.delivery-cities-table th,
+.delivery-cities-table td {
+    vertical-align: middle;
+}
+.sidebar {
+    background-color: var(--primary-color);
+    min-height: 100vh;
+    color: white;
+}
+
+.sidebar .nav-link {
+    color: rgba(255, 255, 255, 0.8);
+    margin-bottom: 5px;
+}
+
+.sidebar .nav-link:hover, .sidebar .nav-link.active {
+    color: white;
+    background-color: var(--secondary-color);
+}
+
+.sidebar .nav-link i {
+    margin-left: 8px;
+}
 :root {
     --primary-color: #2c3e50;
     --secondary-color: #34495e;
@@ -636,21 +95,575 @@ body {
     background-color: #f5f5f5;
 }
 
-.sidebar {
-    background-color: var(--primary-color);
-    min-height: 100vh;
-    color: white;
+.main-content {
+    padding: 20px;
 }
 
-/* باقي الأنماط من الكود الأصلي */
+.card {
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
 
-/* أنماط الفواتير */
+.page {
+    display: none;
+}
+
+.page.active {
+    display: block;
+}
+
+.is-invalid {
+    border-color: #dc3545;
+}
+
+.invalid-feedback {
+    color: #dc3545;
+    font-size: 0.875em;
+}
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>برنامج الحسابات</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    
+    <!-- Main CSS Files -->
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/components/sidebar.css">
+    <link rel="stylesheet" href="css/components/dashboard.css">
+    <link rel="stylesheet" href="css/components/invoice.css">
+    <link rel="stylesheet" href="css/components/products.css">
+    <link rel="stylesheet" href="css/components/product-cost.css">
+    <link rel="stylesheet" href="css/components/settings.css">
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-2 sidebar p-0">
+                <div class="p-3">
+                    <h4 class="text-center" id="project-name-sidebar">برنامج الحسابات</h4>
+                    <hr>
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" data-page="dashboard">
+                                <i class="bi bi-speedometer2"></i> <span class="nav-text">لوحة التحكم</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" data-page="invoice">
+                                <i class="bi bi-receipt"></i> <span class="nav-text">الفواتير</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" data-page="products">
+                                <i class="bi bi-box-seam"></i> <span class="nav-text">المنتجات</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" data-page="product-cost">
+                                <i class="bi bi-calculator"></i> <span class="nav-text">تكلفة المنتج</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" data-page="settings">
+                                <i class="bi bi-gear"></i> <span class="nav-text">الإعدادات</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="col-md-10 main-content">
+                <!-- Dashboard Page -->
+                <div id="dashboard" class="page">
+                    <!-- محتوى لوحة التحكم -->
+                </div>
+
+                <!-- Invoice Page -->
+                <div id="invoice" class="page">
+                    <!-- محتوى الفواتير -->
+                </div>
+
+                <!-- Products Page -->
+                <div id="products" class="page">
+                    <!-- محتوى المنتجات -->
+                </div>
+
+                <!-- Product Cost Calculator Page -->
+                <div id="product-cost" class="page">
+                    <!-- محتوى حساب تكلفة المنتج -->
+                </div>
+
+                <!-- Settings Page -->
+                <div id="settings" class="page">
+                    <!-- محتوى الإعدادات -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modals -->
+    <!-- سيتم تحميلها عبر JavaScript -->
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Main JS Files -->
+    <script src="js/data/storage.js"></script>
+    <script src="js/modules/navigation.js"></script>
+    <script src="js/modules/product-cost.js"></script>
+    <script src="js/modules/invoice.js"></script>
+    <script src="js/modules/products.js"></script>
+    <script src="js/modules/settings.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
+// إدارة التخزين المحلي
+const StorageManager = {
+    // المنتجات
+    getProducts: () => {
+        return JSON.parse(localStorage.getItem('products')) || [];
+    },
+    saveProducts: (products) => {
+        localStorage.setItem('products', JSON.stringify(products));
+    },
+    
+    // الفواتير
+    getInvoices: () => {
+        return JSON.parse(localStorage.getItem('invoices')) || [];
+    },
+    saveInvoices: (invoices) => {
+        localStorage.setItem('invoices', JSON.stringify(invoices));
+    },
+    
+    // إعدادات المشروع
+    getProjectSettings: () => {
+        return JSON.parse(localStorage.getItem('projectSettings')) || {};
+    },
+    saveProjectSettings: (settings) => {
+        localStorage.setItem('projectSettings', JSON.stringify(settings));
+    },
+    
+    // إعدادات النظام
+    getSystemSettings: () => {
+        return JSON.parse(localStorage.getItem('systemSettings')) || {};
+    },
+    saveSystemSettings: (settings) => {
+        localStorage.setItem('systemSettings', JSON.stringify(settings));
+    },
+    
+    // إعدادات الضرائب
+    getTaxSettings: () => {
+        return JSON.parse(localStorage.getItem('taxSettings')) || {};
+    },
+    saveTaxSettings: (settings) => {
+        localStorage.setItem('taxSettings', JSON.stringify(settings));
+    },
+    
+    // طرق الدفع
+    getPaymentMethods: () => {
+        return JSON.parse(localStorage.getItem('paymentMethods')) || [];
+    },
+    savePaymentMethods: (methods) => {
+        localStorage.setItem('paymentMethods', JSON.stringify(methods));
+    },
+    
+    // حالات الفواتير
+    getInvoiceStatuses: () => {
+        return JSON.parse(localStorage.getItem('invoiceStatuses')) || [];
+    },
+    saveInvoiceStatuses: (statuses) => {
+        localStorage.setItem('invoiceStatuses', JSON.stringify(statuses));
+    },
+    
+    // إعدادات التوصيل
+    getDeliveryAreas: () => {
+        return JSON.parse(localStorage.getItem('deliveryAreas')) || [];
+    },
+    saveDeliveryAreas: (areas) => {
+        localStorage.setItem('deliveryAreas', JSON.stringify(areas));
+    },
+    
+    getDeliveryCities: () => {
+        return JSON.parse(localStorage.getItem('deliveryCities')) || [];
+    },
+    saveDeliveryCities: (cities) => {
+        localStorage.setItem('deliveryCities', JSON.stringify(cities));
+    }
+};
+// التهيئة الرئيسية للتطبيق
+document.addEventListener('DOMContentLoaded', function() {
+    // تهيئة إدارة التنقل
+    NavigationManager.init();
+    
+    // تهيئة إدارة تكلفة المنتج
+    ProductCostManager.init();
+    
+    // تهيئة إدارة الفواتير
+    InvoiceManager.init();
+    
+    // تهيئة إدارة المنتجات
+    ProductsManager.init();
+    
+    // تهيئة إدارة الإعدادات
+    SettingsManager.init();
+    
+    // تهيئة القيم الافتراضية
+    initDefaultValues();
+});
+
+// تهيئة القيم الافتراضية
+function initDefaultValues() {
+    // تعيين تاريخ اليوم في حقل تاريخ الفاتورة
+    const invoiceDateInput = document.getElementById('invoice-date');
+    if (invoiceDateInput) {
+        invoiceDateInput.value = new Date().toISOString().split('T')[0];
+    }
+}
+// إدارة نظام الفواتير
+const InvoiceManager = {
+    init: function() {
+        this.setupEventListeners();
+        this.loadInvoices();
+    },
+    
+    setupEventListeners: function() {
+        // إضافة عنصر جديد للفاتورة
+        document.getElementById('add-invoice-item').addEventListener('click', () => this.addInvoiceItem());
+        
+        // معاينة الفاتورة
+        document.getElementById('preview-invoice').addEventListener('click', () => this.previewInvoice());
+        
+        // حفظ الفاتورة
+        document.getElementById('save-invoice').addEventListener('click', () => this.saveInvoice());
+        
+        // أحداث أخرى للفواتير...
+    },
+    
+    loadInvoiceData: function() {
+        this.loadProductsForInvoice();
+        this.loadCitiesForDelivery();
+        this.generateInvoiceNumber();
+        this.updatePaymentMethodsInInvoice();
+    },
+    
+    // باقي دوال إدارة الفواتير...
+    // سيتم نقل الدوال الخاصة بالفواتير هنا
+};
+// إدارة التنقل بين الصفحات
+const NavigationManager = {
+    init: function() {
+        this.setupPageNavigation();
+        this.setupTabNavigation();
+    },
+    
+    setupPageNavigation: function() {
+        document.querySelectorAll('[data-page]').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const pageId = link.getAttribute('data-page');
+                this.showPage(pageId);
+                
+                // تحديث القائمة الجانبية
+                document.querySelectorAll('.sidebar .nav-link').forEach(navLink => {
+                    navLink.classList.remove('active');
+                });
+                link.classList.add('active');
+                
+                // تحميل بيانات الصفحة إذا لزم الأمر
+                if (pageId === 'settings') {
+                    SettingsManager.loadSettings();
+                } else if (pageId === 'invoice') {
+                    InvoiceManager.loadInvoiceData();
+                }
+            });
+        });
+    },
+    
+    setupTabNavigation: function() {
+        document.querySelectorAll('[data-tab]').forEach(tab => {
+            tab.addEventListener('click', (e) => {
+                e.preventDefault();
+                const tabId = tab.getAttribute('data-tab');
+                this.showTab(tabId);
+                
+                // تحديث التبويبات
+                document.querySelectorAll('.nav-tabs .nav-link').forEach(navLink => {
+                    navLink.classList.remove('active');
+                });
+                tab.classList.add('active');
+            });
+        });
+    },
+    
+    showPage: function(pageId) {
+        // إخفاء جميع الصفحات
+        document.querySelectorAll('.page').forEach(page => {
+            page.classList.remove('active');
+        });
+        
+        // إظهار الصفحة المحددة
+        document.getElementById(pageId).classList.add('active');
+    },
+    
+    showTab: function(tabId) {
+        // إخفاء جميع التبويبات
+        document.querySelectorAll('.invoice-tab').forEach(tab => {
+            tab.classList.remove('active');
+        });
+        
+        // إظهار التبويب المحدد
+        document.getElementById(tabId).classList.add('active');
+    }
+};
+// إدارة حساب تكلفة المنتج
+const ProductCostManager = {
+    lastProductCode: 0,
+    
+    init: function() {
+        this.setupEventListeners();
+        this.generateProductCode();
+        this.loadProducts();
+    },
+    
+    setupEventListeners: function() {
+        // إضافة صفوف للجداول
+        document.getElementById('add-material').addEventListener('click', () => this.addTableRow('materials-table', 'material'));
+        document.getElementById('add-packaging').addEventListener('click', () => this.addTableRow('packaging-table', 'packaging'));
+        document.getElementById('add-worker').addEventListener('click', () => this.addWorkerRow());
+        
+        // مستمعي الأحداث للحقول العامة
+        document.getElementById('depreciation-rate').addEventListener('input', () => this.updateCosts());
+        document.getElementById('profit-rate').addEventListener('input', () => this.updateCosts());
+        document.getElementById('sale-quantity').addEventListener('input', () => this.updateCosts());
+        document.getElementById('final-price').addEventListener('input', () => this.updateCosts());
+        
+        // حفظ المنتج
+        document.getElementById('save-product').addEventListener('click', () => this.saveProduct());
+    },
+    
+    // باقي دوال إدارة تكلفة المنتج...
+    // سيتم نقل الدوال الخاصة بحساب التكاليف هنا
+};
+// إدارة المنتجات
+const ProductsManager = {
+    init: function() {
+        this.loadProducts();
+        this.setupEventListeners();
+    },
+    
+    setupEventListeners: function() {
+        // سيتم إضافة مستمعي الأحداث هنا
+    },
+    
+    // دوال إدارة المنتجات...
+    // سيتم نقل الدوال الخاصة بالمنتجات هنا
+};
+// إدارة الإعدادات
+const SettingsManager = {
+    init: function() {
+        this.setupEventListeners();
+        this.loadSettings();
+    },
+    
+    setupEventListeners: function() {
+        // معاينة شعار المشروع
+        document.getElementById('project-logo').addEventListener('change', (e) => this.previewLogo(e));
+        
+        // اختيار لون النظام
+        document.querySelectorAll('.color-option').forEach(option => {
+            option.addEventListener('click', () => this.selectColor(option));
+        });
+        
+        // حفظ إعدادات المشروع
+        document.getElementById('project-settings-form').addEventListener('submit', (e) => this.saveProjectSettings(e));
+        
+        // حفظ إعدادات النظام
+        document.getElementById('system-settings-form').addEventListener('submit', (e) => this.saveSystemSettings(e));
+        
+        // أحداث أخرى للإعدادات...
+    },
+    
+    loadSettings: function() {
+        this.loadProjectSettings();
+        this.loadSystemSettings();
+        this.loadTaxSettings();
+        this.loadPaymentMethods();
+        this.loadInvoiceStatuses();
+        this.loadDeliverySettings();
+    },
+    
+    // باقي دوال إدارة الإعدادات...
+    // سيتم نقل الدوال الخاصة بالإعدادات هنا
+};
+/* أنماط خاصة بلوحة التحكم */
+.summary-container {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    gap: 15px;
+    padding: 10px 0;
+}
+
+.summary-box {
+    min-width: 200px;
+    background-color: white;
+    border-radius: 8px;
+    padding: 15px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    border-left: 4px solid #3498db;
+}
+
+.summary-box:nth-child(1) { border-left-color: #e74c3c; }
+.summary-box:nth-child(2) { border-left-color: #2ecc71; }
+.summary-box:nth-child(3) { border-left-color: #f39c12; }
+.summary-box:nth-child(4) { border-left-color: #9b59b6; }
+.summary-box:nth-child(5) { border-left-color: #1abc9c; }
+
+.summary-title {
+    font-size: 14px;
+    color: #7f8c8d;
+    margin-bottom: 8px;
+}
+
+.summary-value {
+    font-size: 18px;
+    font-weight: bold;
+    color: #2c3e50;
+}
+
+.summary-value.final-price {
+    color: #27ae60;
+}
+/* أنماط خاصة بصفحة الفواتير */
+.invoice-container {
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    margin: 20px auto;
+    max-width: 800px;
+}
+
+.invoice-header {
+    text-align: center;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #eee;
+    padding-bottom: 20px;
+}
+
+.invoice-title {
+    font-size: 24px;
+    font-weight: bold;
+    color: #2c3e50;
+    margin-bottom: 10px;
+}
+
+.invoice-info {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    margin-bottom: 15px;
+}
+
+.invoice-info > div {
+    margin: 5px 0;
+}
+
+.invoice-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+.invoice-table th {
+    background-color: #f8f9fa;
+    padding: 10px;
+    text-align: right;
+    border: 1px solid #ddd;
+}
+
+.invoice-table td {
+    padding: 10px;
+    border: 1px solid #ddd;
+}
+
+.invoice-totals {
+    margin-top: 20px;
+    padding: 15px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+}
+
+.total-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.total-row.final {
+    color: #2ecc71;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.delivery-address {
+    margin-top: 20px;
+    padding: 15px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+}
+
+.address-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 10px;
+    margin-top: 10px;
+}
+
+@media (max-width: 768px) {
+    .address-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+.address-field {
+    padding: 8px;
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.footer-note {
+    margin-top: 20px;
+    text-align: center;
+    font-size: 12px;
+    color: #777;
+}
+
+.nav-tabs .nav-link.active {
+    font-weight: bold;
+    border-bottom: 2px solid #2c3e50;
+}
+
 .invoice-tab {
     display: none;
 }
 
 .invoice-tab.active {
     display: block;
+}
+
+.tax-badge {
+    font-size: 12px;
+    margin-right: 5px;
 }
 
 .payment-status {
@@ -671,27 +684,47 @@ body {
     color: #721c24;
 }
 
-/* أنماط حساب تكلفة المنتج */
-.product-info-section {
+.status-select {
+    padding: 3px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+}
+
+.tax-related {
+    display: none;
+}
+/* أنماط خاصة بصفحة تكلفة المنتج */
+.cost-table input {
+    width: 100%;
+    border: 1px solid #ddd;
+    padding: 5px;
+    border-radius: 4px;
+}
+
+.cost-table th {
     background-color: #f8f9fa;
-    padding: 15px;
-    border-radius: 8px;
-    margin-bottom: 20px;
+    text-align: center;
 }
 
-.summary-container {
+.cost-summary {
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    padding: 15px;
+    margin-top: 20px;
+}
+
+.add-btn-container {
     display: flex;
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    gap: 15px;
-    padding: 10px 0;
+    justify-content: flex-end;
+    margin-top: 10px;
 }
 
-.summary-box {
-    min-width: 200px;
-    background-color: white;
-    border-radius: 8px;
-    padding: 15px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    border-left: 4px solid #3498db;
+.auto-generate {
+    background-color: #f0f0f0;
+    cursor: not-allowed;
+}
+
+.save-btn-container {
+    margin-top: 20px;
+    text-align: left;
 }
