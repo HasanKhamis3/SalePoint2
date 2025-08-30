@@ -572,85 +572,6 @@ body {
         </table>
     </div>
 </div>
-// تحديث وظيفة loadPage
-function loadPage(page) {
-    fetch(page + '.html')
-        .then(response => response.text())
-        .then(data => {
-            document.getElementById('content-area').innerHTML = data;
-            
-            // تحميل الـscripts الإضافية إذا كانت موجودة
-            if (page === 'invoice') {
-                loadScript('invoice.js');
-            } else if (page === 'product-cost') {
-                loadScript('product-cost.js');
-                initProductCostPage();
-            } else if (page === 'settings') {
-                loadScript('settings.js');
-            } else if (page === 'products') {
-                initProductsPage();
-            }
-            
-            // تحديث واجهة المستخدم بعد تحميل الصفحة
-            if (page === 'dashboard') {
-                updateUI();
-            }
-        })
-        .catch(error => console.error('Error loading page:', error));
-}
-
-// تهيئة صفحة المنتجات
-function initProductsPage() {
-    // تحميل المنتجات وعرضها
-    loadProducts();
-    
-    // إضافة مستمع حدث للزر الانتقال إلى تكلفة المنتج
-    const goToProductCostBtn = document.getElementById('go-to-product-cost');
-    if (goToProductCostBtn) {
-        goToProductCostBtn.addEventListener('click', function() {
-            loadPage('product-cost');
-            document.querySelector('[data-page="product-cost"]').classList.add('active');
-            document.querySelector('[data-page="products"]').classList.remove('active');
-        });
-    }
-}
-
-// تهيئة صفحة تكلفة المنتج
-function initProductCostPage() {
-    // تهيئة الحقول والأحداث
-    document.getElementById('product-code').value = generateProductCode();
-    
-    // إضافة مستمعي الأحداث للأزرار
-    document.getElementById('add-material').addEventListener('click', function() {
-        addTableRow('materials-table', 'material');
-    });
-    
-    document.getElementById('add-packaging').addEventListener('click', function() {
-        addTableRow('packaging-table', 'packaging');
-    });
-    
-    document.getElementById('add-worker').addEventListener('click', function() {
-        addWorkerRow();
-    });
-    
-    document.getElementById('save-product').addEventListener('click', saveProduct);
-    
-    // إضافة مستمعي الأحداث لحقول الإدخال
-    const inputFields = ['sale-quantity', 'profit-rate', 'depreciation-rate', 'final-price'];
-    inputFields.forEach(id => {
-        const field = document.getElementById(id);
-        if (field) {
-            field.addEventListener('input', updateCosts);
-        }
-    });
-}
-
-// توليد كود المنتج
-let lastProductCode = 0;
-function generateProductCode() {
-    lastProductCode++;
-    return "PRD-" + lastProductCode.toString().padStart(4, '0');
-}
 // حالة التطبيق للمنتجات
 let products = [];
 let currentCurrency = 'د.ب';
@@ -1168,4 +1089,120 @@ function deleteProduct(productCode) {
         localStorage.setItem('products', JSON.stringify(products));
         refreshProductsTable();
     }
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- روابط CSS والأنماط -->
+    <style>
+        /* كل أنماط CSS هنا */
+    </style>
+</head>
+<body>
+    <!-- الهيكل الأساسي والقوائم -->
+    
+    <!-- صفحة تكلفة المنتج -->
+    <div id="product-cost" class="page">
+        <!-- محتوى تكلفة المنتج -->
+    </div>
+    
+    <!-- صفحة المنتجات -->
+    <div id="products" class="page">
+        <!-- محتوى المنتجات -->
+    </div>
+    
+    <!-- صفحة الفواتير -->
+    <div id="invoice" class="page">
+        <!-- محتوى الفواتير -->
+    </div>
+    
+    <!-- الأكواد الجافاسكريبت -->
+    <script>
+        // كل أكواد الجافاسكريبت هنا
+        // تكلفة المنتج
+        // إدارة المنتجات
+        // نظام الفواتير
+        // الإعدادات
+    </script>
+</body>
+</html>
+
+// تحديث وظيفة loadPage
+function loadPage(page) {
+    fetch(page + '.html')
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById('content-area').innerHTML = data;
+            
+            // تحميل الـscripts الإضافية إذا كانت موجودة
+            if (page === 'invoice') {
+                loadScript('invoice.js');
+            } else if (page === 'product-cost') {
+                loadScript('product-cost.js');
+                initProductCostPage();
+            } else if (page === 'settings') {
+                loadScript('settings.js');
+            } else if (page === 'products') {
+                initProductsPage();
+            }
+            
+            // تحديث واجهة المستخدم بعد تحميل الصفحة
+            if (page === 'dashboard') {
+                updateUI();
+            }
+        })
+        .catch(error => console.error('Error loading page:', error));
+}
+
+// تهيئة صفحة المنتجات
+function initProductsPage() {
+    // تحميل المنتجات وعرضها
+    loadProducts();
+    
+    // إضافة مستمع حدث للزر الانتقال إلى تكلفة المنتج
+    const goToProductCostBtn = document.getElementById('go-to-product-cost');
+    if (goToProductCostBtn) {
+        goToProductCostBtn.addEventListener('click', function() {
+            loadPage('product-cost');
+            document.querySelector('[data-page="product-cost"]').classList.add('active');
+            document.querySelector('[data-page="products"]').classList.remove('active');
+        });
+    }
+}
+
+// تهيئة صفحة تكلفة المنتج
+function initProductCostPage() {
+    // تهيئة الحقول والأحداث
+    document.getElementById('product-code').value = generateProductCode();
+    
+    // إضافة مستمعي الأحداث للأزرار
+    document.getElementById('add-material').addEventListener('click', function() {
+        addTableRow('materials-table', 'material');
+    });
+    
+    document.getElementById('add-packaging').addEventListener('click', function() {
+        addTableRow('packaging-table', 'packaging');
+    });
+    
+    document.getElementById('add-worker').addEventListener('click', function() {
+        addWorkerRow();
+    });
+    
+    document.getElementById('save-product').addEventListener('click', saveProduct);
+    
+    // إضافة مستمعي الأحداث لحقول الإدخال
+    const inputFields = ['sale-quantity', 'profit-rate', 'depreciation-rate', 'final-price'];
+    inputFields.forEach(id => {
+        const field = document.getElementById(id);
+        if (field) {
+            field.addEventListener('input', updateCosts);
+        }
+    });
+}
+
+// توليد كود المنتج
+let lastProductCode = 0;
+function generateProductCode() {
+    lastProductCode++;
+    return "PRD-" + lastProductCode.toString().padStart(4, '0');
 }
