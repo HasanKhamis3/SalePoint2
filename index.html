@@ -1,3 +1,35 @@
+<div id="products" class="page">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>قائمة المنتجات</h2>
+        <button class="btn btn-primary" data-page="product-cost">
+            <span>➕</span> إضافة منتج جديد
+        </button>
+    </div>
+    
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>رمز المنتج</th>
+                    <th>اسم المنتج</th>
+                    <th>عدد القطع في العلبة</th>
+                    <th>إجمالي تكلفة العلبة</th>
+                    <th>سعر البيع النهائي</th>
+                    <th>نسبة الربح</th>
+                    <th>هامش الربح</th>
+                    <th>تكلفة اليد العاملة للعلبة</th>
+                    <th>قيمة إهلاك المعدات</th>
+                    <th>الإجراءات</th>
+                </tr>
+            </thead>
+            <tbody id="products-list">
+                <tr>
+                    <td colspan="10" class="text-center">لا توجد منتجات مسجلة بعد</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
 // الكود الخاص بصفحة الإعدادات
 document.addEventListener('DOMContentLoaded', function() {
     // تهيئة صفحة الإعدادات
@@ -45,516 +77,83 @@ function generateInvoiceNumber() {
 <div id="product-cost" class="page">
     <h2 class="mb-4">حساب تكلفة المنتج</h2>
     
-    <!-- محتوى صفحة حساب تكلفة المنتج -->
+    <div class="card mb-4">
+        <div class="card-header bg-primary text-white">
+            <h5>المعلومات الأساسية</h5>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="product-name">اسم المنتج</label>
+                        <input type="text" class="form-control" id="product-name" required>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="product-code">رمز المنتج</label>
+                        <input type="text" class="form-control" id="product-code" readonly>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="sale-quantity">عدد القطع في العلبة</label>
+                        <input type="number" class="form-control" id="sale-quantity" min="1" required>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="profit-rate">نسبة الربح (%)</label>
+                        <input type="number" class="form-control" id="profit-rate" step="0.1" min="0" required>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="depreciation-rate">نسبة إهلاك المعدات (%)</label>
+                        <input type="number" class="form-control" id="depreciation-rate" step="0.1" min="0" required>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- باقي محتوى صفحة تكلفة المنتج -->
+    <div class="card mb-4">
+        <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
+            <h5>المواد الخام</h5>
+            <button type="button" class="btn btn-light btn-sm" id="add-material">+ إضافة مادة</button>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-striped" id="materials-table">
+                    <thead>
+                        <tr>
+                            <th>المادة</th>
+                            <th>الكمية</th>
+                            <th>سعر الشراء</th>
+                            <th>الكمية المستخدمة</th>
+                            <th>التكلفة</th>
+                            <th>الإجراءات</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- سيتم إضافة الصفوف ديناميكيًا -->
+                    </tbody>
+                </table>
+            </div>
+            <div class="text-right mt-3">
+                <strong>إجمالي تكلفة المواد: <span id="total-materials-cost">0.000</span></strong>
+            </div>
+        </div>
+    </div>
+
+    <!-- أقسام أخرى للتغليف والعمالة والإهلاك -->
+
+    <div class="text-center mt-4">
+        <button type="button" class="btn btn-primary btn-lg" id="calculate-cost">حساب التكلفة</button>
+        <button type="button" class="btn btn-success btn-lg ml-2" id="save-product">حفظ المنتج</button>
+    </div>
 </div>
-// ============ تكلفة المنتج ============
-// توليد كود المنتج
-function generateProductCode() {
-    lastProductCode++;
-    return "PRD-" + lastProductCode.toString().padStart(4, '0');
-}
-
-// إضافة صف للمواد
-document.getElementById('add-material').addEventListener('click', function() {
-    addTableRow('materials-table', 'material');
-});
-
-// إضافة صف للتغليف
-document.getElementById('add-packaging').addEventListener('click', function() {
-    addTableRow('packaging-table', 'packaging');
-});
-
-// إضافة صف للعمال
-document.getElementById('add-worker').addEventListener('click', function() {
-    addWorkerRow();
-});
-
-// دالة عامة لإضافة صف
-function addTableRow(tableId, type) {
-    const tbody = document.querySelector(`#${tableId} tbody`);
-    const newRow = document.createElement('tr');
-    
-    if (type === 'material' || type === 'packaging') {
-        newRow.innerHTML = `
-            <td><input type="text" class="form-control" required></td>
-            <td><input type="number" class="form-control" required></td>
-            <td><input type="number" class="form-control" step="0.001" required></td>
-            <td><input type="number" class="form-control" required></td>
-            <td class="${type}-cost">0.000</td>
-            <td><button class="btn btn-sm btn-danger remove-row"><i class="bi bi-trash"></i></button></td>
-        `;
-    }
-    
-    tbody.appendChild(newRow);
-    setupRowEventListeners(newRow, type);
-}
-
-// إضافة صف خاص للعمال
-function addWorkerRow() {
-    const tbody = document.querySelector('#workers-table tbody');
-    const newRow = document.createElement('tr');
-    newRow.innerHTML = `
-        <td><input type="text" class="form-control" required></td>
-        <td><input type="number" class="form-control" step="0.001" required></td>
-        <td><input type="number" class="form-control" required></td>
-        <td><input type="number" class="form-control" required></td>
-        <td class="pieces-per-hour">0</td>
-        <td class="piece-cost">0.000</td>
-        <td><button class="btn btn-sm btn-danger remove-row"><i class="bi bi-trash"></i></button></td>
-    `;
-    tbody.appendChild(newRow);
-    setupRowEventListeners(newRow, 'worker');
-}
-
-// إعداد مستمعي الأحداث للصفوف
-function setupRowEventListeners(row, type) {
-    // حذف الصف
-    row.querySelector('.remove-row').addEventListener('click', function() {
-        row.remove();
-        updateCosts();
-    });
-
-    // مستمعي الأحداث للحقول
-    const inputs = row.querySelectorAll('input');
-    inputs.forEach(input => {
-        input.addEventListener('input', function() {
-            validateInput(this);
-            updateCosts();
-        });
-    });
-}
-
-// تحديث جميع الحسابات
-function updateCosts() {
-    // حساب تكاليف المواد
-    let materialsCost = 0;
-    document.querySelectorAll('#materials-table tbody tr').forEach(row => {
-        const inputs = row.querySelectorAll('input');
-        const count = parseFloat(inputs[1].value) || 1;
-        const price = parseFloat(inputs[2].value) || 0;
-        const used = parseFloat(inputs[3].value) || 0;
-        const cost = (price / count) * used;
-        row.querySelector('.material-cost').textContent = cost.toFixed(3);
-        materialsCost += cost;
-    });
-    document.getElementById('total-materials-cost').textContent = materialsCost.toFixed(3) + ' ' + currencySymbols[currentCurrency];
-
-    // حساب تكاليف التغليف
-    let packagingCost = 0;
-    document.querySelectorAll('#packaging-table tbody tr').forEach(row => {
-        const inputs = row.querySelectorAll('input');
-        const count = parseFloat(inputs[1].value) || 1;
-        const price = parseFloat(inputs[2].value) || 0;
-        const used = parseFloat(inputs[3].value) || 0;
-        const cost = (price / count) * used;
-        row.querySelector('.packaging-cost').textContent = cost.toFixed(3);
-        packagingCost += cost;
-    });
-    document.getElementById('total-packaging-cost').textContent = packagingCost.toFixed(3) + ' ' + currencySymbols[currentCurrency];
-
-    // حساب تكاليف العمالة
-    let totalLaborCost = 0;
-    let workerCount = 0;
-    let totalProducedPieces = 0;
-    
-    document.querySelectorAll('#workers-table tbody tr').forEach(row => {
-        const inputs = row.querySelectorAll('input');
-        const salary = parseFloat(inputs[1].value) || 0;
-        const hours = parseFloat(inputs[2].value) || 1;
-        const pieces = parseFloat(inputs[3].value) || 1;
-        
-        const hourlySalary = (salary / 30) / 8; // الراتب بالساعة
-        const piecesPerHour = pieces / hours;
-        const pieceCost = piecesPerHour > 0 ? hourlySalary / piecesPerHour : 0;
-        
-        row.querySelector('.pieces-per-hour').textContent = piecesPerHour.toFixed(0);
-        row.querySelector('.piece-cost').textContent = pieceCost.toFixed(3);
-        totalLaborCost += pieceCost;
-        workerCount++;
-        totalProducedPieces += pieces;
-    });
-    
-    const avgLaborCost = workerCount > 0 ? totalLaborCost / workerCount : 0;
-    document.getElementById('labor-per-piece').textContent = avgLaborCost.toFixed(3) + ' ' + currencySymbols[currentCurrency];
-
-    // حساب الإهلاك
-    const depreciationRate = parseFloat(document.getElementById('depreciation-rate').value) || 0;
-    const depreciationCost = materialsCost * (depreciationRate / 100);
-    document.getElementById('equipment-depreciation').value = depreciationCost.toFixed(3);
-
-    // حساب التكاليف لكل علبة
-    const saleQuantity = parseFloat(document.getElementById('sale-quantity').value) || 1;
-    
-    // حساب تكلفة المواد لكل علبة
-    const materialsPerPiece = totalProducedPieces > 0 ? materialsCost / totalProducedPieces : 0;
-    const materialsPerBox = materialsPerPiece * saleQuantity;
-    
-    // تكلفة التغليف لكل علبة (إجمالي التغليف)
-    const packagingPerBox = packagingCost;
-    
-    // تكلفة العمالة لكل علبة
-    const laborPerBox = avgLaborCost * saleQuantity;
-    
-    // تكلفة الإهلاك لكل علبة
-    const depreciationPerPiece = totalProducedPieces > 0 ? depreciationCost / totalProducedPieces : 0;
-    const depreciationPerBox = depreciationPerPiece * saleQuantity;
-
-    // تحديث واجهة المستخدم
-    document.getElementById('materials-per-box').textContent = materialsPerBox.toFixed(3) + ' ' + currencySymbols[currentCurrency];
-    document.getElementById('depreciation-per-box').textContent = depreciationPerBox.toFixed(3) + ' ' + currencySymbols[currentCurrency];
-    document.getElementById('labor-per-box').textContent = laborPerBox.toFixed(3) + ' ' + currencySymbols[currentCurrency];
-
-    // حساب التكلفة الإجمالية للعلبة
-    const totalCostPerBox = materialsPerBox + packagingPerBox + laborPerBox + depreciationPerBox;
-    document.getElementById('grand-total-cost').textContent = totalCostPerBox.toFixed(3) + ' ' + currencySymbols[currentCurrency];
-
-    // حساب الربح والسعر المقترح
-    const profitRate = parseFloat(document.getElementById('profit-rate').value) || 0;
-    const profitAmount = totalCostPerBox * (profitRate / 100);
-    const suggestedPrice = totalCostPerBox + profitAmount;
-    
-    document.getElementById('suggested-price').textContent = suggestedPrice.toFixed(3) + ' ' + currencySymbols[currentCurrency];
-    document.getElementById('profit-margin').textContent = profitAmount.toFixed(3) + ' ' + currencySymbols[currentCurrency] + ' (' + profitRate + '%)';
-
-    // تحديث مربعات الملخص
-    document.getElementById('summary-materials-cost').textContent = materialsPerBox.toFixed(3) + ' ' + currencySymbols[currentCurrency];
-    document.getElementById('summary-packaging-cost').textContent = packagingPerBox.toFixed(3) + ' ' + currencySymbols[currentCurrency];
-    document.getElementById('summary-depreciation-cost').textContent = depreciationPerBox.toFixed(3) + ' ' + currencySymbols[currentCurrency];
-    document.getElementById('summary-labor-cost').textContent = laborPerBox.toFixed(3) + ' ' + currencySymbols[currentCurrency];
-    
-    const finalPrice = parseFloat(document.getElementById('final-price').value) || suggestedPrice;
-    document.getElementById('summary-final-price').textContent = finalPrice.toFixed(3) + ' ' + currencySymbols[currentCurrency];
-}
-
-// حفظ المنتج
-document.getElementById('save-product').addEventListener('click', function() {
-    if (!validateForm()) {
-        alert('الرجاء إكمال جميع الحقول المطلوبة');
-        return;
-    }
-
-    const productData = {
-        name: document.getElementById('product-name').value,
-        code: document.getElementById('product-code').value,
-        piecesPerPackage: document.getElementById('sale-quantity').value,
-        packageCost: parseFloat(document.getElementById('grand-total-cost').textContent),
-        finalPrice: document.getElementById('final-price').value,
-        profitRate: document.getElementById('profit-rate').value,
-        depreciationRate: document.getElementById('depreciation-rate').value,
-        materialsCost: parseFloat(document.getElementById('total-materials-cost').textContent),
-        packagingCost: parseFloat(document.getElementById('total-packaging-cost').textContent),
-        laborCost: parseFloat(document.getElementById('labor-per-piece').textContent),
-        depreciationCost: parseFloat(document.getElementById('equipment-depreciation').value),
-        materialsTable: getTableData('materials-table'),
-        packagingTable: getTableData('packaging-table'),
-        workersTable: getTableData('workers-table')
-    };
-
-    // التحقق مما إذا كان المنتج موجودًا بالفعل للتحديث
-    const existingIndex = products.findIndex(p => p.code === productData.code);
-    if (existingIndex >= 0) {
-        products[existingIndex] = productData;
-    } else {
-        products.push(productData);
-    }
-    
-    // حفظ في localStorage
-    localStorage.setItem('products', JSON.stringify(products));
-    
-    // تحديث الجدول
-    refreshProductsTable();
-    
-    // إعادة تعيين النموذج
-    resetForm();
-    
-    // الانتقال إلى صفحة المنتجات
-    document.querySelector('[data-page="products"]').click();
-});
-
-// الحصول على بيانات الجدول
-function getTableData(tableId) {
-    const rows = [];
-    document.querySelectorAll(`#${tableId} tbody tr`).forEach(row => {
-        const inputs = row.querySelectorAll('input');
-        const rowData = {
-            product: inputs[0].value,
-            count: inputs[1].value,
-            price: inputs[2].value,
-            used: inputs[3].value,
-            cost: row.querySelector('td:nth-last-child(2)').textContent
-        };
-        rows.push(rowData);
-    });
-    return rows;
-}
-
-// تحميل المنتجات المحفوظة
-function loadProducts() {
-    const savedProducts = localStorage.getItem('products');
-    if (savedProducts) {
-        products = JSON.parse(savedProducts);
-        if (products.length > 0) {
-            // تحديث آخر كود منتج مستخدم
-            const codes = products.map(p => parseInt(p.code.replace('PRD-', '')));
-            lastProductCode = Math.max(...codes);
-        }
-        refreshProductsTable();
-    }
-}
-
-// تحديث جدول المنتجات
-function refreshProductsTable() {
-    const tbody = document.querySelector('#products-list');
-    tbody.innerHTML = '';
-
-    if (products.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="10" class="text-center">لا توجد منتجات مسجلة بعد</td></tr>';
-        return;
-    }
-
-    products.forEach(product => {
-        const piecesPerPackage = parseFloat(product.piecesPerPackage) || 1;
-        const laborCostPerPiece = parseFloat(product.laborCost) || 0;
-        const laborCostPerPackage = (laborCostPerPiece * piecesPerPackage).toFixed(3);
-        const packageCost = parseFloat(product.packageCost) || 0;
-        const finalPrice = parseFloat(product.finalPrice) || 0;
-        const profitMargin = (finalPrice - packageCost).toFixed(3);
-        const profitRate = packageCost > 0 ? ((finalPrice - packageCost) / packageCost * 100).toFixed(1) : '0.0';
-        
-        const row = document.createElement('tr');
-        row.innerHTML = `
-            <td>${product.code}</td>
-            <td>${product.name}</td>
-            <td>${piecesPerPackage}</td>
-            <td>${packageCost.toFixed(3)} ${currencySymbols[currentCurrency]}</td>
-            <td>${finalPrice.toFixed(3)} ${currencySymbols[currentCurrency]}</td>
-            <td>${profitRate}%</td>
-            <td>${profitMargin} ${currencySymbols[currentCurrency]}</td>
-            <td>${laborCostPerPackage} ${currencySymbols[currentCurrency]}</td>
-            <td>${product.depreciationCost || '0.000'} ${currencySymbols[currentCurrency]}</td>
-            <td class="action-buttons">
-                <button class="btn btn-sm btn-info view-product" data-code="${product.code}">
-                    <i class="bi bi-eye"></i>
-                </button>
-                <button class="btn btn-sm btn-warning edit-product" data-code="${product.code}">
-                    <i class="bi bi-pencil"></i>
-                </button>
-                <button class="btn btn-sm btn-danger delete-product" data-code="${product.code}">
-                    <i class="bi bi-trash"></i>
-                </button>
-            </td>
-        `;
-        tbody.appendChild(row);
-
-        // إضافة مستمعي الأحداث للأزرار
-        row.querySelector('.view-product').addEventListener('click', () => viewProduct(product.code));
-        row.querySelector('.edit-product').addEventListener('click', () => editProduct(product.code));
-        row.querySelector('.delete-product').addEventListener('click', () => deleteProduct(product.code));
-    });
-}
-
-// عرض تفاصيل المنتج
-function viewProduct(productCode) {
-    const product = products.find(p => p.code === productCode);
-    if (!product) return;
-
-    // تعبئة البيانات في النافذة المنبثقة
-    document.getElementById('detail-name').textContent = product.name;
-    document.getElementById('detail-code').textContent = product.code;
-    document.getElementById('detail-pieces').textContent = product.piecesPerPackage;
-    document.getElementById('detail-package-cost').textContent = product.packageCost.toFixed(3) + ' ' + currencySymbols[currentCurrency];
-    document.getElementById('detail-final-price').textContent = product.finalPrice + ' ' + currencySymbols[currentCurrency];
-    document.getElementById('detail-profit-rate').textContent = product.profitRate + '%';
-    document.getElementById('detail-profit-margin').textContent = (product.finalPrice - product.packageCost).toFixed(3) + ' ' + currencySymbols[currentCurrency];
-    
-    const laborCostPerPiece = parseFloat(product.laborCost) || 0;
-    const laborCostPerPackage = (laborCostPerPiece * parseFloat(product.piecesPerPackage || 1)).toFixed(3);
-    document.getElementById('detail-labor-cost').textContent = laborCostPerPackage + ' ' + currencySymbols[currentCurrency];
-    
-    document.getElementById('detail-depreciation').textContent = (product.depreciationCost || '0.000') + ' ' + currencySymbols[currentCurrency];
-    document.getElementById('detail-materials-cost').textContent = (product.materialsCost || '0.000') + ' ' + currencySymbols[currentCurrency];
-
-    // عرض النافذة المنبثقة
-    productDetailsModal.show();
-}
-
-// تحرير المنتج
-function editProduct(productCode) {
-    const product = products.find(p => p.code === productCode);
-    if (!product) return;
-
-    // الانتقال إلى صفحة تكلفة المنتج
-    document.querySelector('[data-page="product-cost"]').click();
-
-    // تعبئة البيانات الأساسية
-    document.getElementById('product-name').value = product.name;
-    document.getElementById('product-code').value = product.code;
-    document.getElementById('sale-quantity').value = product.piecesPerPackage;
-    document.getElementById('profit-rate').value = product.profitRate;
-    document.getElementById('depreciation-rate').value = product.depreciationRate;
-    document.getElementById('final-price').value = product.finalPrice;
-
-    // تعبئة جداول المواد والتغليف والعمالة
-    populateTable('materials-table', product.materialsTable || []);
-    populateTable('packaging-table', product.packagingTable || []);
-    populateTable('workers-table', product.workersTable || []);
-
-    // تحديث الحسابات
-    updateCosts();
-}
-
-// تعبئة الجدول بالبيانات
-function populateTable(tableId, data) {
-    const tbody = document.querySelector(`#${tableId} tbody`);
-    tbody.innerHTML = '';
-
-    if (data.length === 0) {
-        // إضافة صف فارغ إذا لم يكن هناك بيانات
-        if (tableId === 'materials-table' || tableId === 'packaging-table') {
-            addTableRow(tableId, tableId === 'materials-table' ? 'material' : 'packaging');
-        } else if (tableId === 'workers-table') {
-            addWorkerRow();
-        }
-        return;
-    }
-
-    data.forEach(rowData => {
-        if (tableId === 'materials-table' || tableId === 'packaging-table') {
-            const newRow = document.createElement('tr');
-            newRow.innerHTML = `
-                <td><input type="text" class="form-control" value="${rowData.product || ''}" required></td>
-                <td><input type="number" class="form-control" value="${rowData.count || ''}" required></td>
-                <td><input type="number" class="form-control" step="0.001" value="${rowData.price || ''}" required></td>
-                <td><input type="number" class="form-control" value="${rowData.used || ''}" required></td>
-                <td class="${tableId === 'materials-table' ? 'material-cost' : 'packaging-cost'}">${rowData.cost || '0.000'}</td>
-                <td><button class="btn btn-sm btn-danger remove-row"><i class="bi bi-trash"></i></button></td>
-            `;
-            tbody.appendChild(newRow);
-            setupRowEventListeners(newRow, tableId === 'materials-table' ? 'material' : 'packaging');
-        } else if (tableId === 'workers-table') {
-            const newRow = document.createElement('tr');
-            newRow.innerHTML = `
-                <td><input type="text" class="form-control" value="${rowData.product || ''}" required></td>
-                <td><input type="number" class="form-control" step="0.001" value="${rowData.count || ''}" required></td>
-                <td><input type="number" class="form-control" value="${rowData.price || ''}" required></td>
-                <td><input type="number" class="form-control" value="${rowData.used || ''}" required></td>
-                <td class="pieces-per-hour">${rowData.piecesPerHour || '0'}</td>
-                <td class="piece-cost">${rowData.cost || '0.000'}</td>
-                <td><button class="btn btn-sm btn-danger remove-row"><i class="bi bi-trash"></i></button></td>
-            `;
-            tbody.appendChild(newRow);
-            setupRowEventListeners(newRow, 'worker');
-        }
-    });
-}
-
-// حذف المنتج
-function deleteProduct(productCode) {
-    if (confirm('هل أنت متأكد من حذف المنتج ' + productCode + '؟')) {
-        products = products.filter(p => p.code !== productCode);
-        localStorage.setItem('products', JSON.stringify(products));
-        refreshProductsTable();
-    }
-}
-
-// التحقق من صحة النموذج
-function validateForm() {
-    let isValid = true;
-    
-    // التحقق من الحقول الأساسية
-    const requiredFields = [
-        'product-name', 'sale-quantity', 'profit-rate', 
-        'depreciation-rate', 'final-price'
-    ];
-    
-    requiredFields.forEach(id => {
-        const field = document.getElementById(id);
-        if (!field.value.trim()) {
-            field.classList.add('is-invalid');
-            isValid = false;
-        } else {
-            field.classList.remove('is-invalid');
-        }
-    });
-    
-    // التحقق من الجداول
-    const tables = ['materials-table', 'packaging-table', 'workers-table'];
-    tables.forEach(tableId => {
-        const rows = document.querySelectorAll(`#${tableId} tbody tr`);
-        if (rows.length === 0) {
-            isValid = false;
-            document.querySelector(`#${tableId}`).classList.add('is-invalid');
-        } else {
-            document.querySelector(`#${tableId}`).classList.remove('is-invalid');
-        }
-        
-        rows.forEach(row => {
-            const inputs = row.querySelectorAll('input');
-            inputs.forEach(input => {
-                if (!input.value.trim()) {
-                    input.classList.add('is-invalid');
-                    isValid = false;
-                } else {
-                    input.classList.remove('is-invalid');
-                }
-            });
-        });
-    });
-    
-    return isValid;
-}
-
-// إعادة تعيين النموذج
-function resetForm() {
-    // إعادة تعيين الحقول الأساسية
-    document.getElementById('product-name').value = '';
-    document.getElementById('product-code').value = generateProductCode();
-    document.getElementById('sale-quantity').value = '';
-    document.getElementById('profit-rate').value = '';
-    document.getElementById('depreciation-rate').value = '';
-    document.getElementById('final-price').value = '';
-    
-    // إعادة تعيين الجداول
-    resetTable('materials-table', 'material');
-    resetTable('packaging-table', 'packaging');
-    resetTable('workers-table', 'worker');
-    
-    // تحديث الحسابات
-    updateCosts();
-}
-
-// إعادة تعيين الجدول
-function resetTable(tableId, type) {
-    const tbody = document.querySelector(`#${tableId} tbody`);
-    tbody.innerHTML = '';
-    
-    if (type === 'material' || type === 'packaging') {
-        const newRow = document.createElement('tr');
-        newRow.innerHTML = `
-            <td><input type="text" class="form-control" required></td>
-            <td><input type="number" class="form-control" required></td>
-            <td><input type="number" class="form-control" step="0.001" required></td>
-            <td><input type="number" class="form-control" required></td>
-            <td class="${type}-cost">0.000</td>
-            <td><button class="btn btn-sm btn-danger remove-row"><i class="bi bi-trash"></i></button></td>
-        `;
-        tbody.appendChild(newRow);
-        setupRowEventListeners(newRow, type);
-    } else if (type === 'worker') {
-        const newRow = document.createElement('tr');
-        newRow.innerHTML = `
-            <td><input type="text" class="form-control" required></td>
-            <td><input type="number" class="form-control" step="0.001" required></td>
-            <td><input type="number" class="form-control" required></td>
-            <td><input type="number" class="form-control" required></td>
-            <td class="pieces-per-hour">0</td>
-            <td class="piece-cost">0.000</td>
-            <td><button class="btn btn-sm btn-danger remove-row"><i class="bi bi-trash"></i></button></td>
-        `;
-        tbody.appendChild(newRow);
-        setupRowEventListeners(newRow, 'worker');
-    }
-}
 <div id="invoices" class="page">
     <h2>إدارة الفواتير</h2>
     <p>صفحة إدارة الفواتير - تحت التطوير</p>
@@ -953,3 +552,10 @@ body {
     <script src="script.js"></script>
 </body>
 </html>
+
+<div class="nav-link" data-page="products">
+    <span>📦</span> المنتجات
+</div>
+<div class="nav-link" data-page="product-cost">
+    <span>💰</span> تكلفة المنتج
+</div>
