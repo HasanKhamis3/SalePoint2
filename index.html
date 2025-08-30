@@ -1,3 +1,88 @@
+<div id="products" class="page">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>قائمة المنتجات</h2>
+        <button class="btn btn-primary" id="go-to-product-cost">
+            <span>➕</span> إضافة منتج جديد
+        </button>
+    </div>
+    
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>رمز المنتج</th>
+                    <th>اسم المنتج</th>
+                    <th>عدد القطع في العلبة</th>
+                    <th>إجمالي تكلفة العلبة</th>
+                    <th>سعر البيع النهائي</th>
+                    <th>نسبة الربح</th>
+                    <th>هامش الربح</th>
+                    <th>تكلفة اليد العاملة للعلبة</th>
+                    <th>قيمة إهلاك المعدات</th>
+                    <th>الإجراءات</th>
+                </tr>
+            </thead>
+            <tbody id="products-list">
+                <tr>
+                    <td colspan="10" class="text-center">لا توجد منتجات مسجلة بعد</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نظام نقطة البيع - SalePoint</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+</head>
+<body>
+    <div class="main-container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div style="padding: 15px;">
+                <h4 style="text-align: center; margin-bottom: 5px;">نظام نقطة البيع</h4>
+                <h6 style="text-align: center; color: rgba(255,255,255,0.8); margin-bottom: 20px;">SalePoint System</h6>
+                <hr>
+                <div>
+                    <div class="nav-link" data-page="dashboard">
+                        <span>📊</span> لوحة التحكم
+                    </div>
+                    <div class="nav-link" data-page="invoices">
+                        <span>🧾</span> إدارة الفواتير
+                    </div>
+                    <div class="nav-link active" data-page="products">
+                        <span>📦</span> المنتجات
+                    </div>
+                    <div class="nav-link" data-page="product-cost">
+                        <span>💰</span> تكلفة المنتج
+                    </div>
+                    <div class="nav-link" data-page="customers">
+                        <span>👥</span> العملاء
+                    </div>
+                    <div class="nav-link" data-page="reports">
+                        <span>📈</span> التقارير
+                    </div>
+                    <div class="nav-link" data-page="settings">
+                        <span>⚙️</span> الإعدادات
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content" id="content-area">
+            <!-- سيتم تحميل المحتوى هنا ديناميكيًا -->
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script src="product-cost.js"></script>
+</body>
+</html>
 // الكود الخاص بصفحة الإعدادات
 document.addEventListener('DOMContentLoaded', function() {
     // تهيئة صفحة الإعدادات
@@ -108,6 +193,380 @@ function generateInvoiceNumber() {
         نظام إدارة المبيعات - الإصدار 1.0
     </div>
 </div>
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نظام نقطة البيع - SalePoint</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="main-container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div style="padding: 15px;">
+                <h4 style="text-align: center; margin-bottom: 5px;">نظام نقطة البيع</h4>
+                <h6 style="text-align: center; color: rgba(255,255,255,0.8); margin-bottom: 20px;">SalePoint System</h6>
+                <hr>
+                <div>
+                    <div class="nav-link active" data-page="dashboard">
+                        <span>📊</span> لوحة التحكم
+                    </div>
+                    <div class="nav-link" data-page="invoices">
+                        <span>🧾</span> إدارة الفواتير
+                    </div>
+                    <div class="nav-link" data-page="products">
+                        <span>📦</span> المنتجات
+                    </div>
+                    <div class="nav-link" data-page="customers">
+                        <span>👥</span> العملاء
+                    </div>
+                    <div class="nav-link" data-page="reports">
+                        <span>📈</span> التقارير
+                    </div>
+                    <div class="nav-link" data-page="settings">
+                        <span>⚙️</span> الإعدادات
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content" id="content-area">
+            <!-- سيتم تحميل المحتوى هنا ديناميكيًا -->
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
+// تهيئة التطبيق عند تحميل الصفحة
+document.addEventListener('DOMContentLoaded', function() {
+    initApp();
+});
+
+// تهيئة التطبيق
+function initApp() {
+    // تهيئة التنقل بين الصفحات
+    initNavigation();
+    
+    // تحميل الصفحة الافتراضية
+    loadPage('dashboard');
+}
+
+// تهيئة نظام التنقل
+function initNavigation() {
+    const navItems = document.querySelectorAll('.nav-item');
+    navItems.forEach(item => {
+        item.addEventListener('click', function() {
+            const page = this.getAttribute('data-page');
+            
+            // تحديث حالة العنصر النشط في القائمة
+            navItems.forEach(nav => nav.classList.remove('active'));
+            this.classList.add('active');
+            
+            // تحميل الصفحة المحددة
+            loadPage(page);
+        });
+    });
+}
+
+// وظيفة تحميل الصفحات
+function loadPage(page) {
+    fetch(page + '.html')
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById('content-area').innerHTML = data;
+            
+            // تحميل الـscripts الإضافية إذا كانت موجودة
+            if (page === 'invoice') {
+                loadScript('invoice.js');
+            } else if (page === 'product-cost') {
+                loadScript('product-cost.js');
+                initProductCostPage();
+            } else if (page === 'settings') {
+                loadScript('settings.js');
+            } else if (page === 'products') {
+                initProductsPage();
+            }
+            
+            // تحديث واجهة المستخدم بعد تحميل الصفحة
+            if (page === 'dashboard') {
+                updateUI();
+            }
+        })
+        .catch(error => console.error('Error loading page:', error));
+}
+
+// تحميل ملفات script ديناميكياً
+function loadScript(src) {
+    const script = document.createElement('script');
+    script.src = src;
+    document.body.appendChild(script);
+}
+
+// تهيئة صفحة المنتجات
+function initProductsPage() {
+    // تحميل المنتجات وعرضها
+    loadProducts();
+    
+    // إضافة مستمع حدث للزر الانتقال إلى تكلفة المنتج
+    const goToProductCostBtn = document.getElementById('go-to-product-cost');
+    if (goToProductCostBtn) {
+        goToProductCostBtn.addEventListener('click', function() {
+            loadPage('product-cost');
+            document.querySelector('[data-page="product-cost"]').classList.add('active');
+            document.querySelector('[data-page="products"]').classList.remove('active');
+        });
+    }
+}
+
+// تحميل المنتجات
+function loadProducts() {
+    // هنا سيتم جلب البيانات من localStorage أو API
+    console.log('Loading products...');
+    // سيتم تنفيذ الكود الفعلي لتحميل المنتجات هنا
+}
+
+// تهيئة صفحة تكلفة المنتج
+function initProductCostPage() {
+    // تهيئة الحقول والأحداث
+    document.getElementById('product-code').value = generateProductCode();
+    
+    // إضافة مستمعي الأحداث للأزرار
+    document.getElementById('add-material').addEventListener('click', function() {
+        addTableRow('materials-table', 'material');
+    });
+    
+    document.getElementById('add-packaging').addEventListener('click', function() {
+        addTableRow('packaging-table', 'packaging');
+    });
+    
+    document.getElementById('add-worker').addEventListener('click', function() {
+        addWorkerRow();
+    });
+    
+    document.getElementById('save-product').addEventListener('click', saveProduct);
+    
+    // إضافة مستمعي الأحداث لحقول الإدخال
+    const inputFields = ['sale-quantity', 'profit-rate', 'depreciation-rate', 'final-price'];
+    inputFields.forEach(id => {
+        const field = document.getElementById(id);
+        if (field) {
+            field.addEventListener('input', updateCosts);
+        }
+    });
+}
+
+// توليد كود المنتج
+let lastProductCode = 0;
+function generateProductCode() {
+    lastProductCode++;
+    return "PRD-" + lastProductCode.toString().padStart(4, '0');
+}
+
+// إضافة صف إلى الجدول
+function addTableRow(tableId, type) {
+    const table = document.getElementById(tableId);
+    const tbody = table.querySelector('tbody');
+    const newRow = document.createElement('tr');
+    
+    newRow.innerHTML = `
+        <td><input type="text" placeholder="اسم ${type}"></td>
+        <td><input type="number" placeholder="الكمية"></td>
+        <td><input type="number" placeholder="السعر"></td>
+        <td><input type="number" placeholder="التكلفة" readonly></td>
+        <td><button class="remove-btn">إزالة</button></td>
+    `;
+    
+    tbody.appendChild(newRow);
+    
+    // إضافة مستمع حدث لحذف الصف
+    newRow.querySelector('.remove-btn').addEventListener('click', function() {
+        tbody.removeChild(newRow);
+        updateCosts();
+    });
+    
+    // إضافة مستمعي الأحداث لحساب التكلفة تلقائياً
+    const inputs = newRow.querySelectorAll('input[type="number"]:not([readonly])');
+    inputs.forEach(input => {
+        input.addEventListener('input', updateCosts);
+    });
+    
+    updateCosts();
+}
+
+// إضافة صف لعامل
+function addWorkerRow() {
+    const table = document.getElementById('workers-table');
+    const tbody = table.querySelector('tbody');
+    const newRow = document.createElement('tr');
+    
+    newRow.innerHTML = `
+        <td><input type="text" placeholder="اسم العامل"></td>
+        <td><input type="number" placeholder="عدد الساعات"></td>
+        <td><input type="number" placeholder="أجر الساعة"></td>
+        <td><input type="number" placeholder="التكلفة" readonly></td>
+        <td><button class="remove-btn">إزالة</button></td>
+    `;
+    
+    tbody.appendChild(newRow);
+    
+    // إضافة مستمع حدث لحذف الصف
+    newRow.querySelector('.remove-btn').addEventListener('click', function() {
+        tbody.removeChild(newRow);
+        updateCosts();
+    });
+    
+    // إضافة مستمعي الأحداث لحساب التكلفة تلقائياً
+    const inputs = newRow.querySelectorAll('input[type="number"]:not([readonly])');
+    inputs.forEach(input => {
+        input.addEventListener('input', updateCosts);
+    });
+    
+    updateCosts();
+}
+
+// تحديث التكاليف
+function updateCosts() {
+    // حساب تكلفة المواد
+    let materialCost = 0;
+    const materialRows = document.querySelectorAll('#materials-table tbody tr');
+    materialRows.forEach(row => {
+        const quantity = parseFloat(row.querySelector('input:nth-child(2)').value) || 0;
+        const price = parseFloat(row.querySelector('input:nth-child(3)').value) || 0;
+        const cost = quantity * price;
+        row.querySelector('input:nth-child(4)').value = cost.toFixed(2);
+        materialCost += cost;
+    });
+    
+    // حساب تكلفة التغليف
+    let packagingCost = 0;
+    const packagingRows = document.querySelectorAll('#packaging-table tbody tr');
+    packagingRows.forEach(row => {
+        const quantity = parseFloat(row.querySelector('input:nth-child(2)').value) || 0;
+        const price = parseFloat(row.querySelector('input:nth-child(3)').value) || 0;
+        const cost = quantity * price;
+        row.querySelector('input:nth-child(4)').value = cost.toFixed(2);
+        packagingCost += cost;
+    });
+    
+    // حساب تكلفة العمال
+    let workerCost = 0;
+    const workerRows = document.querySelectorAll('#workers-table tbody tr');
+    workerRows.forEach(row => {
+        const hours = parseFloat(row.querySelector('input:nth-child(2)').value) || 0;
+        const wage = parseFloat(row.querySelector('input:nth-child(3)').value) || 0;
+        const cost = hours * wage;
+        row.querySelector('input:nth-child(4)').value = cost.toFixed(2);
+        workerCost += cost;
+    });
+    
+    // حساب التكاليف الإجمالية
+    const totalCost = materialCost + packagingCost + workerCost;
+    document.getElementById('total-cost').textContent = totalCost.toFixed(2);
+    
+    // حساب سعر البيع إذا كانت هناك كمية بيع محددة
+    const saleQuantity = parseFloat(document.getElementById('sale-quantity').value) || 1;
+    const costPerUnit = totalCost / saleQuantity;
+    document.getElementById('cost-per-unit').textContent = costPerUnit.toFixed(2);
+    
+    // حساب سعر البيع مع هامش الربح إذا كان محدداً
+    const profitRate = parseFloat(document.getElementById('profit-rate').value) || 0;
+    if (profitRate > 0) {
+        const profitAmount = costPerUnit * (profitRate / 100);
+        const finalPrice = costPerUnit + profitAmount;
+        document.getElementById('final-price').value = finalPrice.toFixed(2);
+    }
+    
+    // حساب الإهلاك إذا كان محدداً
+    const depreciationRate = parseFloat(document.getElementById('depreciation-rate').value) || 0;
+    if (depreciationRate > 0) {
+        const depreciationAmount = totalCost * (depreciationRate / 100);
+        document.getElementById('depreciation-amount').textContent = depreciationAmount.toFixed(2);
+    }
+}
+
+// حفظ المنتج
+function saveProduct() {
+    // جمع بيانات المنتج
+    const productData = {
+        code: document.getElementById('product-code').value,
+        name: document.getElementById('product-name').value,
+        description: document.getElementById('product-description').value,
+        materials: [],
+        packaging: [],
+        workers: [],
+        saleQuantity: parseFloat(document.getElementById('sale-quantity').value) || 1,
+        profitRate: parseFloat(document.getElementById('profit-rate').value) || 0,
+        depreciationRate: parseFloat(document.getElementById('depreciation-rate').value) || 0,
+        finalPrice: parseFloat(document.getElementById('final-price').value) || 0,
+        totalCost: parseFloat(document.getElementById('total-cost').textContent) || 0
+    };
+    
+    // جمع بيانات المواد
+    const materialRows = document.querySelectorAll('#materials-table tbody tr');
+    materialRows.forEach(row => {
+        const name = row.querySelector('input:nth-child(1)').value;
+        const quantity = parseFloat(row.querySelector('input:nth-child(2)').value) || 0;
+        const price = parseFloat(row.querySelector('input:nth-child(3)').value) || 0;
+        const cost = parseFloat(row.querySelector('input:nth-child(4)').value) || 0;
+        
+        if (name) {
+            productData.materials.push({ name, quantity, price, cost });
+        }
+    });
+    
+    // جمع بيانات مواد التغليف
+    const packagingRows = document.querySelectorAll('#packaging-table tbody tr');
+    packagingRows.forEach(row => {
+        const name = row.querySelector('input:nth-child(1)').value;
+        const quantity = parseFloat(row.querySelector('input:nth-child(2)').value) || 0;
+        const price = parseFloat(row.querySelector('input:nth-child(3)').value) || 0;
+        const cost = parseFloat(row.querySelector('input:nth-child(4)').value) || 0;
+        
+        if (name) {
+            productData.packaging.push({ name, quantity, price, cost });
+        }
+    });
+    
+    // جمع بيانات العمال
+    const workerRows = document.querySelectorAll('#workers-table tbody tr');
+    workerRows.forEach(row => {
+        const name = row.querySelector('input:nth-child(1)').value;
+        const hours = parseFloat(row.querySelector('input:nth-child(2)').value) || 0;
+        const wage = parseFloat(row.querySelector('input:nth-child(3)').value) || 0;
+        const cost = parseFloat(row.querySelector('input:nth-child(4)').value) || 0;
+        
+        if (name) {
+            productData.workers.push({ name, hours, wage, cost });
+        }
+    });
+    
+    // حفظ البيانات (هنا يمكن حفظها في localStorage أو إرسالها لخادم)
+    saveProductToStorage(productData);
+    
+    alert('تم حفظ المنتج بنجاح!');
+    
+    // الانتقال إلى صفحة المنتجات
+    loadPage('products');
+    document.querySelector('[data-page="products"]').classList.add('active');
+    document.querySelector('[data-page="product-cost"]').classList.remove('active');
+}
+
+// حفظ المنتج في التخزين المحلي
+function saveProductToStorage(productData) {
+    let products = JSON.parse(localStorage.getItem('products')) || [];
+    products.push(productData);
+    localStorage.setItem('products', JSON.stringify(products));
+}
+
+// تحديث واجهة المستخدم
+function updateUI() {
+    // تحديث الإحصائيات أو أي عناصر واجهة مستخدم أخرى
+    console.log('Updating UI...');
+}
 :root {
     --primary-color: #2c3e50;
     --secondary-color: #34495e;
@@ -439,139 +898,6 @@ body {
 .align-items-center {
     align-items: center !important;
 }
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نظام نقطة البيع - SalePoint</title>
-    <link rel="stylesheet" href="styles.css">
-</head>
-<body>
-    <div class="main-container">
-        <!-- Sidebar -->
-        <div class="sidebar">
-            <div style="padding: 15px;">
-                <h4 style="text-align: center; margin-bottom: 5px;">نظام نقطة البيع</h4>
-                <h6 style="text-align: center; color: rgba(255,255,255,0.8); margin-bottom: 20px;">SalePoint System</h6>
-                <hr>
-                <div>
-                    <div class="nav-link active" data-page="dashboard">
-                        <span>📊</span> لوحة التحكم
-                    </div>
-                    <div class="nav-link" data-page="invoices">
-                        <span>🧾</span> إدارة الفواتير
-                    </div>
-                    <div class="nav-link" data-page="products">
-                        <span>📦</span> المنتجات
-                    </div>
-                    <div class="nav-link" data-page="customers">
-                        <span>👥</span> العملاء
-                    </div>
-                    <div class="nav-link" data-page="reports">
-                        <span>📈</span> التقارير
-                    </div>
-                    <div class="nav-link" data-page="settings">
-                        <span>⚙️</span> الإعدادات
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Main Content -->
-        <div class="main-content" id="content-area">
-            <!-- سيتم تحميل المحتوى هنا ديناميكيًا -->
-        </div>
-    </div>
-
-    <script src="script.js"></script>
-</body>
-</html>
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نظام نقطة البيع - SalePoint</title>
-    <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
-</head>
-<body>
-    <div class="main-container">
-        <!-- Sidebar -->
-        <div class="sidebar">
-            <div style="padding: 15px;">
-                <h4 style="text-align: center; margin-bottom: 5px;">نظام نقطة البيع</h4>
-                <h6 style="text-align: center; color: rgba(255,255,255,0.8); margin-bottom: 20px;">SalePoint System</h6>
-                <hr>
-                <div>
-                    <div class="nav-link" data-page="dashboard">
-                        <span>📊</span> لوحة التحكم
-                    </div>
-                    <div class="nav-link" data-page="invoices">
-                        <span>🧾</span> إدارة الفواتير
-                    </div>
-                    <div class="nav-link active" data-page="products">
-                        <span>📦</span> المنتجات
-                    </div>
-                    <div class="nav-link" data-page="product-cost">
-                        <span>💰</span> تكلفة المنتج
-                    </div>
-                    <div class="nav-link" data-page="customers">
-                        <span>👥</span> العملاء
-                    </div>
-                    <div class="nav-link" data-page="reports">
-                        <span>📈</span> التقارير
-                    </div>
-                    <div class="nav-link" data-page="settings">
-                        <span>⚙️</span> الإعدادات
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Main Content -->
-        <div class="main-content" id="content-area">
-            <!-- سيتم تحميل المحتوى هنا ديناميكيًا -->
-        </div>
-    </div>
-
-    <script src="script.js"></script>
-    <script src="product-cost.js"></script>
-</body>
-</html>
-<div id="products" class="page">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2>قائمة المنتجات</h2>
-        <button class="btn btn-primary" id="go-to-product-cost">
-            <span>➕</span> إضافة منتج جديد
-        </button>
-    </div>
-    
-    <div class="table-responsive">
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th>رمز المنتج</th>
-                    <th>اسم المنتج</th>
-                    <th>عدد القطع في العلبة</th>
-                    <th>إجمالي تكلفة العلبة</th>
-                    <th>سعر البيع النهائي</th>
-                    <th>نسبة الربح</th>
-                    <th>هامش الربح</th>
-                    <th>تكلفة اليد العاملة للعلبة</th>
-                    <th>قيمة إهلاك المعدات</th>
-                    <th>الإجراءات</th>
-                </tr>
-            </thead>
-            <tbody id="products-list">
-                <tr>
-                    <td colspan="10" class="text-center">لا توجد منتجات مسجلة بعد</td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-</div>
 // حالة التطبيق للمنتجات
 let products = [];
 let currentCurrency = 'د.ب';
@@ -1089,120 +1415,4 @@ function deleteProduct(productCode) {
         localStorage.setItem('products', JSON.stringify(products));
         refreshProductsTable();
     }
-}
-<!DOCTYPE html>
-<html>
-<head>
-    <!-- روابط CSS والأنماط -->
-    <style>
-        /* كل أنماط CSS هنا */
-    </style>
-</head>
-<body>
-    <!-- الهيكل الأساسي والقوائم -->
-    
-    <!-- صفحة تكلفة المنتج -->
-    <div id="product-cost" class="page">
-        <!-- محتوى تكلفة المنتج -->
-    </div>
-    
-    <!-- صفحة المنتجات -->
-    <div id="products" class="page">
-        <!-- محتوى المنتجات -->
-    </div>
-    
-    <!-- صفحة الفواتير -->
-    <div id="invoice" class="page">
-        <!-- محتوى الفواتير -->
-    </div>
-    
-    <!-- الأكواد الجافاسكريبت -->
-    <script>
-        // كل أكواد الجافاسكريبت هنا
-        // تكلفة المنتج
-        // إدارة المنتجات
-        // نظام الفواتير
-        // الإعدادات
-    </script>
-</body>
-</html>
-
-// تحديث وظيفة loadPage
-function loadPage(page) {
-    fetch(page + '.html')
-        .then(response => response.text())
-        .then(data => {
-            document.getElementById('content-area').innerHTML = data;
-            
-            // تحميل الـscripts الإضافية إذا كانت موجودة
-            if (page === 'invoice') {
-                loadScript('invoice.js');
-            } else if (page === 'product-cost') {
-                loadScript('product-cost.js');
-                initProductCostPage();
-            } else if (page === 'settings') {
-                loadScript('settings.js');
-            } else if (page === 'products') {
-                initProductsPage();
-            }
-            
-            // تحديث واجهة المستخدم بعد تحميل الصفحة
-            if (page === 'dashboard') {
-                updateUI();
-            }
-        })
-        .catch(error => console.error('Error loading page:', error));
-}
-
-// تهيئة صفحة المنتجات
-function initProductsPage() {
-    // تحميل المنتجات وعرضها
-    loadProducts();
-    
-    // إضافة مستمع حدث للزر الانتقال إلى تكلفة المنتج
-    const goToProductCostBtn = document.getElementById('go-to-product-cost');
-    if (goToProductCostBtn) {
-        goToProductCostBtn.addEventListener('click', function() {
-            loadPage('product-cost');
-            document.querySelector('[data-page="product-cost"]').classList.add('active');
-            document.querySelector('[data-page="products"]').classList.remove('active');
-        });
-    }
-}
-
-// تهيئة صفحة تكلفة المنتج
-function initProductCostPage() {
-    // تهيئة الحقول والأحداث
-    document.getElementById('product-code').value = generateProductCode();
-    
-    // إضافة مستمعي الأحداث للأزرار
-    document.getElementById('add-material').addEventListener('click', function() {
-        addTableRow('materials-table', 'material');
-    });
-    
-    document.getElementById('add-packaging').addEventListener('click', function() {
-        addTableRow('packaging-table', 'packaging');
-    });
-    
-    document.getElementById('add-worker').addEventListener('click', function() {
-        addWorkerRow();
-    });
-    
-    document.getElementById('save-product').addEventListener('click', saveProduct);
-    
-    // إضافة مستمعي الأحداث لحقول الإدخال
-    const inputFields = ['sale-quantity', 'profit-rate', 'depreciation-rate', 'final-price'];
-    inputFields.forEach(id => {
-        const field = document.getElementById(id);
-        if (field) {
-            field.addEventListener('input', updateCosts);
-        }
-    });
-}
-
-// توليد كود المنتج
-let lastProductCode = 0;
-function generateProductCode() {
-    lastProductCode++;
-    return "PRD-" + lastProductCode.toString().padStart(4, '0');
 }
