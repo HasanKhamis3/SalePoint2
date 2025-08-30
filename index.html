@@ -1,3 +1,178 @@
+:root {
+    --primary-color: #2c3e50;
+    --secondary-color: #34495e;
+    --success-color: #28a745;
+    --warning-color: #ffc107;
+    --info-color: #17a2b8;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f8f9fa;
+    margin: 0;
+    padding: 0;
+    direction: rtl;
+}
+
+.main-container {
+    display: flex;
+    min-height: 100vh;
+}
+
+.sidebar {
+    background: linear-gradient(to bottom, var(--primary-color), var(--secondary-color));
+    width: 280px;
+    color: white;
+    padding: 20px 0;
+    position: fixed;
+    height: 100vh;
+    right: 0;
+}
+
+.sidebar .nav-link {
+    color: rgba(255, 255, 255, 0.9);
+    margin: 8px 15px;
+    padding: 12px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    transition: all 0.3s ease;
+    text-decoration: none;
+}
+
+.sidebar .nav-link:hover, 
+.sidebar .nav-link.active {
+    background-color: rgba(255, 255, 255, 0.15);
+    transform: translateX(-5px);
+}
+
+.main-content {
+    flex: 1;
+    padding: 30px;
+    background-color: #f8f9fa;
+    margin-right: 280px;
+    min-height: 100vh;
+}
+
+.welcome-card {
+    background: linear-gradient(135deg, #2c3e50 0%, #4ca1af 100%);
+    color: white;
+    border-radius: 15px;
+    padding: 30px;
+    margin-bottom: 30px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+}
+
+.stats-card {
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    height: 100%;
+    text-align: center;
+    padding: 25px 15px;
+    background: white;
+    margin-bottom: 20px;
+    transition: transform 0.3s ease;
+}
+
+.stats-card:hover {
+    transform: translateY(-5px);
+}
+
+.stats-card span {
+    font-size: 2.5rem;
+    margin-bottom: 15px;
+    display: block;
+}
+
+.page {
+    display: none;
+}
+
+.page.active {
+    display: block;
+    animation: fadeIn 0.4s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.alert {
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    border: none;
+}
+
+.alert-info {
+    background-color: #d1ecf1;
+    color: #0c5460;
+}
+
+.bg-primary { 
+    background: linear-gradient(135deg, #007bff, #0056b3) !important;
+    color: white !important;
+}
+
+.bg-success { 
+    background: linear-gradient(135deg, #28a745, #1e7e34) !important;
+    color: white !important;
+}
+
+.bg-warning { 
+    background: linear-gradient(135deg, #ffc107, #e0a800) !important;
+    color: black !important;
+}
+
+.bg-info { 
+    background: linear-gradient(135deg, #17a2b8, #138496) !important;
+    color: white !important;
+}
+
+@media (max-width: 768px) {
+    .sidebar {
+        width: 100%;
+        position: relative;
+        height: auto;
+    }
+    
+    .main-content {
+        margin-right: 0;
+        padding: 15px;
+    }
+    
+    .main-container {
+        flex-direction: column;
+    }
+    
+    .stats-card {
+        margin-bottom: 15px;
+    }
+}
+// الكود الخاص بصفحة الإعدادات
+document.addEventListener('DOMContentLoaded', function() {
+    // تهيئة صفحة الإعدادات
+    loadSettings();
+    loadDeliverySettings();
+    loadTaxSettings();
+    loadPaymentMethods();
+    loadInvoiceStatuses();
+    
+    // باقي الكود الخاص بالإعدادات...
+});
+<div id="settings" class="page">
+    <h2 class="mb-4">الإعدادات</h2>
+    
+    <!-- محتوى صفحة الإعدادات -->
+</div>
 // الكود الأساسي للتنقل بين الصفحات وإدارة الحالة العامة
 document.addEventListener('DOMContentLoaded', function() {
     // إدارة تحميل الصفحات
@@ -294,6 +469,7 @@ function generateInvoiceNumber() {
             margin: 0;
             padding: 0;
             direction: rtl;
+            user-select: none; /* منع التحديد */
         }
         
         .main-container {
@@ -416,6 +592,19 @@ function generateInvoiceNumber() {
             border: 1px solid #bee5eb;
         }
         
+        .no-refresh-message {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background: #28a745;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 5px;
+            font-size: 12px;
+            z-index: 10000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+        
         @media (max-width: 768px) {
             .sidebar {
                 width: 100%;
@@ -435,10 +624,22 @@ function generateInvoiceNumber() {
             .stats-grid {
                 grid-template-columns: 1fr;
             }
+            
+            .no-refresh-message {
+                bottom: 10px;
+                left: 10px;
+                right: 10px;
+                text-align: center;
+            }
         }
     </style>
 </head>
 <body>
+    <!-- رسالة منع التحديث -->
+    <div class="no-refresh-message" id="refreshMessage">
+        🔒 نظام مضاد للتحديث التلقائي مفعل
+    </div>
+
     <div class="main-container">
         <!-- Sidebar -->
         <div class="sidebar">
@@ -652,6 +853,70 @@ function generateInvoiceNumber() {
             window.history.pushState(null, null, `#${pageId}`);
         }
         
+        // ==================== منع التحديث التلقائي ====================
+        function preventAutoRefresh() {
+            // منع إعادة تحميل الصفحة
+            window.onbeforeunload = function(e) {
+                const message = '⚠️ هل أنت متأكد من أنك تريد مغادرة هذه الصفحة؟';
+                e.returnValue = message;
+                return message;
+            };
+            
+            // منع مفاتيح التحديث
+            document.addEventListener('keydown', function(e) {
+                // منع F5
+                if (e.key === 'F5' || e.keyCode === 116) {
+                    e.preventDefault();
+                    showRefreshWarning();
+                    return false;
+                }
+                
+                // منع Ctrl+R
+                if (e.ctrlKey && (e.key === 'r' || e.keyCode === 82)) {
+                    e.preventDefault();
+                    showRefreshWarning();
+                    return false;
+                }
+                
+                // منع Ctrl+Shift+R
+                if (e.ctrlKey && e.shiftKey && (e.key === 'R' || e.keyCode === 82)) {
+                    e.preventDefault();
+                    showRefreshWarning();
+                    return false;
+                }
+            });
+            
+            // منع قائمة السياق (Right-click)
+            document.addEventListener('contextmenu', function(e) {
+                e.preventDefault();
+                return false;
+            });
+            
+            // منع سحب وإفلات الصفحة (التي قد تسبب التحديث)
+            document.addEventListener('dragstart', function(e) {
+                e.preventDefault();
+                return false;
+            });
+            
+            // منع اختيار النص
+            document.addEventListener('selectstart', function(e) {
+                e.preventDefault();
+                return false;
+            });
+        }
+        
+        // عرض تحذير التحديث
+        function showRefreshWarning() {
+            const message = document.getElementById('refreshMessage');
+            message.style.background = '#dc3545';
+            message.innerHTML = '⛔ التحديث التلقائي معطل في هذا النظام';
+            
+            setTimeout(() => {
+                message.style.background = '#28a745';
+                message.innerHTML = '🔒 نظام مضاد للتحديث التلقائي مفعل';
+            }, 2000);
+        }
+        
         // معالجة زر الرجوع في المتصفح
         window.addEventListener('popstate', function() {
             const hash = window.location.hash.substring(1);
@@ -664,6 +929,9 @@ function generateInvoiceNumber() {
         
         // تهيئة التطبيق عند التحميل
         document.addEventListener('DOMContentLoaded', function() {
+            // تفعيل نظام منع التحديث التلقائي
+            preventAutoRefresh();
+            
             // تحميل البيانات
             loadData();
             
@@ -684,7 +952,7 @@ function generateInvoiceNumber() {
                 switchPage(hash);
             }
             
-            console.log('✅ تم تحميل النظام بنجاح');
+            console.log('✅ تم تحميل النظام بنجاح - نظام منع التحديث التلقائي مفعل');
         });
     </script>
 </body>
@@ -736,180 +1004,19 @@ function generateInvoiceNumber() {
         نظام إدارة المبيعات - الإصدار 1.0
     </div>
 </div>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إعادة التوجيه - نظام نقطة البيع</title>
+    <meta http-equiv="refresh" content="0; url='https://hasankhamis3.github.io/SalePoint2/'" />
+    <script>
+        window.location.href = 'https://hasankhamis3.github.io/SalePoint2/';
+    </script>
+</head>
+<body>
+    <p>يتم إعادة توجيهك إلى <a href="https://hasankhamis3.github.io/SalePoint2/">نظام نقطة البيع</a>.</p>
+</body>
+</html>
 # هذا الملف يمنع GitHub من معالجة الموقع باستخدام Jekyll
-# وهذا ضروري للتطبيقات أحادية الصفحة (SPA)
-:root {
-    --primary-color: #2c3e50;
-    --secondary-color: #34495e;
-    --success-color: #28a745;
-    --warning-color: #ffc107;
-    --info-color: #17a2b8;
-}
-
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #f8f9fa;
-    margin: 0;
-    padding: 0;
-    direction: rtl;
-}
-
-.main-container {
-    display: flex;
-    min-height: 100vh;
-}
-
-.sidebar {
-    background: linear-gradient(to bottom, var(--primary-color), var(--secondary-color));
-    width: 280px;
-    color: white;
-    padding: 20px 0;
-    position: fixed;
-    height: 100vh;
-    right: 0;
-}
-
-.sidebar .nav-link {
-    color: rgba(255, 255, 255, 0.9);
-    margin: 8px 15px;
-    padding: 12px 20px;
-    border-radius: 8px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    transition: all 0.3s ease;
-    text-decoration: none;
-}
-
-.sidebar .nav-link:hover, 
-.sidebar .nav-link.active {
-    background-color: rgba(255, 255, 255, 0.15);
-    transform: translateX(-5px);
-}
-
-.main-content {
-    flex: 1;
-    padding: 30px;
-    background-color: #f8f9fa;
-    margin-right: 280px;
-    min-height: 100vh;
-}
-
-.welcome-card {
-    background: linear-gradient(135deg, #2c3e50 0%, #4ca1af 100%);
-    color: white;
-    border-radius: 15px;
-    padding: 30px;
-    margin-bottom: 30px;
-    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-}
-
-.stats-card {
-    border-radius: 12px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-    height: 100%;
-    text-align: center;
-    padding: 25px 15px;
-    background: white;
-    margin-bottom: 20px;
-    transition: transform 0.3s ease;
-}
-
-.stats-card:hover {
-    transform: translateY(-5px);
-}
-
-.stats-card span {
-    font-size: 2.5rem;
-    margin-bottom: 15px;
-    display: block;
-}
-
-.page {
-    display: none;
-}
-
-.page.active {
-    display: block;
-    animation: fadeIn 0.4s ease;
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-.alert {
-    padding: 15px;
-    border-radius: 8px;
-    margin-bottom: 20px;
-    border: none;
-}
-
-.alert-info {
-    background-color: #d1ecf1;
-    color: #0c5460;
-}
-
-.bg-primary { 
-    background: linear-gradient(135deg, #007bff, #0056b3) !important;
-    color: white !important;
-}
-
-.bg-success { 
-    background: linear-gradient(135deg, #28a745, #1e7e34) !important;
-    color: white !important;
-}
-
-.bg-warning { 
-    background: linear-gradient(135deg, #ffc107, #e0a800) !important;
-    color: black !important;
-}
-
-.bg-info { 
-    background: linear-gradient(135deg, #17a2b8, #138496) !important;
-    color: white !important;
-}
-
-@media (max-width: 768px) {
-    .sidebar {
-        width: 100%;
-        position: relative;
-        height: auto;
-    }
-    
-    .main-content {
-        margin-right: 0;
-        padding: 15px;
-    }
-    
-    .main-container {
-        flex-direction: column;
-    }
-    
-    .stats-card {
-        margin-bottom: 15px;
-    }
-}
-// الكود الخاص بصفحة الإعدادات
-document.addEventListener('DOMContentLoaded', function() {
-    // تهيئة صفحة الإعدادات
-    loadSettings();
-    loadDeliverySettings();
-    loadTaxSettings();
-    loadPaymentMethods();
-    loadInvoiceStatuses();
-    
-    // باقي الكود الخاص بالإعدادات...
-});
-<div id="settings" class="page">
-    <h2 class="mb-4">الإعدادات</h2>
-    
-    <!-- محتوى صفحة الإعدادات -->
-</div>
