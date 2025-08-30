@@ -21,6 +21,7 @@
             background-color: #f8f9fa;
             margin: 0;
             padding: 0;
+            overflow-x: hidden;
         }
         
         .main-container {
@@ -558,7 +559,7 @@
                         </div>
                         <div class="card-body">
                             <div class="form-group mb-3">
-                                <label>ابحث برقم الفاتورة</label>
+                                <label>ابحث بررقم الفاتورة</label>
                                 <div class="input-group">
                                     <input type="text" class="form-control" placeholder="أدخل رقم الفاتورة">
                                     <button class="btn btn-primary">بحث</button>
@@ -1128,6 +1129,20 @@
             switchPage(lastPage);
             
             console.log('التنقل جاهز للعمل');
+            
+            // منع إعادة تحميل الصفحة عند النقر على الروابط
+            document.addEventListener('click', function(e) {
+                if (e.target.tagName === 'A' && e.target.getAttribute('href') === '#') {
+                    e.preventDefault();
+                }
+            });
+        });
+        
+        // منع إعادة تحميل الصفحة عند الضغط على زر Enter في النماذج
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && e.target.tagName === 'INPUT') {
+                e.preventDefault();
+            }
         });
     </script>
 </body>
