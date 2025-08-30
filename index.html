@@ -1,456 +1,3 @@
-<div id="invoice" class="page">
-    <h2 class="mb-4"><i class="bi bi-receipt"></i> الفواتير</h2>
-    
-    <ul class="nav nav-tabs mb-4">
-        <li class="nav-item">
-            <a class="nav-link active" href="#" data-tab="new-invoice">فاتورة جديدة</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="#" data-tab="manage-invoices">إدارة الفواتير</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="#" data-tab="track-invoices">تتبع الفواتير</a>
-        </li>
-    </ul>
-    
-    <!-- محتوى الفواتير -->
-    <div id="new-invoice" class="invoice-tab active">
-        <!-- محتوى فاتورة جديدة -->
-    </div>
-    
-    <div id="manage-invoices" class="invoice-tab">
-        <!-- محتوى إدارة الفواتير -->
-    </div>
-    
-    <div id="track-invoices" class="invoice-tab">
-        <!-- محتوى تتبع الفواتير -->
-    </div>
-</div>
-
-<script src="invoice.js"></script>
-// الكود الخاص بصفحة الفواتير
-document.addEventListener('DOMContentLoaded', function() {
-    // تهيئة صفحة الفواتير
-    const invoiceDateInput = document.getElementById('invoice-date');
-    if (invoiceDateInput) {
-        invoiceDateInput.value = new Date().toISOString().split('T')[0];
-    }
-    document.getElementById('invoice-number').value = generateInvoiceNumber();
-    
-    // باقي الكود الخاص بالفاتورة...
-});
-
-function generateInvoiceNumber() {
-    const savedInvoices = JSON.parse(localStorage.getItem('invoices')) || [];
-    return "INV-" + new Date().getFullYear() + "-" + 
-        (savedInvoices.length + 1).toString().padStart(4, '0');
-}
-
-// دالة لإضافة عنصر جديد للفاتورة
-function addInvoiceItem() {
-    // كود إضافة عنصر
-}
-
-// دالة لحساب إجمالي الفاتورة
-function calculateInvoiceTotal() {
-    // كود حساب الإجمالي
-}
-
-// دالة لحفظ الفاتورة
-function saveInvoice() {
-    // كود حفظ الفاتورة
-}
-<div id="product-cost" class="page">
-    <h2 class="mb-4"><i class="bi bi-calculator"></i> حساب تكلفة المنتج</h2>
-    
-    <!-- محتوى حساب تكلفة المنتج -->
-    <div class="product-info-section">
-        <h5>معلومات المنتج</h5>
-        <!-- نموذج إدخال بيانات المنتج -->
-    </div>
-    
-    <div class="row">
-        <div class="col-md-6">
-            <!-- تكاليف المواد -->
-        </div>
-        <div class="col-md-6">
-            <!-- تكاليف العمالة والمعدات -->
-        </div>
-    </div>
-</div>
-
-<script src="product-cost.js"></script>
-// الكود الخاص بصفحة تكلفة المنتج
-document.addEventListener('DOMContentLoaded', function() {
-    // تهيئة صفحة تكلفة المنتج
-    document.getElementById('product-code').value = generateProductCode();
-    
-    // باقي الكود الخاص بتكلفة المنتج...
-});
-
-function generateProductCode() {
-    lastProductCode++;
-    return "PRD-" + lastProductCode.toString().padStart(4, '0');
-}
-<div id="products" class="page">
-    <h2 class="mb-4">المنتجات</h2>
-    
-    <div class="table-responsive">
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th>رمز المنتج</th>
-                    <th>اسم المنتج</th>
-                    <th>عدد القطع في العلبة</th>
-                    <th>إجمالي تكلفة العلبة</th>
-                    <th>سعر البيع النهائي</th>
-                    <th>نسبة الربح</th>
-                    <th>هامش الربح</th>
-                    <th>تكلفة اليد العاملة للعلبة</th>
-                    <th>قيمة إهلاك المعدات</th>
-                    <th>الإجراءات</th>
-                </tr>
-            </thead>
-            <tbody id="products-list">
-                <tr>
-                    <td colspan="10" class="text-center">لا توجد منتجات مسجلة بعد</td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-</div>
-// الكود الأساسي للتنقل بين الصفحات وإدارة الحالة العامة
-document.addEventListener('DOMContentLoaded', function() {
-    // إدارة تحميل الصفحات
-    function loadPage(page) {
-        fetch(page + '.html')
-            .then(response => response.text())
-            .then(data => {
-                document.getElementById('content-area').innerHTML = data;
-                
-                // تحميل الـscripts الإضافية إذا كانت موجودة
-                if (page === 'invoice') {
-                    loadScript('invoice.js');
-                } else if (page === 'product-cost') {
-                    loadScript('product-cost.js');
-                } else if (page === 'settings') {
-                    loadScript('settings.js');
-                }
-            })
-            .catch(error => console.error('Error loading page:', error));
-    }
-    
-    function loadScript(src) {
-        const script = document.createElement('script');
-        script.src = src;
-        document.body.appendChild(script);
-    }
-    
-    // التنقل بين الصفحات
-    document.querySelectorAll('.sidebar .nav-link').forEach(link => {
-        link.addEventListener('click', function(e) {
-            e.preventDefault();
-            const page = this.getAttribute('href').replace('.html', '');
-            loadPage(page);
-            
-            // تحديث القائمة الجانبية
-            document.querySelectorAll('.sidebar .nav-link').forEach(navLink => {
-                navLink.classList.remove('active');
-            });
-            this.classList.add('active');
-        });
-    });
-    
-    // تحميل الصفحة الأولى افتراضيًا
-    loadPage('dashboard');
-});
-
-// دالة لتحميل المحتوى ديناميكيًا
-function loadPage(page) {
-    fetch(page + '.html')
-        .then(response => response.text())
-        .then(data => {
-            document.getElementById('content-area').innerHTML = data;
-            // تحميل الـscripts الإضافية إذا كانت موجودة
-            if (page === 'invoice') {
-                loadScript('invoice.js');
-            } else if (page === 'product-cost') {
-                loadScript('product-cost.js');
-            } else if (page === 'settings') {
-                loadScript('settings.js');
-            }
-        })
-        .catch(error => console.error('Error loading page:', error));
-}
-
-function loadScript(src) {
-    const script = document.createElement('script');
-    script.src = src;
-    document.body.appendChild(script);
-}
-
-// التنقل بين الصفحات
-document.querySelectorAll('[data-page]').forEach(link => {
-    link.addEventListener('click', function(e) {
-        e.preventDefault();
-        const page = this.getAttribute('data-page');
-        loadPage(page);
-        
-        // تحديث القائمة الجانبية
-        document.querySelectorAll('.nav-link').forEach(navLink => {
-            navLink.classList.remove('active');
-        });
-        this.classList.add('active');
-        
-        // تحديث عنوان URL دون إعادة تحميل الصفحة
-        history.pushState(null, null, '#' + page);
-    });
-});
-
-// تحميل الصفحة الأولى افتراضيًا
-window.addEventListener('load', function() {
-    const hash = window.location.hash.substring(1);
-    if (hash) {
-        loadPage(hash);
-        document.querySelector(`[data-page="${hash}"]`).classList.add('active');
-    } else {
-        loadPage('dashboard');
-        document.querySelector('[data-page="dashboard"]').classList.add('active');
-    }
-});
-
-// إدارة التنقل بين الصفحات
-function showPage(pageId) {
-    // إخفاء جميع الصفحات
-    document.querySelectorAll('.page').forEach(page => {
-        page.classList.remove('active');
-    });
-    
-    // إظهار الصفحة المطلوبة
-    const targetPage = document.getElementById(pageId);
-    if (targetPage) {
-        targetPage.classList.add('active');
-    }
-    
-    // تحديث القائمة الجانبية
-    document.querySelectorAll('.nav-link').forEach(link => {
-        link.classList.remove('active');
-    });
-    
-    // تمييز العنصر النشط
-    document.querySelector(`.nav-link[data-page="${pageId}"]`).classList.add('active');
-    
-    // حفظ الصفحة النشطة
-    localStorage.setItem('activePage', pageId);
-}
-
-// تهيئة التنقل عند تحميل الصفحة
-document.addEventListener('DOMContentLoaded', function() {
-    // إضافة مستمعين لأحداث النقر على عناصر القائمة
-    document.querySelectorAll('.nav-link').forEach(link => {
-        link.addEventListener('click', function() {
-            const pageId = this.getAttribute('data-page');
-            showPage(pageId);
-        });
-    });
-    
-    // استعادة الصفحة النشطة من التخزين المحلي إذا كانت موجودة
-    const activePage = localStorage.getItem('activePage') || 'dashboard';
-    showPage(activePage);
-    
-    // توليد رقم فاتورة تلقائي
-    document.getElementById('invoice-number').value = 'INV-' + new Date().getTime();
-    document.getElementById('invoice-date').valueAsDate = new Date();
-});
-
-// إدارة عناصر الفاتورة
-document.getElementById('add-item-btn').addEventListener('click', function() {
-    const tbody = document.querySelector('#invoice-items tbody');
-    
-    // إذا كان الجدول فارغاً، قم بإزالة الصف الفارغ
-    if (tbody.innerHTML.includes('لا توجد عناصر')) {
-        tbody.innerHTML = '';
-    }
-    
-    // إضافة صف جديد
-    const newRow = document.createElement('tr');
-    newRow.innerHTML = `
-        <td>
-            <select class="form-control product-select">
-                <option value="">اختر المنتج</option>
-            </select>
-        </td>
-        <td>
-            <input type="number" class="form-control quantity" min="1" value="1">
-        </td>
-        <td>
-            <input type="number" class="form-control price" step="0.01" min="0" value="0">
-        </td>
-        <td class="item-total">0.00 د.ب</td>
-        <td>
-            <button class="btn btn-sm btn-danger remove-item">حذف</button>
-        </td>
-    `;
-    
-    tbody.appendChild(newRow);
-    
-    // ملء قائمة المنتجات
-    fillProductSelect(newRow.querySelector('.product-select'));
-    
-    // إضافة مستمعي الأحداث
-    newRow.querySelector('.quantity').addEventListener('input', updateItemTotal);
-    newRow.querySelector('.price').addEventListener('input', updateItemTotal);
-    newRow.querySelector('.remove-item').addEventListener('click', function() {
-        newRow.remove();
-        updateInvoiceTotal();
-        
-        // إذا لم يتبق أي عناصر، أضف رسالة "لا توجد عناصر"
-        if (tbody.querySelectorAll('tr').length === 0) {
-            tbody.innerHTML = '<tr><td colspan="5" class="text-center">لا توجد عناصر</td></tr>';
-        }
-    });
-});
-
-// تحديث الإجمالي للعنصر
-function updateItemTotal() {
-    const row = this.closest('tr');
-    const quantity = parseFloat(row.querySelector('.quantity').value) || 0;
-    const price = parseFloat(row.querySelector('.price').value) || 0;
-    const total = quantity * price;
-    
-    row.querySelector('.item-total').textContent = total.toFixed(2) + ' د.ب';
-    updateInvoiceTotal();
-}
-
-// تحديث الإجمالي للفاتورة
-function updateInvoiceTotal() {
-    let total = 0;
-    document.querySelectorAll('.item-total').forEach(cell => {
-        const value = parseFloat(cell.textContent) || 0;
-        total += value;
-    });
-    
-    document.getElementById('invoice-total').textContent = total.toFixed(2) + ' د.ب';
-}
-
-// ملء قائمة المنتجات
-function fillProductSelect(selectElement) {
-    // هذه البيانات مؤقتة - يمكن استبدالها ببيانات حقيقية من قاعدة البيانات
-    const products = [
-        { id: 1, name: "منتج 1", price: 10.5 },
-        { id: 2, name: "منتج 2", price: 15.75 },
-        { id: 3, name: "منتج 3", price: 20.0 }
-    ];
-    
-    products.forEach(product => {
-        const option = document.createElement('option');
-        option.value = product.id;
-        option.textContent = `${product.name} - ${product.price.toFixed(2)} د.ب`;
-        option.dataset.price = product.price;
-        selectElement.appendChild(option);
-    });
-    
-    // عند تغيير المنتج، تحديث السعر تلقائياً
-    selectElement.addEventListener('change', function() {
-        if (this.value) {
-            const price = this.options[this.selectedIndex].dataset.price;
-            const row = this.closest('tr');
-            row.querySelector('.price').value = price;
-            updateItemTotal.call(row.querySelector('.price'));
-        }
-    });
-}
-<div id="settings" class="page">
-    <h2 class="mb-4">الإعدادات</h2>
-    
-    <!-- محتوى صفحة الإعدادات -->
-</div>
-
-<script src="settings.js"></script>
-// الكود الخاص بصفحة الإعدادات
-document.addEventListener('DOMContentLoaded', function() {
-    // تهيئة صفحة الإعدادات
-    loadSettings();
-    loadDeliverySettings();
-    loadTaxSettings();
-    loadPaymentMethods();
-    loadInvoiceStatuses();
-    
-    // باقي الكود الخاص بالإعدادات...
-});
-:root {
-    --primary-color: #2c3e50;
-    --secondary-color: #34495e;
-}
-
-body {
-    font-family: 'Arial', sans-serif;
-    background-color: #f5f5f5;
-}
-
-.sidebar {
-    background-color: var(--primary-color);
-    min-height: 100vh;
-    color: white;
-}
-
-/* باقي الأنماط من الكود الأصلي */
-
-/* أنماط الصفحات */
-.page {
-    display: none;
-}
-
-.page.active {
-    display: block;
-}
-
-/* أنماط الجداول */
-.table th {
-    background-color: #f8f9fa;
-    font-weight: 600;
-}
-
-/* أنماط البطاقات */
-.card {
-    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
-    border: 1px solid rgba(0, 0, 0, 0.125);
-}
-
-.card-header {
-    background-color: rgba(0, 0, 0, 0.03);
-    border-bottom: 1px solid rgba(0, 0, 0, 0.125);
-}
-
-/* أنماط الأزرار */
-.btn {
-    border-radius: 0.375rem;
-}
-
-/* أنماط التنبيهات */
-.alert {
-    border-radius: 0.375rem;
-    padding: 1rem 1.25rem;
-}
-
-.alert span {
-    margin-left: 0.5rem;
-}
-
-<!DOCTYPE html>
-<html>
-<head>
-    <meta http-equiv="refresh" content="0; url='/SalePoint2/'" />
-    <script>window.location.href = '/SalePoint2/';</script>
-</head>
-<body>
-    <p>يتم إعادة توجيهك إلى <a href="/SalePoint2/">نقطة البيع</a>.</p>
-</body>
-</html>
-<div id="dashboard" class="page active">
-    <h2 class="mb-4">لوحة التحكم</h2>
-    <div class="alert alert-info">صفحة لوحة التحكم - تحت التطوير</div>
-</div>
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -558,6 +105,7 @@ body {
             to { opacity: 1; transform: translateY(0); }
         }
         
+        /* أنماط Bootstrap بديلة */
         .alert {
             padding: 15px;
             border-radius: 5px;
@@ -623,6 +171,7 @@ body {
             color: white !important;
         }
 
+        /* أنماط الجداول */
         .table {
             width: 100%;
             border-collapse: collapse;
@@ -646,11 +195,10 @@ body {
             background-color: rgba(0, 0, 0, 0.05);
         }
 
+        /* أنماط التنقل الداخلي */
         .nav-tabs {
             border-bottom: 1px solid #dee2e6;
             margin-bottom: 1rem;
-            display: flex;
-            list-style: none;
         }
         
         .nav-tabs .nav-item {
@@ -663,8 +211,6 @@ body {
             border-top-right-radius: 0.25rem;
             padding: 0.5rem 1rem;
             color: #495057;
-            text-decoration: none;
-            display: block;
         }
         
         .nav-tabs .nav-link.active {
@@ -681,6 +227,7 @@ body {
             display: block;
         }
         
+        /* أنماط النماذج */
         .form-control {
             display: block;
             width: 100%;
@@ -742,7 +289,6 @@ body {
             border-radius: 0.25rem;
             transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, 
                         border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
-            cursor: pointer;
         }
         
         .btn-sm {
@@ -781,31 +327,6 @@ body {
         .me-2 {
             margin-left: 0.5rem !important;
         }
-
-        .badge {
-            display: inline-block;
-            padding: 0.25em 0.4em;
-            font-size: 75%;
-            font-weight: 700;
-            line-height: 1;
-            text-align: center;
-            white-space: nowrap;
-            vertical-align: baseline;
-            border-radius: 0.25rem;
-        }
-        
-        .bg-success {
-            background-color: #28a745 !important;
-        }
-        
-        .bg-warning {
-            background-color: #ffc107 !important;
-            color: #212529;
-        }
-        
-        .bg-danger {
-            background-color: #dc3545 !important;
-        }
     </style>
 </head>
 <body>
@@ -817,25 +338,25 @@ body {
                 <h6 style="text-align: center; color: rgba(255,255,255,0.8); margin-bottom: 20px;">SalePoint System</h6>
                 <hr>
                 <div>
-                    <div class="nav-link active" onclick="switchPage('dashboard')">
+                    <div class="nav-link active" data-page="dashboard">
                         <span>📊</span> لوحة التحكم
                     </div>
-                    <div class="nav-link" onclick="switchPage('invoices')">
+                    <div class="nav-link" data-page="invoices">
                         <span>🧾</span> إدارة الفواتير
                     </div>
-                    <div class="nav-link" onclick="switchPage('products')">
+                    <div class="nav-link" data-page="products">
                         <span>📦</span> المنتجات
                     </div>
-                    <div class="nav-link" onclick="switchPage('product-cost')">
+                    <div class="nav-link" data-page="product-cost">
                         <span>🧮</span> حساب تكلفة المنتج
                     </div>
-                    <div class="nav-link" onclick="switchPage('customers')">
+                    <div class="nav-link" data-page="customers">
                         <span>👥</span> العملاء
                     </div>
-                    <div class="nav-link" onclick="switchPage('reports')">
+                    <div class="nav-link" data-page="reports">
                         <span>📈</span> التقارير
                     </div>
-                    <div class="nav-link" onclick="switchPage('settings')">
+                    <div class="nav-link" data-page="settings">
                         <span>⚙️</span> الإعدادات
                     </div>
                 </div>
@@ -856,7 +377,7 @@ body {
                         <div class="stats-card bg-primary">
                             <span>🧾</span>
                             <h4 style="margin-top: 1rem;">الفواتير</h4>
-                            <h2 id="invoices-count">12</h2>
+                            <h2 id="invoices-count">0</h2>
                             <p style="margin-bottom: 0;">فواتير هذا الشهر</p>
                         </div>
                     </div>
@@ -864,7 +385,7 @@ body {
                         <div class="stats-card bg-success">
                             <span>📦</span>
                             <h4 style="margin-top: 1rem;">المنتجات</h4>
-                            <h2 id="products-count">24</h2>
+                            <h2 id="products-count">0</h2>
                             <p style="margin-bottom: 0;">منتج في المخزون</p>
                         </div>
                     </div>
@@ -872,7 +393,7 @@ body {
                         <div class="stats-card bg-warning">
                             <span>💰</span>
                             <h4 style="margin-top: 1rem;">المبيعات</h4>
-                            <h2 id="sales-count">17,250 د.ب</h2>
+                            <h2 id="sales-count">0 د.ب</h2>
                             <p style="margin-bottom: 0;">إجمالي المبيعات</p>
                         </div>
                     </div>
@@ -880,7 +401,7 @@ body {
                         <div class="stats-card bg-info">
                             <span>👥</span>
                             <h4 style="margin-top: 1rem;">العملاء</h4>
-                            <h2 id="customers-count">8</h2>
+                            <h2 id="customers-count">0</h2>
                             <p style="margin-bottom: 0;">عميل مسجل</p>
                         </div>
                     </div>
@@ -898,13 +419,13 @@ body {
                 
                 <ul class="nav nav-tabs mb-4">
                     <li class="nav-item">
-                        <a class="nav-link active" href="javascript:void(0)" onclick="switchTab('new-invoice')">فاتورة جديدة</a>
+                        <a class="nav-link active" href="#" data-tab="new-invoice">فاتورة جديدة</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="javascript:void(0)" onclick="switchTab('manage-invoices')">إدارة الفواتير</a>
+                        <a class="nav-link" href="#" data-tab="manage-invoices">إدارة الفواتير</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="javascript:void(0)" onclick="switchTab('track-invoices')">تتبع الفواتير</a>
+                        <a class="nav-link" href="#" data-tab="track-invoices">تتبع الفواتير</a>
                     </li>
                 </ul>
                 
@@ -918,7 +439,7 @@ body {
                             <div class="row mb-3">
                                 <div class="col-md-4">
                                     <label>رقم الفاتورة</label>
-                                    <input type="text" class="form-control" id="invoice-number" readonly value="INV-2023-0012">
+                                    <input type="text" class="form-control" id="invoice-number" readonly>
                                 </div>
                                 <div class="col-md-4">
                                     <label>التاريخ</label>
@@ -928,9 +449,6 @@ body {
                                     <label>العميل</label>
                                     <select class="form-control" id="customer-select">
                                         <option value="">اختر العميل</option>
-                                        <option value="1">محمد أحمد</option>
-                                        <option value="2">علي حسن</option>
-                                        <option value="3">سارة خالد</option>
                                     </select>
                                 </div>
                             </div>
@@ -962,8 +480,8 @@ body {
                             </div>
                             
                             <div class="d-flex justify-content-end mt-3">
-                                <button class="btn btn-success me-2" onclick="addInvoiceItem()">إضافة منتج</button>
-                                <button class="btn btn-primary" onclick="saveInvoice()">حفظ الفاتورة</button>
+                                <button class="btn btn-success me-2" id="add-item-btn">إضافة منتج</button>
+                                <button class="btn btn-primary" id="save-invoice-btn">حفظ الفاتورة</button>
                             </div>
                         </div>
                     </div>
@@ -1442,7 +960,7 @@ body {
                 link.classList.remove('active');
             });
             
-            const activeLink = document.querySelector(`.sidebar .nav-link[onclick="switchPage('${pageId}')"]`);
+            const activeLink = document.querySelector(`.sidebar .nav-link[data-page="${pageId}"]`);
             if (activeLink) {
                 activeLink.classList.add('active');
             }
@@ -1471,7 +989,7 @@ body {
                 link.classList.remove('active');
             });
             
-            const activeTabLink = document.querySelector(`.nav-tabs .nav-link[onclick="switchTab('${tabId}')"]`);
+            const activeTabLink = document.querySelector(`.nav-tabs .nav-link[data-tab="${tabId}"]`);
             if (activeTabLink) {
                 activeTabLink.classList.add('active');
             }
@@ -1482,6 +1000,18 @@ body {
             // توليد رقم فاتورة تلقائي
             document.getElementById('invoice-number').value = 'INV-' + new Date().getFullYear() + '-' + (appData.invoices + 1).toString().padStart(4, '0');
             document.getElementById('invoice-date').valueAsDate = new Date();
+            
+            // إعداد معالج الحدث لإضافة العناصر
+            const addItemBtn = document.getElementById('add-item-btn');
+            if (addItemBtn) {
+                addItemBtn.onclick = addInvoiceItem;
+            }
+            
+            // إعداد معالج الحدث لحفظ الفاتورة
+            const saveInvoiceBtn = document.getElementById('save-invoice-btn');
+            if (saveInvoiceBtn) {
+                saveInvoiceBtn.onclick = saveInvoice;
+            }
         }
         
         // إضافة عنصر إلى الفاتورة
@@ -1497,57 +1027,55 @@ body {
             const newRow = document.createElement('tr');
             newRow.innerHTML = `
                 <td>
-                    <select class="form-control product-select" onchange="updateProductPrice(this)">
+                    <select class="form-control product-select">
                         <option value="">اختر المنتج</option>
-                        <option value="45">سماعات رأس لاسلكية - 45.00 د.ب</option>
-                        <option value="320">هاتف ذكي - 320.00 د.ب</option>
-                        <option value="25">قلم حبر فاخر - 25.00 د.ب</option>
+                        <option value="1">سماعات رأس لاسلكية - 45.00 د.ب</option>
+                        <option value="2">هاتف ذكي - 320.00 د.ب</option>
+                        <option value="3">قلم حبر فاخر - 25.00 د.ب</option>
                     </select>
                 </td>
                 <td>
-                    <input type="number" class="form-control quantity" min="1" value="1" oninput="updateItemTotal(this)">
+                    <input type="number" class="form-control quantity" min="1" value="1">
                 </td>
                 <td>
                     <input type="number" class="form-control price" step="0.01" min="0" value="0" readonly>
                 </td>
                 <td class="item-total">0.00 د.ب</td>
                 <td>
-                    <button class="btn btn-sm btn-danger" onclick="removeInvoiceItem(this)">حذف</button>
+                    <button class="btn btn-sm btn-danger remove-item">حذف</button>
                 </td>
             `;
             
             tbody.appendChild(newRow);
-        }
-        
-        // تحديث سعر المنتج
-        function updateProductPrice(selectElement) {
-            const row = selectElement.closest('tr');
-            const priceInput = row.querySelector('.price');
-            priceInput.value = selectElement.value;
-            updateItemTotal(row.querySelector('.quantity'));
+            
+            // إضافة مستمعي الأحداث
+            newRow.querySelector('.quantity').addEventListener('input', updateItemTotal);
+            newRow.querySelector('.product-select').addEventListener('change', function() {
+                const price = this.value === '1' ? 45.00 : this.value === '2' ? 320.00 : this.value === '3' ? 25.00 : 0;
+                newRow.querySelector('.price').value = price;
+                updateItemTotal.call(newRow.querySelector('.quantity'));
+            });
+            
+            newRow.querySelector('.remove-item').addEventListener('click', function() {
+                newRow.remove();
+                updateInvoiceTotal();
+                
+                // إذا لم يتبق أي عناصر، أضف رسالة "لا توجد عناصر"
+                if (tbody.querySelectorAll('tr').length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="5" class="text-center">لا توجد عناصر</td></tr>';
+                }
+            });
         }
         
         // تحديث الإجمالي للعنصر
-        function updateItemTotal(inputElement) {
-            const row = inputElement.closest('tr');
-            const quantity = parseFloat(inputElement.value) || 0;
+        function updateItemTotal() {
+            const row = this.closest('tr');
+            const quantity = parseFloat(row.querySelector('.quantity').value) || 0;
             const price = parseFloat(row.querySelector('.price').value) || 0;
             const total = quantity * price;
             
             row.querySelector('.item-total').textContent = total.toFixed(2) + ' د.ب';
             updateInvoiceTotal();
-        }
-        
-        // إزالة عنصر من الفاتورة
-        function removeInvoiceItem(button) {
-            const row = button.closest('tr');
-            row.remove();
-            updateInvoiceTotal();
-            
-            const tbody = document.querySelector('#invoice-items tbody');
-            if (tbody.querySelectorAll('tr').length === 0) {
-                tbody.innerHTML = '<tr><td colspan="5" class="text-center">لا توجد عناصر</td></tr>';
-            }
         }
         
         // تحديث الإجمالي للفاتورة
@@ -1576,9 +1104,24 @@ body {
             // تحميل البيانات
             loadData();
             
-            // تعيين تاريخ اليوم لحقل التاريخ
-            const today = new Date();
-            document.getElementById('invoice-date').value = today.toISOString().substr(0, 10);
+            // إعداد event listeners للروابط الرئيسية
+            document.querySelectorAll('.sidebar .nav-link').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const pageId = this.getAttribute('data-page');
+                    console.log('نقر على:', pageId);
+                    switchPage(pageId);
+                });
+            });
+            
+            // إعداد event listeners للتبويبات الداخلية
+            document.querySelectorAll('.nav-tabs .nav-link').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const tabId = this.getAttribute('data-tab');
+                    switchTab(tabId);
+                });
+            });
             
             // تحميل الصفحة الأخيرة التي تم زيارتها
             const lastPage = localStorage.getItem('currentPage') || 'dashboard';
