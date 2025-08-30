@@ -1,3 +1,85 @@
+<div id="invoice" class="page">
+    <h2 class="mb-4"><i class="bi bi-receipt"></i> الفواتير</h2>
+    
+    <ul class="nav nav-tabs mb-4">
+        <li class="nav-item">
+            <a class="nav-link active" href="#" data-tab="new-invoice">فاتورة جديدة</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#" data-tab="manage-invoices">إدارة الفواتير</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#" data-tab="track-invoices">تتبع الفواتير</a>
+        </li>
+    </ul>
+    
+    <!-- محتوى الفواتير -->
+    <div id="new-invoice" class="invoice-tab active">
+        <!-- محتوى فاتورة جديدة -->
+    </div>
+    
+    <div id="manage-invoices" class="invoice-tab">
+        <!-- محتوى إدارة الفواتير -->
+    </div>
+    
+    <div id="track-invoices" class="invoice-tab">
+        <!-- محتوى تتبع الفواتير -->
+    </div>
+</div>
+
+<script src="invoice.js"></script>
+// الكود الخاص بصفحة الفواتير
+document.addEventListener('DOMContentLoaded', function() {
+    // تهيئة صفحة الفواتير
+    const invoiceDateInput = document.getElementById('invoice-date');
+    if (invoiceDateInput) {
+        invoiceDateInput.value = new Date().toISOString().split('T')[0];
+    }
+    document.getElementById('invoice-number').value = generateInvoiceNumber();
+    
+    // باقي الكود الخاص بالفاتورة...
+});
+
+function generateInvoiceNumber() {
+    const savedInvoices = JSON.parse(localStorage.getItem('invoices')) || [];
+    return "INV-" + new Date().getFullYear() + "-" + 
+        (savedInvoices.length + 1).toString().padStart(4, '0');
+}
+
+// دالة لإضافة عنصر جديد للفاتورة
+function addInvoiceItem() {
+    // كود إضافة عنصر
+}
+
+// دالة لحساب إجمالي الفاتورة
+function calculateInvoiceTotal() {
+    // كود حساب الإجمالي
+}
+
+// دالة لحفظ الفاتورة
+function saveInvoice() {
+    // كود حفظ الفاتورة
+}
+<div id="product-cost" class="page">
+    <h2 class="mb-4"><i class="bi bi-calculator"></i> حساب تكلفة المنتج</h2>
+    
+    <!-- محتوى حساب تكلفة المنتج -->
+    <div class="product-info-section">
+        <h5>معلومات المنتج</h5>
+        <!-- نموذج إدخال بيانات المنتج -->
+    </div>
+    
+    <div class="row">
+        <div class="col-md-6">
+            <!-- تكاليف المواد -->
+        </div>
+        <div class="col-md-6">
+            <!-- تكاليف العمالة والمعدات -->
+        </div>
+    </div>
+</div>
+
+<script src="product-cost.js"></script>
 // الكود الخاص بصفحة تكلفة المنتج
 document.addEventListener('DOMContentLoaded', function() {
     // تهيئة صفحة تكلفة المنتج
@@ -392,7 +474,6 @@ body {
             background-color: #f8f9fa;
             margin: 0;
             padding: 0;
-            overflow-x: hidden;
         }
         
         .main-container {
@@ -477,7 +558,6 @@ body {
             to { opacity: 1; transform: translateY(0); }
         }
         
-        /* أنماط Bootstrap بديلة */
         .alert {
             padding: 15px;
             border-radius: 5px;
@@ -543,7 +623,6 @@ body {
             color: white !important;
         }
 
-        /* أنماط الجداول */
         .table {
             width: 100%;
             border-collapse: collapse;
@@ -567,10 +646,11 @@ body {
             background-color: rgba(0, 0, 0, 0.05);
         }
 
-        /* أنماط التنقل الداخلي */
         .nav-tabs {
             border-bottom: 1px solid #dee2e6;
             margin-bottom: 1rem;
+            display: flex;
+            list-style: none;
         }
         
         .nav-tabs .nav-item {
@@ -583,6 +663,8 @@ body {
             border-top-right-radius: 0.25rem;
             padding: 0.5rem 1rem;
             color: #495057;
+            text-decoration: none;
+            display: block;
         }
         
         .nav-tabs .nav-link.active {
@@ -599,7 +681,6 @@ body {
             display: block;
         }
         
-        /* أنماط النماذج */
         .form-control {
             display: block;
             width: 100%;
@@ -661,6 +742,7 @@ body {
             border-radius: 0.25rem;
             transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, 
                         border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+            cursor: pointer;
         }
         
         .btn-sm {
@@ -699,6 +781,31 @@ body {
         .me-2 {
             margin-left: 0.5rem !important;
         }
+
+        .badge {
+            display: inline-block;
+            padding: 0.25em 0.4em;
+            font-size: 75%;
+            font-weight: 700;
+            line-height: 1;
+            text-align: center;
+            white-space: nowrap;
+            vertical-align: baseline;
+            border-radius: 0.25rem;
+        }
+        
+        .bg-success {
+            background-color: #28a745 !important;
+        }
+        
+        .bg-warning {
+            background-color: #ffc107 !important;
+            color: #212529;
+        }
+        
+        .bg-danger {
+            background-color: #dc3545 !important;
+        }
     </style>
 </head>
 <body>
@@ -710,25 +817,25 @@ body {
                 <h6 style="text-align: center; color: rgba(255,255,255,0.8); margin-bottom: 20px;">SalePoint System</h6>
                 <hr>
                 <div>
-                    <div class="nav-link active" data-page="dashboard">
+                    <div class="nav-link active" onclick="switchPage('dashboard')">
                         <span>📊</span> لوحة التحكم
                     </div>
-                    <div class="nav-link" data-page="invoices">
+                    <div class="nav-link" onclick="switchPage('invoices')">
                         <span>🧾</span> إدارة الفواتير
                     </div>
-                    <div class="nav-link" data-page="products">
+                    <div class="nav-link" onclick="switchPage('products')">
                         <span>📦</span> المنتجات
                     </div>
-                    <div class="nav-link" data-page="product-cost">
+                    <div class="nav-link" onclick="switchPage('product-cost')">
                         <span>🧮</span> حساب تكلفة المنتج
                     </div>
-                    <div class="nav-link" data-page="customers">
+                    <div class="nav-link" onclick="switchPage('customers')">
                         <span>👥</span> العملاء
                     </div>
-                    <div class="nav-link" data-page="reports">
+                    <div class="nav-link" onclick="switchPage('reports')">
                         <span>📈</span> التقارير
                     </div>
-                    <div class="nav-link" data-page="settings">
+                    <div class="nav-link" onclick="switchPage('settings')">
                         <span>⚙️</span> الإعدادات
                     </div>
                 </div>
@@ -749,7 +856,7 @@ body {
                         <div class="stats-card bg-primary">
                             <span>🧾</span>
                             <h4 style="margin-top: 1rem;">الفواتير</h4>
-                            <h2 id="invoices-count">0</h2>
+                            <h2 id="invoices-count">12</h2>
                             <p style="margin-bottom: 0;">فواتير هذا الشهر</p>
                         </div>
                     </div>
@@ -757,7 +864,7 @@ body {
                         <div class="stats-card bg-success">
                             <span>📦</span>
                             <h4 style="margin-top: 1rem;">المنتجات</h4>
-                            <h2 id="products-count">0</h2>
+                            <h2 id="products-count">24</h2>
                             <p style="margin-bottom: 0;">منتج في المخزون</p>
                         </div>
                     </div>
@@ -765,7 +872,7 @@ body {
                         <div class="stats-card bg-warning">
                             <span>💰</span>
                             <h4 style="margin-top: 1rem;">المبيعات</h4>
-                            <h2 id="sales-count">0 د.ب</h2>
+                            <h2 id="sales-count">17,250 د.ب</h2>
                             <p style="margin-bottom: 0;">إجمالي المبيعات</p>
                         </div>
                     </div>
@@ -773,7 +880,7 @@ body {
                         <div class="stats-card bg-info">
                             <span>👥</span>
                             <h4 style="margin-top: 1rem;">العملاء</h4>
-                            <h2 id="customers-count">0</h2>
+                            <h2 id="customers-count">8</h2>
                             <p style="margin-bottom: 0;">عميل مسجل</p>
                         </div>
                     </div>
@@ -791,13 +898,13 @@ body {
                 
                 <ul class="nav nav-tabs mb-4">
                     <li class="nav-item">
-                        <a class="nav-link active" href="#" data-tab="new-invoice">فاتورة جديدة</a>
+                        <a class="nav-link active" href="javascript:void(0)" onclick="switchTab('new-invoice')">فاتورة جديدة</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#" data-tab="manage-invoices">إدارة الفواتير</a>
+                        <a class="nav-link" href="javascript:void(0)" onclick="switchTab('manage-invoices')">إدارة الفواتير</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#" data-tab="track-invoices">تتبع الفواتير</a>
+                        <a class="nav-link" href="javascript:void(0)" onclick="switchTab('track-invoices')">تتبع الفواتير</a>
                     </li>
                 </ul>
                 
@@ -811,7 +918,7 @@ body {
                             <div class="row mb-3">
                                 <div class="col-md-4">
                                     <label>رقم الفاتورة</label>
-                                    <input type="text" class="form-control" id="invoice-number" readonly>
+                                    <input type="text" class="form-control" id="invoice-number" readonly value="INV-2023-0012">
                                 </div>
                                 <div class="col-md-4">
                                     <label>التاريخ</label>
@@ -821,6 +928,9 @@ body {
                                     <label>العميل</label>
                                     <select class="form-control" id="customer-select">
                                         <option value="">اختر العميل</option>
+                                        <option value="1">محمد أحمد</option>
+                                        <option value="2">علي حسن</option>
+                                        <option value="3">سارة خالد</option>
                                     </select>
                                 </div>
                             </div>
@@ -852,8 +962,8 @@ body {
                             </div>
                             
                             <div class="d-flex justify-content-end mt-3">
-                                <button class="btn btn-success me-2" id="add-item-btn">إضافة منتج</button>
-                                <button class="btn btn-primary" id="save-invoice-btn">حفظ الفاتورة</button>
+                                <button class="btn btn-success me-2" onclick="addInvoiceItem()">إضافة منتج</button>
+                                <button class="btn btn-primary" onclick="saveInvoice()">حفظ الفاتورة</button>
                             </div>
                         </div>
                     </div>
@@ -930,7 +1040,7 @@ body {
                         </div>
                         <div class="card-body">
                             <div class="form-group mb-3">
-                                <label>ابحث بررقم الفاتورة</label>
+                                <label>ابحث برقم الفاتورة</label>
                                 <div class="input-group">
                                     <input type="text" class="form-control" placeholder="أدخل رقم الفاتورة">
                                     <button class="btn btn-primary">بحث</button>
@@ -1332,7 +1442,7 @@ body {
                 link.classList.remove('active');
             });
             
-            const activeLink = document.querySelector(`.sidebar .nav-link[data-page="${pageId}"]`);
+            const activeLink = document.querySelector(`.sidebar .nav-link[onclick="switchPage('${pageId}')"]`);
             if (activeLink) {
                 activeLink.classList.add('active');
             }
@@ -1361,7 +1471,7 @@ body {
                 link.classList.remove('active');
             });
             
-            const activeTabLink = document.querySelector(`.nav-tabs .nav-link[data-tab="${tabId}"]`);
+            const activeTabLink = document.querySelector(`.nav-tabs .nav-link[onclick="switchTab('${tabId}')"]`);
             if (activeTabLink) {
                 activeTabLink.classList.add('active');
             }
@@ -1372,18 +1482,6 @@ body {
             // توليد رقم فاتورة تلقائي
             document.getElementById('invoice-number').value = 'INV-' + new Date().getFullYear() + '-' + (appData.invoices + 1).toString().padStart(4, '0');
             document.getElementById('invoice-date').valueAsDate = new Date();
-            
-            // إعداد معالج الحدث لإضافة العناصر
-            const addItemBtn = document.getElementById('add-item-btn');
-            if (addItemBtn) {
-                addItemBtn.onclick = addInvoiceItem;
-            }
-            
-            // إعداد معالج الحدث لحفظ الفاتورة
-            const saveInvoiceBtn = document.getElementById('save-invoice-btn');
-            if (saveInvoiceBtn) {
-                saveInvoiceBtn.onclick = saveInvoice;
-            }
         }
         
         // إضافة عنصر إلى الفاتورة
@@ -1399,55 +1497,57 @@ body {
             const newRow = document.createElement('tr');
             newRow.innerHTML = `
                 <td>
-                    <select class="form-control product-select">
+                    <select class="form-control product-select" onchange="updateProductPrice(this)">
                         <option value="">اختر المنتج</option>
-                        <option value="1">سماعات رأس لاسلكية - 45.00 د.ب</option>
-                        <option value="2">هاتف ذكي - 320.00 د.ب</option>
-                        <option value="3">قلم حبر فاخر - 25.00 د.ب</option>
+                        <option value="45">سماعات رأس لاسلكية - 45.00 د.ب</option>
+                        <option value="320">هاتف ذكي - 320.00 د.ب</option>
+                        <option value="25">قلم حبر فاخر - 25.00 د.ب</option>
                     </select>
                 </td>
                 <td>
-                    <input type="number" class="form-control quantity" min="1" value="1">
+                    <input type="number" class="form-control quantity" min="1" value="1" oninput="updateItemTotal(this)">
                 </td>
                 <td>
                     <input type="number" class="form-control price" step="0.01" min="0" value="0" readonly>
                 </td>
                 <td class="item-total">0.00 د.ب</td>
                 <td>
-                    <button class="btn btn-sm btn-danger remove-item">حذف</button>
+                    <button class="btn btn-sm btn-danger" onclick="removeInvoiceItem(this)">حذف</button>
                 </td>
             `;
             
             tbody.appendChild(newRow);
-            
-            // إضافة مستمعي الأحداث
-            newRow.querySelector('.quantity').addEventListener('input', updateItemTotal);
-            newRow.querySelector('.product-select').addEventListener('change', function() {
-                const price = this.value === '1' ? 45.00 : this.value === '2' ? 320.00 : this.value === '3' ? 25.00 : 0;
-                newRow.querySelector('.price').value = price;
-                updateItemTotal.call(newRow.querySelector('.quantity'));
-            });
-            
-            newRow.querySelector('.remove-item').addEventListener('click', function() {
-                newRow.remove();
-                updateInvoiceTotal();
-                
-                // إذا لم يتبق أي عناصر، أضف رسالة "لا توجد عناصر"
-                if (tbody.querySelectorAll('tr').length === 0) {
-                    tbody.innerHTML = '<tr><td colspan="5" class="text-center">لا توجد عناصر</td></tr>';
-                }
-            });
+        }
+        
+        // تحديث سعر المنتج
+        function updateProductPrice(selectElement) {
+            const row = selectElement.closest('tr');
+            const priceInput = row.querySelector('.price');
+            priceInput.value = selectElement.value;
+            updateItemTotal(row.querySelector('.quantity'));
         }
         
         // تحديث الإجمالي للعنصر
-        function updateItemTotal() {
-            const row = this.closest('tr');
-            const quantity = parseFloat(row.querySelector('.quantity').value) || 0;
+        function updateItemTotal(inputElement) {
+            const row = inputElement.closest('tr');
+            const quantity = parseFloat(inputElement.value) || 0;
             const price = parseFloat(row.querySelector('.price').value) || 0;
             const total = quantity * price;
             
             row.querySelector('.item-total').textContent = total.toFixed(2) + ' د.ب';
             updateInvoiceTotal();
+        }
+        
+        // إزالة عنصر من الفاتورة
+        function removeInvoiceItem(button) {
+            const row = button.closest('tr');
+            row.remove();
+            updateInvoiceTotal();
+            
+            const tbody = document.querySelector('#invoice-items tbody');
+            if (tbody.querySelectorAll('tr').length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" class="text-center">لا توجد عناصر</td></tr>';
+            }
         }
         
         // تحديث الإجمالي للفاتورة
@@ -1476,127 +1576,16 @@ body {
             // تحميل البيانات
             loadData();
             
-            // إعداد event listeners للروابط الرئيسية
-            document.querySelectorAll('.sidebar .nav-link').forEach(link => {
-                link.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const pageId = this.getAttribute('data-page');
-                    console.log('نقر على:', pageId);
-                    switchPage(pageId);
-                });
-            });
-            
-            // إعداد event listeners للتبويبات الداخلية
-            document.querySelectorAll('.nav-tabs .nav-link').forEach(link => {
-                link.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const tabId = this.getAttribute('data-tab');
-                    switchTab(tabId);
-                });
-            });
+            // تعيين تاريخ اليوم لحقل التاريخ
+            const today = new Date();
+            document.getElementById('invoice-date').value = today.toISOString().substr(0, 10);
             
             // تحميل الصفحة الأخيرة التي تم زيارتها
             const lastPage = localStorage.getItem('currentPage') || 'dashboard';
             switchPage(lastPage);
             
             console.log('التنقل جاهز للعمل');
-            
-            // منع إعادة تحميل الصفحة عند النقر على الروابط
-            document.addEventListener('click', function(e) {
-                if (e.target.tagName === 'A' && e.target.getAttribute('href') === '#') {
-                    e.preventDefault();
-                }
-            });
-        });
-        
-        // منع إعادة تحميل الصفحة عند الضغط على زر Enter في النماذج
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Enter' && e.target.tagName === 'INPUT') {
-                e.preventDefault();
-            }
         });
     </script>
 </body>
 </html>
-<div id="invoice" class="page">
-    <h2 class="mb-4"><i class="bi bi-receipt"></i> الفواتير</h2>
-    
-    <ul class="nav nav-tabs mb-4">
-        <li class="nav-item">
-            <a class="nav-link active" href="#" data-tab="new-invoice">فاتورة جديدة</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="#" data-tab="manage-invoices">إدارة الفواتير</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="#" data-tab="track-invoices">تتبع الفواتير</a>
-        </li>
-    </ul>
-    
-    <!-- محتوى الفواتير -->
-    <div id="new-invoice" class="invoice-tab active">
-        <!-- محتوى فاتورة جديدة -->
-    </div>
-    
-    <div id="manage-invoices" class="invoice-tab">
-        <!-- محتوى إدارة الفواتير -->
-    </div>
-    
-    <div id="track-invoices" class="invoice-tab">
-        <!-- محتوى تتبع الفواتير -->
-    </div>
-</div>
-
-<script src="invoice.js"></script>
-// الكود الخاص بصفحة الفواتير
-document.addEventListener('DOMContentLoaded', function() {
-    // تهيئة صفحة الفواتير
-    const invoiceDateInput = document.getElementById('invoice-date');
-    if (invoiceDateInput) {
-        invoiceDateInput.value = new Date().toISOString().split('T')[0];
-    }
-    document.getElementById('invoice-number').value = generateInvoiceNumber();
-    
-    // باقي الكود الخاص بالفاتورة...
-});
-
-function generateInvoiceNumber() {
-    const savedInvoices = JSON.parse(localStorage.getItem('invoices')) || [];
-    return "INV-" + new Date().getFullYear() + "-" + 
-        (savedInvoices.length + 1).toString().padStart(4, '0');
-}
-
-// دالة لإضافة عنصر جديد للفاتورة
-function addInvoiceItem() {
-    // كود إضافة عنصر
-}
-
-// دالة لحساب إجمالي الفاتورة
-function calculateInvoiceTotal() {
-    // كود حساب الإجمالي
-}
-
-// دالة لحفظ الفاتورة
-function saveInvoice() {
-    // كود حفظ الفاتورة
-}
-<div id="product-cost" class="page">
-    <h2 class="mb-4"><i class="bi bi-calculator"></i> حساب تكلفة المنتج</h2>
-    
-    <!-- محتوى حساب تكلفة المنتج -->
-    <div class="product-info-section">
-        <h5>معلومات المنتج</h5>
-        <!-- نموذج إدخال بيانات المنتج -->
-    </div>
-    
-    <div class="row">
-        <div class="col-md-6">
-            <!-- تكاليف المواد -->
-        </div>
-        <div class="col-md-6">
-            <!-- تكاليف العمالة والمعدات -->
-        </div>
-    </div>
-</div>
-
-<script src="product-cost.js"></script>
