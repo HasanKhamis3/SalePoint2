@@ -1,3 +1,214 @@
+// الكود الأساسي للتنقل بين الصفحات وإدارة الحالة العامة
+document.addEventListener('DOMContentLoaded', function() {
+    // إدارة تحميل الصفحات
+    function loadPage(page) {
+        fetch(page + '.html')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('الصفحة غير موجودة');
+                }
+                return response.text();
+            })
+            .then(data => {
+                document.getElementById('content-area').innerHTML = data;
+                
+                // تحميل الـscripts الإضافية إذا كانت موجودة
+                if (page === 'invoice') {
+                    loadScript('invoice.js');
+                } else if (page === 'product-cost') {
+                    loadScript('product-cost.js');
+                } else if (page === 'settings') {
+                    loadScript('settings.js');
+                }
+            })
+            .catch(error => {
+                console.error('Error loading page:', error);
+                document.getElementById('content-area').innerHTML = `
+                    <div class="alert alert-danger">
+                        <h4>خطأ في تحميل الصفحة</h4>
+                        <p>${error.message}</p>
+                    </div>
+                `;
+            });
+    }
+    
+    function loadScript(src) {
+        const script = document.createElement('script');
+        script.src = src;
+        script.onerror = function() {
+            console.error('Failed to load script:', src);
+        };
+        document.body.appendChild(script);
+    }
+    
+    // التنقل بين الصفحات
+    document.querySelectorAll('.sidebar .nav-link').forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            const page = this.getAttribute('data-page');
+            if (page) {
+                loadPage(page);
+                
+                // تحديث القائمة الجانبية
+                document.querySelectorAll('.sidebar .nav-link').forEach(navLink => {
+                    navLink.classList.remove('active');
+                });
+                this.classList.add('active');
+                
+                // تحديث عنوان URL
+                window.location.hash = page;
+            }
+        });
+    });
+    
+    // تحميل الصفحة الأولى افتراضيًا
+    const hash = window.location.hash.substring(1);
+    if (hash) {
+        loadPage(hash);
+        document.querySelector(`[data-page="${hash}"]`)?.classList.add('active');
+    } else {
+        loadPage('dashboard');
+        document.querySelector('[data-page="dashboard"]')?.classList.add('active');
+    }
+});
+
+// دالة لتحميل المحتوى ديناميكيًا
+function loadPage(page) {
+    fetch(page + '.html')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('الصفحة غير موجودة');
+            }
+            return response.text();
+        })
+        .then(data => {
+            document.getElementById('content-area').innerHTML = data;
+            // تحميل الـscripts الإضافية إذا كانت موجودة
+            if (page === 'invoice') {
+                loadScript('invoice.js');
+            } else if (page === 'product-cost') {
+                loadScript('product-cost.js');
+            } else if (page === 'settings') {
+                loadScript('settings.js');
+            }
+        })
+        .catch(error => {
+            console.error('Error loading page:', error);
+            document.getElementById('content-area').innerHTML = `
+                <div class="alert alert-danger">
+                    <h4>خطأ في تحميل الصفحة</h4>
+                    <p>${error.message}</p>
+                </div>
+            `;
+        });
+}
+
+function loadScript(src) {
+    const script = document.createElement('script');
+    script.src = src;
+    script.onerror = function() {
+        console.error('Failed to load script:', src);
+    };
+    document.body.appendChild(script);
+}
+
+// التنقل بين الصفحات
+document.querySelectorAll('[data-page]').forEach(link => {
+    link.addEventListener('click', function(e) {
+        e.preventDefault();
+        const page = this.getAttribute('data-page');
+        if (page) {
+            loadPage(page);
+            
+            // تحديث القائمة الجانبية
+            document.querySelectorAll('.nav-link').forEach(navLink => {
+                navLink.classList.remove('active');
+            });
+            this.classList.add('active');
+            
+            // تحديث عنوان URL دون إعادة تحميل الصفحة
+            history.pushState(null, null, '#' + page);
+        }
+    });
+});
+
+// تحميل الصفحة الأولى افتراضيًا
+window.addEventListener('load', function() {
+    const hash = window.location.hash.substring(1);
+    if (hash) {
+        loadPage(hash);
+        document.querySelector(`[data-page="${hash}"]`)?.classList.add('active');
+    } else {
+        loadPage('dashboard');
+        document.querySelector('[data-page="dashboard"]')?.classList.add('active');
+    }
+});
+
+// إدارة حالة التطبيق
+let appState = {
+    currentPage: 'dashboard',
+    userData: null,
+    settings: {}
+};
+
+// حفظ الحالة في localStorage
+function saveAppState() {
+    localStorage.setItem('salePointAppState', JSON.stringify(appState));
+}
+
+// تحميل الحالة من localStorage
+function loadAppState() {
+    const savedState = localStorage.getItem('salePointAppState');
+    if (savedState) {
+        appState = JSON.parse(savedState);
+    }
+}
+
+// تهيئة التطبيق
+function initializeApp() {
+    loadAppState();
+    console.log('التطبيق initialized بنجاح');
+}
+<div id="products" class="page">
+    <h2>إدارة المنتجات</h2>
+    <p>صفحة إدارة المنتجات - تحت التطوير</p>
+    
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>رمز المنتج</th>
+                    <th>اسم المنتج</th>
+                    <th>عدد القطع في العلبة</th>
+                    <th>إجمالي تكلفة العلبة</th>
+                    <th>سعر البيع النهائي</th>
+                    <th>نسبة الربح</th>
+                    <th>هامش الربح</th>
+                    <th>تكلفة اليد العاملة للعلبة</th>
+                    <th>قيمة إهلاك المعدات</th>
+                    <th>الإجراءات</th>
+                </tr>
+            </thead>
+            <tbody id="products-list">
+                <tr>
+                    <td colspan="10" class="text-center">لا توجد منتجات مسجلة بعد</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+// الكود الخاص بصفحة تكلفة المنتج
+document.addEventListener('DOMContentLoaded', function() {
+    // تهيئة صفحة تكلفة المنتج
+    document.getElementById('product-code').value = generateProductCode();
+    
+    // باقي الكود الخاص بتكلفة المنتج...
+});
+
+function generateProductCode() {
+    lastProductCode++;
+    return "PRD-" + lastProductCode.toString().padStart(4, '0');
+}
 <div id="product-cost" class="page">
     <h2 class="mb-4">حساب تكلفة المنتج</h2>
     
@@ -525,18 +736,6 @@ function generateInvoiceNumber() {
         نظام إدارة المبيعات - الإصدار 1.0
     </div>
 </div>
-<!DOCTYPE html>
-<html>
-<head>
-    <meta http-equiv="refresh" content="0; url='/SalePoint2/'" />
-    <script>
-        window.location.href = '/SalePoint2/';
-    </script>
-</head>
-<body>
-    <p>يتم إعادة توجيهك إلى <a href="/SalePoint2/">نقطة البيع</a>.</p>
-</body>
-</html>
 # هذا الملف يمنع GitHub من معالجة الموقع باستخدام Jekyll
 # وهذا ضروري للتطبيقات أحادية الصفحة (SPA)
 :root {
@@ -714,214 +913,3 @@ document.addEventListener('DOMContentLoaded', function() {
     
     <!-- محتوى صفحة الإعدادات -->
 </div>
-// الكود الأساسي للتنقل بين الصفحات وإدارة الحالة العامة
-document.addEventListener('DOMContentLoaded', function() {
-    // إدارة تحميل الصفحات
-    function loadPage(page) {
-        fetch(page + '.html')
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('الصفحة غير موجودة');
-                }
-                return response.text();
-            })
-            .then(data => {
-                document.getElementById('content-area').innerHTML = data;
-                
-                // تحميل الـscripts الإضافية إذا كانت موجودة
-                if (page === 'invoice') {
-                    loadScript('invoice.js');
-                } else if (page === 'product-cost') {
-                    loadScript('product-cost.js');
-                } else if (page === 'settings') {
-                    loadScript('settings.js');
-                }
-            })
-            .catch(error => {
-                console.error('Error loading page:', error);
-                document.getElementById('content-area').innerHTML = `
-                    <div class="alert alert-danger">
-                        <h4>خطأ في تحميل الصفحة</h4>
-                        <p>${error.message}</p>
-                    </div>
-                `;
-            });
-    }
-    
-    function loadScript(src) {
-        const script = document.createElement('script');
-        script.src = src;
-        script.onerror = function() {
-            console.error('Failed to load script:', src);
-        };
-        document.body.appendChild(script);
-    }
-    
-    // التنقل بين الصفحات
-    document.querySelectorAll('.sidebar .nav-link').forEach(link => {
-        link.addEventListener('click', function(e) {
-            e.preventDefault();
-            const page = this.getAttribute('data-page');
-            if (page) {
-                loadPage(page);
-                
-                // تحديث القائمة الجانبية
-                document.querySelectorAll('.sidebar .nav-link').forEach(navLink => {
-                    navLink.classList.remove('active');
-                });
-                this.classList.add('active');
-                
-                // تحديث عنوان URL
-                window.location.hash = page;
-            }
-        });
-    });
-    
-    // تحميل الصفحة الأولى افتراضيًا
-    const hash = window.location.hash.substring(1);
-    if (hash) {
-        loadPage(hash);
-        document.querySelector(`[data-page="${hash}"]`)?.classList.add('active');
-    } else {
-        loadPage('dashboard');
-        document.querySelector('[data-page="dashboard"]')?.classList.add('active');
-    }
-});
-
-// دالة لتحميل المحتوى ديناميكيًا
-function loadPage(page) {
-    fetch(page + '.html')
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('الصفحة غير موجودة');
-            }
-            return response.text();
-        })
-        .then(data => {
-            document.getElementById('content-area').innerHTML = data;
-            // تحميل الـscripts الإضافية إذا كانت موجودة
-            if (page === 'invoice') {
-                loadScript('invoice.js');
-            } else if (page === 'product-cost') {
-                loadScript('product-cost.js');
-            } else if (page === 'settings') {
-                loadScript('settings.js');
-            }
-        })
-        .catch(error => {
-            console.error('Error loading page:', error);
-            document.getElementById('content-area').innerHTML = `
-                <div class="alert alert-danger">
-                    <h4>خطأ في تحميل الصفحة</h4>
-                    <p>${error.message}</p>
-                </div>
-            `;
-        });
-}
-
-function loadScript(src) {
-    const script = document.createElement('script');
-    script.src = src;
-    script.onerror = function() {
-        console.error('Failed to load script:', src);
-    };
-    document.body.appendChild(script);
-}
-
-// التنقل بين الصفحات
-document.querySelectorAll('[data-page]').forEach(link => {
-    link.addEventListener('click', function(e) {
-        e.preventDefault();
-        const page = this.getAttribute('data-page');
-        if (page) {
-            loadPage(page);
-            
-            // تحديث القائمة الجانبية
-            document.querySelectorAll('.nav-link').forEach(navLink => {
-                navLink.classList.remove('active');
-            });
-            this.classList.add('active');
-            
-            // تحديث عنوان URL دون إعادة تحميل الصفحة
-            history.pushState(null, null, '#' + page);
-        }
-    });
-});
-
-// تحميل الصفحة الأولى افتراضيًا
-window.addEventListener('load', function() {
-    const hash = window.location.hash.substring(1);
-    if (hash) {
-        loadPage(hash);
-        document.querySelector(`[data-page="${hash}"]`)?.classList.add('active');
-    } else {
-        loadPage('dashboard');
-        document.querySelector('[data-page="dashboard"]')?.classList.add('active');
-    }
-});
-
-// إدارة حالة التطبيق
-let appState = {
-    currentPage: 'dashboard',
-    userData: null,
-    settings: {}
-};
-
-// حفظ الحالة في localStorage
-function saveAppState() {
-    localStorage.setItem('salePointAppState', JSON.stringify(appState));
-}
-
-// تحميل الحالة من localStorage
-function loadAppState() {
-    const savedState = localStorage.getItem('salePointAppState');
-    if (savedState) {
-        appState = JSON.parse(savedState);
-    }
-}
-
-// تهيئة التطبيق
-function initializeApp() {
-    loadAppState();
-    console.log('التطبيق initialized بنجاح');
-}
-<div id="products" class="page">
-    <h2>إدارة المنتجات</h2>
-    <p>صفحة إدارة المنتجات - تحت التطوير</p>
-    
-    <div class="table-responsive">
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th>رمز المنتج</th>
-                    <th>اسم المنتج</th>
-                    <th>عدد القطع في العلبة</th>
-                    <th>إجمالي تكلفة العلبة</th>
-                    <th>سعر البيع النهائي</th>
-                    <th>نسبة الربح</th>
-                    <th>هامش الربح</th>
-                    <th>تكلفة اليد العاملة للعلبة</th>
-                    <th>قيمة إهلاك المعدات</th>
-                    <th>الإجراءات</th>
-                </tr>
-            </thead>
-            <tbody id="products-list">
-                <tr>
-                    <td colspan="10" class="text-center">لا توجد منتجات مسجلة بعد</td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-</div>
-// الكود الخاص بصفحة تكلفة المنتج
-document.addEventListener('DOMContentLoaded', function() {
-    // تهيئة صفحة تكلفة المنتج
-    document.getElementById('product-code').value = generateProductCode();
-    
-    // باقي الكود الخاص بتكلفة المنتج...
-});
-
-function generateProductCode() {
-    lastProductCode++;
-    return "PRD-" + lastProductCode.toString().padStart(4, '0');
-}
