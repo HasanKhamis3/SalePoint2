@@ -1,1149 +1,223 @@
+// المتغيرات العامة
+const currencySymbols = {
+    'BHD': 'د.ب',
+    'SAR': 'ر.س',
+    'AED': 'د.إ',
+    'QAR': 'ر.ق',
+    'KWD': 'د.ك',
+    'OMR': 'ر.ع',
+    'USD': '$'
+};
+let currentCurrency = 'BHD';
+
+// دالة تحميل الصفحات
+function loadPage(pageId) {
+    fetch(`${pageId}.html`)
+        .then(response => response.text())
+        .then(data => {
+            document.querySelector('.main-content').innerHTML = data;
+            initPage(pageId);
+        });
+}
+
+// تهيئة الصفحة بعد تحميلها
+function initPage(pageId) {
+    switch(pageId) {
+        case 'dashboard':
+            initDashboard();
+            break;
+        case 'invoice':
+            initInvoice();
+            break;
+        case 'products':
+            initProducts();
+            break;
+        case 'product-cost':
+            initProductCost();
+            break;
+        case 'settings':
+            initSettings();
+            break;
+    }
+}
+
+// مستمعي الأحداث للقائمة الجانبية
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('[data-page]').forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            const pageId = this.getAttribute('data-page');
+            loadPage(pageId);
+        });
+    });
+    
+    // تحميل الصفحة الافتراضية
+    loadPage('dashboard');
+});
+.product-info-section {
+    background-color: #f8f9fa;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+/* تنسيقات حساب التكلفة الأخرى */
+<div id="product-cost" class="page">
+    <h2 class="mb-4">حساب تكلفة المنتج</h2>
+    
+    <!-- محتوى حساب تكلفة المنتج -->
+</div>
+<div id="products" class="page">
+    <h2 class="mb-4">المنتجات</h2>
+    
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <!-- محتوى جدول المنتجات -->
+        </table>
+    </div>
+</div>
+<div id="settings" class="page">
+    <h2 class="mb-4">الإعدادات</h2>
+    
+    <!-- محتوى الإعدادات -->
+</div>
+<div id="dashboard" class="page">
+    <h2 class="mb-4">لوحة التحكم</h2>
+    <div class="alert alert-info">صفحة لوحة التحكم - تحت التطوير</div>
+</div>
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نظام نقطة البيع - SalePoint</title>
-    <style>
-        :root {
-            --primary-color: #2c3e50;
-            --secondary-color: #34495e;
-        }
-        
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f8f9fa;
-            margin: 0;
-            padding: 0;
-            overflow-x: hidden;
-        }
-        
-        .main-container {
-            display: flex;
-            min-height: 100vh;
-        }
-        
-        .sidebar {
-            background: linear-gradient(to bottom, var(--primary-color), var(--secondary-color));
-            width: 280px;
-            color: white;
-            padding: 20px 0;
-            position: fixed;
-            height: 100vh;
-            z-index: 1000;
-            overflow-y: auto;
-        }
-        
-        .sidebar .nav-link {
-            color: rgba(255, 255, 255, 0.9);
-            margin: 8px 15px;
-            padding: 12px 20px;
-            border-radius: 8px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            transition: all 0.3s ease;
-        }
-        
-        .sidebar .nav-link:hover, 
-        .sidebar .nav-link.active {
-            background-color: rgba(255, 255, 255, 0.15);
-            transform: translateX(-5px);
-        }
-        
-        .main-content {
-            flex: 1;
-            padding: 30px;
-            background-color: #f8f9fa;
-            margin-right: 280px;
-            min-height: 100vh;
-        }
-        
-        .welcome-card {
-            background: linear-gradient(135deg, #2c3e50 0%, #4ca1af 100%);
-            color: white;
-            border-radius: 15px;
-            padding: 30px;
-            margin-bottom: 30px;
-        }
-        
-        .stats-card {
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-            height: 100%;
-            text-align: center;
-            padding: 25px 15px;
-            background: white;
-            margin-bottom: 20px;
-        }
-        
-        .stats-card span {
-            font-size: 2.5rem;
-            margin-bottom: 15px;
-            display: block;
-        }
-        
-        .page {
-            display: none;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-        
-        .page.active {
-            display: block;
-            opacity: 1;
-            animation: fadeIn 0.5s ease;
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        /* أنماط Bootstrap بديلة */
-        .alert {
-            padding: 15px;
-            border-radius: 5px;
-            margin-bottom: 20px;
-        }
-        
-        .alert-info {
-            background-color: #d1ecf1;
-            border: 1px solid #bee5eb;
-            color: #0c5460;
-        }
-        
-        .bg-primary { background-color: #007bff !important; color: white; }
-        .bg-success { background-color: #28a745 !important; color: white; }
-        .bg-warning { background-color: #ffc107 !important; color: black; }
-        .bg-info { background-color: #17a2b8 !important; color: white; }
-        
-        .row {
-            display: flex;
-            flex-wrap: wrap;
-            margin-right: -15px;
-            margin-left: -15px;
-        }
-        
-        .col-xl-3, .col-md-6 {
-            position: relative;
-            width: 100%;
-            padding-right: 15px;
-            padding-left: 15px;
-        }
-        
-        @media (min-width: 768px) {
-            .col-md-6 {
-                flex: 0 0 50%;
-                max-width: 50%;
-            }
-        }
-        
-        @media (min-width: 1200px) {
-            .col-xl-3 {
-                flex: 0 0 25%;
-                max-width: 25%;
-            }
-        }
-        
-        .mb-4 {
-            margin-bottom: 1.5rem !important;
-        }
-        
-        .mt-3 {
-            margin-top: 1rem !important;
-        }
-        
-        .mt-4 {
-            margin-top: 1.5rem !important;
-        }
-        
-        .text-center {
-            text-align: center !important;
-        }
-        
-        .text-white {
-            color: white !important;
-        }
-
-        /* أنماط الجداول */
-        .table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 1rem;
-            background-color: white;
-        }
-        
-        .table th,
-        .table td {
-            padding: 12px;
-            text-align: right;
-            border: 1px solid #dee2e6;
-        }
-        
-        .table th {
-            background-color: #f8f9fa;
-            font-weight: bold;
-        }
-        
-        .table-striped tbody tr:nth-of-type(odd) {
-            background-color: rgba(0, 0, 0, 0.05);
-        }
-
-        /* أنماط التنقل الداخلي */
-        .nav-tabs {
-            border-bottom: 1px solid #dee2e6;
-            margin-bottom: 1rem;
-        }
-        
-        .nav-tabs .nav-item {
-            margin-bottom: -1px;
-        }
-        
-        .nav-tabs .nav-link {
-            border: 1px solid transparent;
-            border-top-left-radius: 0.25rem;
-            border-top-right-radius: 0.25rem;
-            padding: 0.5rem 1rem;
-            color: #495057;
-        }
-        
-        .nav-tabs .nav-link.active {
-            color: #495057;
-            background-color: #fff;
-            border-color: #dee2e6 #dee2e6 #fff;
-        }
-
-        .invoice-tab {
-            display: none;
-        }
-        
-        .invoice-tab.active {
-            display: block;
-        }
-        
-        /* أنماط النماذج */
-        .form-control {
-            display: block;
-            width: 100%;
-            padding: 0.375rem 0.75rem;
-            font-size: 1rem;
-            line-height: 1.5;
-            color: #495057;
-            background-color: #fff;
-            background-clip: padding-box;
-            border: 1px solid #ced4da;
-            border-radius: 0.25rem;
-            transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
-        }
-        
-        .form-control:focus {
-            color: #495057;
-            background-color: #fff;
-            border-color: #80bdff;
-            outline: 0;
-            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
-        }
-        
-        .card {
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            min-width: 0;
-            word-wrap: break-word;
-            background-color: #fff;
-            background-clip: border-box;
-            border: 1px solid rgba(0, 0, 0, 0.125);
-            border-radius: 0.25rem;
-            margin-bottom: 1rem;
-        }
-        
-        .card-header {
-            padding: 0.75rem 1.25rem;
-            margin-bottom: 0;
-            background-color: rgba(0, 0, 0, 0.03);
-            border-bottom: 1px solid rgba(0, 0, 0, 0.125);
-        }
-        
-        .card-body {
-            flex: 1 1 auto;
-            padding: 1.25rem;
-        }
-        
-        .btn {
-            display: inline-block;
-            font-weight: 400;
-            text-align: center;
-            white-space: nowrap;
-            vertical-align: middle;
-            user-select: none;
-            border: 1px solid transparent;
-            padding: 0.375rem 0.75rem;
-            font-size: 1rem;
-            line-height: 1.5;
-            border-radius: 0.25rem;
-            transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, 
-                        border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
-        }
-        
-        .btn-sm {
-            padding: 0.25rem 0.5rem;
-            font-size: 0.875rem;
-            line-height: 1.5;
-            border-radius: 0.2rem;
-        }
-        
-        .btn-primary {
-            color: #fff;
-            background-color: #007bff;
-            border-color: #007bff;
-        }
-        
-        .btn-success {
-            color: #fff;
-            background-color: #28a745;
-            border-color: #28a745;
-        }
-        
-        .btn-danger {
-            color: #fff;
-            background-color: #dc3545;
-            border-color: #dc3545;
-        }
-        
-        .d-flex {
-            display: flex !important;
-        }
-        
-        .justify-content-end {
-            justify-content: flex-end !important;
-        }
-        
-        .me-2 {
-            margin-left: 0.5rem !important;
-        }
-    </style>
+    <title>برنامج الحسابات</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/invoice.css">
+    <link rel="stylesheet" href="css/products.css">
+    <link rel="stylesheet" href="css/product-cost.css">
+    <link rel="stylesheet" href="css/settings.css">
 </head>
 <body>
-    <div class="main-container">
-        <!-- Sidebar -->
-        <div class="sidebar">
-            <div style="padding: 15px;">
-                <h4 style="text-align: center; margin-bottom: 5px;">نظام نقطة البيع</h4>
-                <h6 style="text-align: center; color: rgba(255,255,255,0.8); margin-bottom: 20px;">SalePoint System</h6>
-                <hr>
-                <div>
-                    <div class="nav-link active" data-page="dashboard">
-                        <span>📊</span> لوحة التحكم
-                    </div>
-                    <div class="nav-link" data-page="invoices">
-                        <span>🧾</span> إدارة الفواتير
-                    </div>
-                    <div class="nav-link" data-page="products">
-                        <span>📦</span> المنتجات
-                    </div>
-                    <div class="nav-link" data-page="product-cost">
-                        <span>🧮</span> حساب تكلفة المنتج
-                    </div>
-                    <div class="nav-link" data-page="customers">
-                        <span>👥</span> العملاء
-                    </div>
-                    <div class="nav-link" data-page="reports">
-                        <span>📈</span> التقارير
-                    </div>
-                    <div class="nav-link" data-page="settings">
-                        <span>⚙️</span> الإعدادات
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Main Content -->
-        <div class="main-content">
-            <!-- Dashboard Page -->
-            <div id="dashboard" class="page active">
-                <div class="welcome-card">
-                    <h2>📊 مرحباً بك في نظام نقطة البيع</h2>
-                    <p style="margin-bottom: 0;">نظام متكامل لإدارة المبيعات والمخزون والفواتير</p>
-                </div>
-                
-                <div class="row">
-                    <div class="col-xl-3 col-md-6 mb-4">
-                        <div class="stats-card bg-primary">
-                            <span>🧾</span>
-                            <h4 style="margin-top: 1rem;">الفواتير</h4>
-                            <h2 id="invoices-count">0</h2>
-                            <p style="margin-bottom: 0;">فواتير هذا الشهر</p>
-                        </div>
-                    </div>
-                    <div class="col-xl-3 col-md-6 mb-4">
-                        <div class="stats-card bg-success">
-                            <span>📦</span>
-                            <h4 style="margin-top: 1rem;">المنتجات</h4>
-                            <h2 id="products-count">0</h2>
-                            <p style="margin-bottom: 0;">منتج في المخزون</p>
-                        </div>
-                    </div>
-                    <div class="col-xl-3 col-md-6 mb-4">
-                        <div class="stats-card bg-warning">
-                            <span>💰</span>
-                            <h4 style="margin-top: 1rem;">المبيعات</h4>
-                            <h2 id="sales-count">0 د.ب</h2>
-                            <p style="margin-bottom: 0;">إجمالي المبيعات</p>
-                        </div>
-                    </div>
-                    <div class="col-xl-3 col-md-6 mb-4">
-                        <div class="stats-card bg-info">
-                            <span>👥</span>
-                            <h4 style="margin-top: 1rem;">العملاء</h4>
-                            <h2 id="customers-count">0</h2>
-                            <p style="margin-bottom: 0;">عميل مسجل</p>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="alert alert-info mt-4">
-                    <span>ℹ️</span>
-                    نظام إدارة المبيعات - الإصدار 1.0
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-2 sidebar p-0">
+                <div class="p-3">
+                    <h4 class="text-center" id="project-name-sidebar">برنامج الحسابات</h4>
+                    <hr>
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" data-page="dashboard">
+                                <i class="bi bi-speedometer2"></i> <span class="nav-text">لوحة التحكم</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" data-page="invoice">
+                                <i class="bi bi-receipt"></i> <span class="nav-text">الفواتير</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" data-page="products">
+                                <i class="bi bi-box-seam"></i> <span class="nav-text">المنتجات</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" data-page="product-cost">
+                                <i class="bi bi-calculator"></i> <span class="nav-text">تكلفة المنتج</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" data-page="settings">
+                                <i class="bi bi-gear"></i> <span class="nav-text">الإعدادات</span>
+                            </a>
+                        </li>
+                    </ul>
                 </div>
             </div>
 
-            <!-- Invoices Page -->
-            <div id="invoices" class="page">
-                <h2 class="mb-4">الفواتير</h2>
-                
-                <ul class="nav nav-tabs mb-4">
-                    <li class="nav-item">
-                        <a class="nav-link active" href="#" data-tab="new-invoice">فاتورة جديدة</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#" data-tab="manage-invoices">إدارة الفواتير</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#" data-tab="track-invoices">تتبع الفواتير</a>
-                    </li>
-                </ul>
-                
-                <!-- New Invoice Tab -->
-                <div id="new-invoice" class="invoice-tab active">
-                    <div class="card mb-4">
-                        <div class="card-header">
-                            <h5>فاتورة جديدة</h5>
-                        </div>
-                        <div class="card-body">
-                            <div class="row mb-3">
-                                <div class="col-md-4">
-                                    <label>رقم الفاتورة</label>
-                                    <input type="text" class="form-control" id="invoice-number" readonly>
-                                </div>
-                                <div class="col-md-4">
-                                    <label>التاريخ</label>
-                                    <input type="date" class="form-control" id="invoice-date">
-                                </div>
-                                <div class="col-md-4">
-                                    <label>العميل</label>
-                                    <select class="form-control" id="customer-select">
-                                        <option value="">اختر العميل</option>
-                                    </select>
-                                </div>
-                            </div>
-                            
-                            <div class="table-responsive">
-                                <table class="table" id="invoice-items">
-                                    <thead>
-                                        <tr>
-                                            <th>المنتج</th>
-                                            <th>الكمية</th>
-                                            <th>السعر</th>
-                                            <th>الإجمالي</th>
-                                            <th>الإجراءات</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td colspan="5" class="text-center">لا توجد عناصر</td>
-                                        </tr>
-                                    </tbody>
-                                    <tfoot>
-                                        <tr>
-                                            <td colspan="3" class="text-end">المجموع:</td>
-                                            <td id="invoice-total">0.00 د.ب</td>
-                                            <td></td>
-                                        </tr>
-                                    </tfoot>
-                                </table>
-                            </div>
-                            
-                            <div class="d-flex justify-content-end mt-3">
-                                <button class="btn btn-success me-2" id="add-item-btn">إضافة منتج</button>
-                                <button class="btn btn-primary" id="save-invoice-btn">حفظ الفاتورة</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Manage Invoices Tab -->
-                <div id="manage-invoices" class="invoice-tab">
-                    <div class="card">
-                        <div class="card-header">
-                            <h5>إدارة الفواتير</h5>
-                        </div>
-                        <div class="card-body">
-                            <div class="table-responsive">
-                                <table class="table table-striped">
-                                    <thead>
-                                        <tr>
-                                            <th>رقم الفاتورة</th>
-                                            <th>التاريخ</th>
-                                            <th>العميل</th>
-                                            <th>المبلغ</th>
-                                            <th>الحالة</th>
-                                            <th>الإجراءات</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="invoices-list">
-                                        <tr>
-                                            <td>INV-2023-001</td>
-                                            <td>2023-11-15</td>
-                                            <td>محمد أحمد</td>
-                                            <td>250.00 د.ب</td>
-                                            <td><span class="badge bg-success">مدفوعة</span></td>
-                                            <td>
-                                                <button class="btn btn-sm btn-info">عرض</button>
-                                                <button class="btn btn-sm btn-warning">تعديل</button>
-                                                <button class="btn btn-sm btn-danger">حذف</button>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>INV-2023-002</td>
-                                            <td>2023-11-14</td>
-                                            <td>علي حسن</td>
-                                            <td>180.00 د.ب</td>
-                                            <td><span class="badge bg-success">مدفوعة</span></td>
-                                            <td>
-                                                <button class="btn btn-sm btn-info">عرض</button>
-                                                <button class="btn btn-sm btn-warning">تعديل</button>
-                                                <button class="btn btn-sm btn-danger">حذف</button>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>INV-2023-003</td>
-                                            <td>2023-11-13</td>
-                                            <td>سارة خالد</td>
-                                            <td>420.00 د.ب</td>
-                                            <td><span class="badge bg-warning">قيد الانتظار</span></td>
-                                            <td>
-                                                <button class="btn btn-sm btn-info">عرض</button>
-                                                <button class="btn btn-sm btn-warning">تعديل</button>
-                                                <button class="btn btn-sm btn-danger">حذف</button>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Track Invoices Tab -->
-                <div id="track-invoices" class="invoice-tab">
-                    <div class="card">
-                        <div class="card-header">
-                            <h5>تتبع الفواتير</h5>
-                        </div>
-                        <div class="card-body">
-                            <div class="form-group mb-3">
-                                <label>ابحث بررقم الفاتورة</label>
-                                <div class="input-group">
-                                    <input type="text" class="form-control" placeholder="أدخل رقم الفاتورة">
-                                    <button class="btn btn-primary">بحث</button>
-                                </div>
-                            </div>
-                            <div class="alert alert-info">
-                                أدخل رقم الفاتورة للبحث عن حالة فاتورة معينة
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Products Page -->
-            <div id="products" class="page">
-                <h2 class="mb-4">المنتجات</h2>
-                
-                <div class="card">
-                    <div class="card-header d-flex justify-content-between align-items-center">
-                        <h5>قائمة المنتجات</h5>
-                        <button class="btn btn-primary">إضافة منتج جديد</button>
-                    </div>
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <table class="table table-striped">
-                                <thead>
-                                    <tr>
-                                        <th>رمز المنتج</th>
-                                        <th>اسم المنتج</th>
-                                        <th>الفئة</th>
-                                        <th>السعر</th>
-                                        <th>المخزون</th>
-                                        <th>الحالة</th>
-                                        <th>الإجراءات</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="products-list">
-                                    <tr>
-                                        <td>PRD-001</td>
-                                        <td>سماعات رأس لاسلكية</td>
-                                        <td>إلكترونيات</td>
-                                        <td>45.00 د.ب</td>
-                                        <td>15</td>
-                                        <td><span class="badge bg-success">متوفر</span></td>
-                                        <td>
-                                            <button class="btn btn-sm btn-info">عرض</button>
-                                            <button class="btn btn-sm btn-warning">تعديل</button>
-                                            <button class="btn btn-sm btn-danger">حذف</button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>PRD-002</td>
-                                        <td>هاتف ذكي</td>
-                                        <td>إلكترونيات</td>
-                                        <td>320.00 د.ب</td>
-                                        <td>8</td>
-                                        <td><span class="badge bg-success">متوفر</span></td>
-                                        <td>
-                                            <button class="btn btn-sm btn-info">عرض</button>
-                                            <button class="btn btn-sm btn-warning">تعديل</button>
-                                            <button class="btn btn-sm btn-danger">حذف</button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>PRD-003</td>
-                                        <td>قلم حبر فاخر</td>
-                                        <td>أدوات مكتبية</td>
-                                        <td>25.00 د.ب</td>
-                                        <td>0</td>
-                                        <td><span class="badge bg-danger">غير متوفر</span></td>
-                                        <td>
-                                            <button class="btn btn-sm btn-info">عرض</button>
-                                            <button class="btn btn-sm btn-warning">تعديل</button>
-                                            <button class="btn btn-sm btn-danger">حذف</button>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Product Cost Calculation Page -->
-            <div id="product-cost" class="page">
-                <h2 class="mb-4">حساب تكلفة المنتج</h2>
-                
-                <div class="card">
-                    <div class="card-header">
-                        <h5>آلة حساب تكلفة المنتج</h5>
-                    </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group mb-3">
-                                    <label>اسم المنتج</label>
-                                    <input type="text" class="form-control" placeholder="أدخل اسم المنتج">
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group mb-3">
-                                    <label>تكلفة المواد الخام (د.ب)</label>
-                                    <input type="number" class="form-control" placeholder="0.00">
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group mb-3">
-                                    <label>تكلفة العمالة (د.ب)</label>
-                                    <input type="number" class="form-control" placeholder="0.00">
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group mb-3">
-                                    <label>التغليف والتعبئة (د.ب)</label>
-                                    <input type="number" class="form-control" placeholder="0.00">
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group mb-3">
-                                    <label>النقل والتوصيل (د.ب)</label>
-                                    <input type="number" class="form-control" placeholder="0.00">
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group mb-3">
-                                    <label>هامش الربح المطلوب (%)</label>
-                                    <input type="number" class="form-control" placeholder="0">
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <button class="btn btn-primary">حساب التكلفة</button>
-                        
-                        <div class="mt-4 p-3 bg-light rounded">
-                            <h5>نتائج حساب التكلفة</h5>
-                            <div class="d-flex justify-content-between mb-2">
-                                <span>التكلفة الإجمالية:</span>
-                                <strong>0.00 د.ب</strong>
-                            </div>
-                            <div class="d-flex justify-content-between mb-2">
-                                <span>هامش الربح:</span>
-                                <strong>0.00 د.ب</strong>
-                            </div>
-                            <div class="d-flex justify-content-between mb-2">
-                                <span>سعر البيع المقترح:</span>
-                                <strong>0.00 د.ب</strong>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Customers Page -->
-            <div id="customers" class="page">
-                <h2 class="mb-4">إدارة العملاء</h2>
-                
-                <div class="card">
-                    <div class="card-header d-flex justify-content-between align-items-center">
-                        <h5>قائمة العملاء</h5>
-                        <button class="btn btn-primary">إضافة عميل جديد</button>
-                    </div>
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <table class="table table-striped">
-                                <thead>
-                                    <tr>
-                                        <th>الاسم</th>
-                                        <th>البريد الإلكتروني</th>
-                                        <th>الهاتف</th>
-                                        <th>عدد المشتريات</th>
-                                        <th>إجمالي المشتريات</th>
-                                        <th>الحالة</th>
-                                        <th>الإجراءات</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="customers-list">
-                                    <tr>
-                                        <td>محمد أحمد</td>
-                                        <td>mohamed@example.com</td>
-                                        <td>12345678</td>
-                                        <td>5</td>
-                                        <td>1,250.00 د.ب</td>
-                                        <td><span class="badge bg-success">نشط</span></td>
-                                        <td>
-                                            <button class="btn btn-sm btn-info">عرض</button>
-                                            <button class="btn btn-sm btn-warning">تعديل</button>
-                                            <button class="btn btn-sm btn-danger">حذف</button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>علي حسن</td>
-                                        <td>ali@example.com</td>
-                                        <td>87654321</td>
-                                        <td>3</td>
-                                        <td>680.00 د.ب</td>
-                                        <td><span class="badge bg-success">نشط</span></td>
-                                        <td>
-                                            <button class="btn btn-sm btn-info">عرض</button>
-                                            <button class="btn btn-sm btn-warning">تعديل</button>
-                                            <button class="btn btn-sm btn-danger">حذف</button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>سارة خالد</td>
-                                        <td>sara@example.com</td>
-                                        <td>55555555</td>
-                                        <td>2</td>
-                                        <td>420.00 د.ب</td>
-                                        <td><span class="badge bg-success">نشط</span></td>
-                                        <td>
-                                            <button class="btn btn-sm btn-info">عرض</button>
-                                            <button class="btn btn-sm btn-warning">تعديل</button>
-                                            <button class="btn btn-sm btn-danger">حذف</button>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Reports Page -->
-            <div id="reports" class="page">
-                <h2 class="mb-4">التقارير</h2>
-                
-                <div class="card">
-                    <div class="card-header">
-                        <h5>تقارير المبيعات</h5>
-                    </div>
-                    <div class="card-body">
-                        <div class="row mb-4">
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label>من تاريخ</label>
-                                    <input type="date" class="form-control">
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label>إلى تاريخ</label>
-                                    <input type="date" class="form-control">
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label>&nbsp;</label>
-                                    <button class="btn btn-primary btn-block">عرض التقرير</button>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="alert alert-info">
-                            <span>ℹ️</span>
-                            اختر الفترة الزمنية لعرض تقارير المبيعات الخاصة بها
-                        </div>
-                        
-                        <div class="row mt-4">
-                            <div class="col-md-6">
-                                <div class="stats-card bg-primary">
-                                    <span>💰</span>
-                                    <h4>إجمالي المبيعات</h4>
-                                    <h2>2,350.00 د.ب</h2>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="stats-card bg-success">
-                                    <span>📦</span>
-                                    <h4>المنتجات المباعة</h4>
-                                    <h2>10</h2>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Settings Page -->
-            <div id="settings" class="page">
-                <h2 class="mb-4">الإعدادات</h2>
-                
-                <div class="card">
-                    <div class="card-header">
-                        <h5>إعدادات النظام</h5>
-                    </div>
-                    <div class="card-body">
-                        <div class="alert alert-info">
-                            <span>ℹ️</span>
-                            هنا يمكنك تعديل إعدادات النظام الخاصة بك
-                        </div>
-                        
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group mb-3">
-                                    <label>اسم المتجر</label>
-                                    <input type="text" class="form-control" value="متجر SalePoint">
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group mb-3">
-                                    <label>البريد الإلكتروني</label>
-                                    <input type="email" class="form-control" value="info@salePoint.com">
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group mb-3">
-                                    <label>رقم الهاتف</label>
-                                    <input type="tel" class="form-control" value="+973 1234 5678">
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group mb-3">
-                                    <label>العنوان</label>
-                                    <input type="text" class="form-control" value="المنامة، البحرين">
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group mb-3">
-                                    <label>عملة المتجر</label>
-                                    <select class="form-control">
-                                        <option>دينار بحريني (د.ب)</option>
-                                        <option>ريال سعودي (ر.س)</option>
-                                        <option>درهم إماراتي (د.إ)</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group mb-3">
-                                    <label>ضريبة القيمة المضافة (%)</label>
-                                    <input type="number" class="form-control" value="5">
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <button class="btn btn-primary">حفظ الإعدادات</button>
-                    </div>
-                </div>
+            <!-- Main Content -->
+            <div class="col-md-10 main-content">
+                <!-- سيتم تحميل المحتوى الديناميكي هنا -->
             </div>
         </div>
     </div>
 
-    <script>
-        // حالة التطبيق
-        let appData = {
-            invoices: 12,
-            products: 24,
-            sales: 17250,
-            customers: 8
-        };
-        
-        // تحميل البيانات
-        function loadData() {
-            const savedData = localStorage.getItem('salePointData');
-            if (savedData) {
-                appData = JSON.parse(savedData);
-            }
-            updateUI();
-        }
-        
-        // حفظ البيانات
-        function saveData() {
-            localStorage.setItem('salePointData', JSON.stringify(appData));
-        }
-        
-        // تحديث واجهة المستخدم
-        function updateUI() {
-            document.getElementById('invoices-count').textContent = appData.invoices;
-            document.getElementById('products-count').textContent = appData.products;
-            document.getElementById('sales-count').textContent = appData.sales.toLocaleString() + ' د.ب';
-            document.getElementById('customers-count').textContent = appData.customers;
-        }
-        
-        // 🔥 الوظيفة الرئيسية للتبديل بين الصفحات
-        function switchPage(pageId) {
-            console.log('جاري التبديل إلى:', pageId);
-            
-            // 1. إخفاء جميع الصفحات
-            const allPages = document.querySelectorAll('.page');
-            allPages.forEach(page => {
-                page.classList.remove('active');
-            });
-            
-            // 2. إظهار الصفحة المطلوبة فقط
-            const targetPage = document.getElementById(pageId);
-            if (targetPage) {
-                targetPage.classList.add('active');
-                console.log('تم عرض الصفحة:', pageId);
-                
-                // تهيئة الصفحة إذا لزم الأمر
-                if (pageId === 'invoices') {
-                    initInvoicePage();
-                }
-            } else {
-                console.error('الصفحة غير موجودة:', pageId);
-            }
-            
-            // 3. تحديث القائمة الجانبية
-            document.querySelectorAll('.sidebar .nav-link').forEach(link => {
-                link.classList.remove('active');
-            });
-            
-            const activeLink = document.querySelector(`.sidebar .nav-link[data-page="${pageId}"]`);
-            if (activeLink) {
-                activeLink.classList.add('active');
-            }
-            
-            // 4. حفظ الصفحة الحالية
-            localStorage.setItem('currentPage', pageId);
-        }
+    <!-- المودالات -->
+    <div id="modals-container">
+        <!-- سيتم تحميل المودالات هنا -->
+    </div>
 
-        // تبديل التبويبات الداخلية
-        function switchTab(tabId) {
-            console.log('جاري التبديل إلى التبويب:', tabId);
-            
-            // إخفاء جميع التبويبات
-            document.querySelectorAll('.invoice-tab').forEach(tab => {
-                tab.classList.remove('active');
-            });
-            
-            // إظهار التبويب المطلوب
-            const targetTab = document.getElementById(tabId);
-            if (targetTab) {
-                targetTab.classList.add('active');
-            }
-            
-            // تحديث روابط التبويبات
-            document.querySelectorAll('.nav-tabs .nav-link').forEach(link => {
-                link.classList.remove('active');
-            });
-            
-            const activeTabLink = document.querySelector(`.nav-tabs .nav-link[data-tab="${tabId}"]`);
-            if (activeTabLink) {
-                activeTabLink.classList.add('active');
-            }
-        }
-        
-        // تهيئة صفحة الفاتورة
-        function initInvoicePage() {
-            // توليد رقم فاتورة تلقائي
-            document.getElementById('invoice-number').value = 'INV-' + new Date().getFullYear() + '-' + (appData.invoices + 1).toString().padStart(4, '0');
-            document.getElementById('invoice-date').valueAsDate = new Date();
-            
-            // إعداد معالج الحدث لإضافة العناصر
-            const addItemBtn = document.getElementById('add-item-btn');
-            if (addItemBtn) {
-                addItemBtn.onclick = addInvoiceItem;
-            }
-            
-            // إعداد معالج الحدث لحفظ الفاتورة
-            const saveInvoiceBtn = document.getElementById('save-invoice-btn');
-            if (saveInvoiceBtn) {
-                saveInvoiceBtn.onclick = saveInvoice;
-            }
-        }
-        
-        // إضافة عنصر إلى الفاتورة
-        function addInvoiceItem() {
-            const tbody = document.querySelector('#invoice-items tbody');
-            
-            // إذا كان الجدول فارغاً، قم بإزالة الصف الفارغ
-            if (tbody.innerHTML.includes('لا توجد عناصر')) {
-                tbody.innerHTML = '';
-            }
-            
-            // إضافة صف جديد
-            const newRow = document.createElement('tr');
-            newRow.innerHTML = `
-                <td>
-                    <select class="form-control product-select">
-                        <option value="">اختر المنتج</option>
-                        <option value="1">سماعات رأس لاسلكية - 45.00 د.ب</option>
-                        <option value="2">هاتف ذكي - 320.00 د.ب</option>
-                        <option value="3">قلم حبر فاخر - 25.00 د.ب</option>
-                    </select>
-                </td>
-                <td>
-                    <input type="number" class="form-control quantity" min="1" value="1">
-                </td>
-                <td>
-                    <input type="number" class="form-control price" step="0.01" min="0" value="0" readonly>
-                </td>
-                <td class="item-total">0.00 د.ب</td>
-                <td>
-                    <button class="btn btn-sm btn-danger remove-item">حذف</button>
-                </td>
-            `;
-            
-            tbody.appendChild(newRow);
-            
-            // إضافة مستمعي الأحداث
-            newRow.querySelector('.quantity').addEventListener('input', updateItemTotal);
-            newRow.querySelector('.product-select').addEventListener('change', function() {
-                const price = this.value === '1' ? 45.00 : this.value === '2' ? 320.00 : this.value === '3' ? 25.00 : 0;
-                newRow.querySelector('.price').value = price;
-                updateItemTotal.call(newRow.querySelector('.quantity'));
-            });
-            
-            newRow.querySelector('.remove-item').addEventListener('click', function() {
-                newRow.remove();
-                updateInvoiceTotal();
-                
-                // إذا لم يتبق أي عناصر، أضف رسالة "لا توجد عناصر"
-                if (tbody.querySelectorAll('tr').length === 0) {
-                    tbody.innerHTML = '<tr><td colspan="5" class="text-center">لا توجد عناصر</td></tr>';
-                }
-            });
-        }
-        
-        // تحديث الإجمالي للعنصر
-        function updateItemTotal() {
-            const row = this.closest('tr');
-            const quantity = parseFloat(row.querySelector('.quantity').value) || 0;
-            const price = parseFloat(row.querySelector('.price').value) || 0;
-            const total = quantity * price;
-            
-            row.querySelector('.item-total').textContent = total.toFixed(2) + ' د.ب';
-            updateInvoiceTotal();
-        }
-        
-        // تحديث الإجمالي للفاتورة
-        function updateInvoiceTotal() {
-            let total = 0;
-            document.querySelectorAll('.item-total').forEach(cell => {
-                const value = parseFloat(cell.textContent) || 0;
-                total += value;
-            });
-            
-            document.getElementById('invoice-total').textContent = total.toFixed(2) + ' د.ب';
-        }
-        
-        // حفظ الفاتورة
-        function saveInvoice() {
-            alert('تم حفظ الفاتورة بنجاح!');
-            appData.invoices++;
-            updateUI();
-            saveData();
-        }
-        
-        // تهيئة التطبيق عند التحميل
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log('تم تحميل النظام');
-            
-            // تحميل البيانات
-            loadData();
-            
-            // إعداد event listeners للروابط الرئيسية
-            document.querySelectorAll('.sidebar .nav-link').forEach(link => {
-                link.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const pageId = this.getAttribute('data-page');
-                    console.log('نقر على:', pageId);
-                    switchPage(pageId);
-                });
-            });
-            
-            // إعداد event listeners للتبويبات الداخلية
-            document.querySelectorAll('.nav-tabs .nav-link').forEach(link => {
-                link.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const tabId = this.getAttribute('data-tab');
-                    switchTab(tabId);
-                });
-            });
-            
-            // تحميل الصفحة الأخيرة التي تم زيارتها
-            const lastPage = localStorage.getItem('currentPage') || 'dashboard';
-            switchPage(lastPage);
-            
-            console.log('التنقل جاهز للعمل');
-            
-            // منع إعادة تحميل الصفحة عند النقر على الروابط
-            document.addEventListener('click', function(e) {
-                if (e.target.tagName === 'A' && e.target.getAttribute('href') === '#') {
-                    e.preventDefault();
-                }
-            });
-        });
-        
-        // منع إعادة تحميل الصفحة عند الضغط على زر Enter في النماذج
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Enter' && e.target.tagName === 'INPUT') {
-                e.preventDefault();
-            }
-        });
-    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/dashboard.js"></script>
+    <script src="js/invoice.js"></script>
+    <script src="js/products.js"></script>
+    <script src="js/product-cost.js"></script>
+    <script src="js/settings.js"></script>
 </body>
 </html>
+.invoice-container {
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    margin: 20px auto;
+    max-width: 800px;
+}
+
+/* تنسيقات الفواتير الأخرى */
+<div id="invoice" class="page">
+    <h2 class="mb-4">الفواتير</h2>
+    
+    <ul class="nav nav-tabs mb-4">
+        <li class="nav-item">
+            <a class="nav-link active" href="#" data-tab="new-invoice">فاتورة جديدة</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#" data-tab="manage-invoices">إدارة الفواتير</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#" data-tab="track-invoices">تتبع الفواتير</a>
+        </li>
+    </ul>
+    
+    <!-- محتوى تبويبات الفواتير -->
+</div>
+function initInvoice() {
+    // تهيئة صفحة الفواتير
+    setupInvoiceTabs();
+    loadProductsForInvoice();
+    setupInvoiceEventListeners();
+}
+
+function setupInvoiceTabs() {
+    // إعداد تبويبات الفواتير
+}
+
+function loadProductsForInvoice() {
+    // تحميل المنتجات للفواتير
+}
+
+function setupInvoiceEventListeners() {
+    // إعداد مستمعي الأحداث للفواتير
+}
+:root {
+    --primary-color: #2c3e50;
+    --secondary-color: #34495e;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f5f5f5;
+}
+
+.sidebar {
+    background-color: var(--primary-color);
+    min-height: 100vh;
+    color: white;
+}
+
+/* التنسيقات العامة الأخرى */
