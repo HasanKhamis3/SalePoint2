@@ -130,11 +130,15 @@
             color: var(--orange-suggested);
         }
         .note-red {
-            color: var(--error);
-            font-size: 0.9rem;
-            font-weight: 600;
+            border: 2px solid var(--error);
+            border-radius: 12px;
+            padding: 0.75rem 1rem;
             margin-top: 0.5rem;
             text-align: center;
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: var(--error);
+            background: rgba(244, 67, 54, 0.1);
         }
         @media (max-width: 768px) {
             .sidebar { transform: translateX(100%); }
@@ -363,19 +367,19 @@
                     </div>
                     <div class="summary-boxes">
                         <div class="summary-box">
-                            <div class="summary-box-label">تكلفة المواد</div>
+                            <div class="summary-box-label">تكلفة المواد للعلبة</div>
                             <div class="summary-box-value" id="material-summary" style="color: var(--blue-cost);">0.000 د.ب</div>
                         </div>
                         <div class="summary-box">
-                            <div class="summary-box-label">تكلفة التغليف</div>
+                            <div class="summary-box-label">تكلفة التغليف للعلبة</div>
                             <div class="summary-box-value" id="packaging-summary" style="color: var(--blue-cost);">0.000 د.ب</div>
                         </div>
                         <div class="summary-box">
-                            <div class="summary-box-label">إهلاك المعدات</div>
+                            <div class="summary-box-label">إهلاك المعدات للعلبة</div>
                             <div class="summary-box-value" id="depreciation-summary" style="color: var(--blue-cost);">0.000 د.ب</div>
                         </div>
                         <div class="summary-box">
-                            <div class="summary-box-label">اليد العاملة</div>
+                            <div class="summary-box-label">اليد العاملة للعلبة</div>
                             <div class="summary-box-value" id="labor-summary" style="color: var(--blue-cost);">0.000 د.ب</div>
                         </div>
                         <div class="summary-box">
@@ -527,7 +531,8 @@
                             <div class="note-red">* نسبة الإهلاك هي تقدير لتكلفة استهلاك المعدات والأجهزة المستخدمة في إنتاج المنتج ونقترح أن تكون 10%</div>
                         </div>
                         <div class="col-md-6">
-                            <div class="mb-3"><label class="form-label">قيمة الإهلاك (د.ب)</label><input type="number" class="form-control-modern" id="equipment-depreciation" step="0.001" readonly></div>
+                            <div class="mb-3"><label class="form-label">إهلاك المعدات (د.ب)</label><input type="number" class="form-control-modern" id="equipment-depreciation" step="0.001" readonly></div>
+                            <div class="mb-3"><label class="form-label">إهلاك المعدات للعلبة (د.ب)</label><input type="number" class="form-control-modern" id="equipment-depreciation-box" step="0.001" readonly></div>
                         </div>
                     </div>
                 </div>
@@ -755,8 +760,6 @@
                 row.querySelector('.material-cost').textContent = cost.toFixed(currencyDecimals);
                 materialsCost += cost;
             });
-            document.getElementById('materials-per-box').textContent = formatCurrency(materialsCost);
-            document.getElementById('material-summary').textContent = formatCurrency(materialsCost);
 
             let packagingCost = 0;
             document.querySelectorAll('#packaging-table tbody tr').forEach(row=>{
@@ -768,8 +771,6 @@
                 row.querySelector('.packaging-cost').textContent = cost.toFixed(currencyDecimals);
                 packagingCost += cost;
             });
-            document.getElementById('packaging-per-box').textContent = formatCurrency(packagingCost);
-            document.getElementById('packaging-summary').textContent = formatCurrency(packagingCost);
 
             let totalLaborCost = 0;
             const workers = document.querySelectorAll('#workers-table-1 tbody tr');
@@ -793,15 +794,27 @@
                     totalLaborCost += boxCost;
                 }
             });
-            document.getElementById('labor-summary').textContent = formatCurrency(totalLaborCost);
-            document.getElementById('labor-per-box').textContent = formatCurrency(totalLaborCost);
+
+            const piecesProduced = parseFloat(document.querySelector('#workers-table-2 tbody tr .pieces')?.value) || 1;
+            const piecesPerBox = parseFloat(document.getElementById('sale-quantity').value) || 1;
+
+            const materialBoxCost = (materialsCost / piecesProduced) * piecesPerBox;
+            const packagingBoxCost = (packagingCost / piecesProduced) * piecesPerBox;
+            const laborBoxCost = totalLaborCost;
 
             const depreciationRate = parseFloat(document.getElementById('depreciation-rate').value) || 0;
             const depreciationCost = materialsCost * (depreciationRate / 100);
-            document.getElementById('equipment-depreciation').value = depreciationCost.toFixed(currencyDecimals);
-            document.getElementById('depreciation-summary').textContent = formatCurrency(depreciationCost);
+            const depreciationBoxCost = (depreciationCost / piecesProduced) * piecesPerBox;
 
-            const totalCostPerBox = materialsCost + packagingCost + totalLaborCost + depreciationCost;
+            document.getElementById('material-summary').textContent = formatCurrency(materialBoxCost);
+            document.getElementById('packaging-summary').textContent = formatCurrency(packagingBoxCost);
+            document.getElementById('depreciation-summary').textContent = formatCurrency(depreciationBoxCost);
+            document.getElementById('labor-summary').textContent = formatCurrency(laborBoxCost);
+
+            document.getElementById('equipment-depreciation').value = depreciationCost.toFixed(currencyDecimals);
+            document.getElementById('equipment-depreciation-box').value = depreciationBoxCost.toFixed(currencyDecimals);
+
+            const totalCostPerBox = materialBoxCost + packagingBoxCost + laborBoxCost + depreciationBoxCost;
             document.getElementById('grand-total-cost').textContent = formatCurrency(totalCostPerBox);
 
             const profitRate = parseFloat(document.getElementById('profit-rate').value) || 0;
@@ -846,6 +859,18 @@
             tbody.appendChild(newRow);
             setupRowEvents(newRow);
             updateCosts();
+        }
+
+        function setupRowEvents(row){
+            row.querySelector('.remove-row')?.addEventListener('click',()=>{
+                row.remove();
+                updateCosts();
+            });
+            row.querySelectorAll('input').forEach(i=>{
+                i.addEventListener('input',updateCosts);
+                i.addEventListener('change',updateCosts);
+                i.addEventListener('keyup',updateCosts);
+            });
         }
 
         function clearForm() {
