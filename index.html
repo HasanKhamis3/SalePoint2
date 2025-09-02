@@ -129,6 +129,13 @@
             font-weight: 600;
             color: var(--orange-suggested);
         }
+        .note-red {
+            color: var(--error);
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-top: 0.5rem;
+            text-align: center;
+        }
         @media (max-width: 768px) {
             .sidebar { transform: translateX(100%); }
             .sidebar.show { transform: translateX(0); }
@@ -447,7 +454,7 @@
                     </div>
                     <button type="button" class="btn btn-success-modern" id="add-packaging"><i class="bi bi-plus"></i> إضافة منتج</button>
                     <div class="cost-total-box">
-                        <div class="cost-total-label">إجمالي تكاليف التغليف</div>
+                        <div class="cost-total-label">إجمالي تكاليف التغليف للعلبة</div>
                         <div class="cost-total-value" id="packaging-per-box" style="color: var(--blue-cost);">0.000 د.ب</div>
                     </div>
                 </div>
@@ -463,10 +470,10 @@
                                 <table class="table-modern" id="workers-table-1">
                                     <thead>
                                         <tr>
-                                            <th>اسم العامل</th>
-                                            <th>الراتب الشهري (د.ب)</th>
-                                            <th>عدد ساعات العمل</th>
-                                            <th>تكلفة ساعات العمل</th>
+                                            <th style="width: 25%">اسم العامل</th>
+                                            <th style="width: 25%">الراتب الشهري (د.ب)</th>
+                                            <th style="width: 25%">عدد ساعات العمل</th>
+                                            <th style="width: 25%">تكلفة ساعات العمل</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -504,6 +511,10 @@
                             </div>
                         </div>
                     </div>
+                    <div class="cost-total-box">
+                        <div class="cost-total-label">إجمالي تكلفة اليد العاملة للعلبة</div>
+                        <div class="cost-total-value" id="labor-per-box" style="color: var(--blue-cost);">0.000 د.ب</div>
+                    </div>
                 </div>
             </div>
 
@@ -513,6 +524,7 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="mb-3"><label class="form-label">النسبة المئوية (%)</label><input type="number" class="form-control-modern" id="depreciation-rate" placeholder="أدخل النسبة" required></div>
+                            <div class="note-red">* نسبة الإهلاك هي تقدير لتكلفة استهلاك المعدات والأجهزة المستخدمة في إنتاج المنتج ونقترح أن تكون 10%</div>
                         </div>
                         <div class="col-md-6">
                             <div class="mb-3"><label class="form-label">قيمة الإهلاك (د.ب)</label><input type="number" class="form-control-modern" id="equipment-depreciation" step="0.001" readonly></div>
@@ -539,7 +551,7 @@
                         </div>
                         <div class="col-md-4 text-center">
                             <h6 class="text-muted">سعر البيع النهائي</h6>
-                            <input type="number" class="form-control-modern" id="final-price" placeholder="أدخل السعر النهائي" step="0.001" style="font-size: 1.8rem; text-align: center; margin: 0 auto; max-width: 200px;">
+                            <input type="number" class="form-control-modern" id="final-price" placeholder="أدخل السعر النهائي" step="0.001" style="font-size: 1.8rem; text-align: center; margin: 0 auto; max-width: 200px; color: var(--green-final);">
                             <div class="profit-box">
                                 <span>هامش الربح: </span>
                                 <span id="final-profit">0.000 د.ب (0%)</span>
@@ -782,9 +794,10 @@
                 }
             });
             document.getElementById('labor-summary').textContent = formatCurrency(totalLaborCost);
+            document.getElementById('labor-per-box').textContent = formatCurrency(totalLaborCost);
 
             const depreciationRate = parseFloat(document.getElementById('depreciation-rate').value) || 0;
-            const depreciationCost = (materialsCost + packagingCost) * (depreciationRate / 100);
+            const depreciationCost = materialsCost * (depreciationRate / 100);
             document.getElementById('equipment-depreciation').value = depreciationCost.toFixed(currencyDecimals);
             document.getElementById('depreciation-summary').textContent = formatCurrency(depreciationCost);
 
@@ -833,18 +846,6 @@
             tbody.appendChild(newRow);
             setupRowEvents(newRow);
             updateCosts();
-        }
-
-        function setupRowEvents(row){
-            row.querySelector('.remove-row')?.addEventListener('click',()=>{
-                row.remove();
-                updateCosts();
-            });
-            row.querySelectorAll('input').forEach(i=>{
-                i.addEventListener('input',updateCosts);
-                i.addEventListener('change',updateCosts);
-                i.addEventListener('keyup',updateCosts);
-            });
         }
 
         function clearForm() {
