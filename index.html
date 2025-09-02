@@ -218,6 +218,16 @@
         .text-profit { color: var(--success) !important; }
         .text-profit.negative { color: var(--error) !important; }
 
+        /* توسيع خانة المنتج */
+        .product-name-col { width: 40%; }
+
+        /* تنسيق سعر البيع النهائي */
+        .final-price-input {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--success) !important;
+        }
+
         @media (max-width: 768px) {
             .sidebar { transform: translateX(100%); }
             .sidebar.show { transform: translateX(0); }
@@ -288,7 +298,7 @@
                                 <table class="table-modern" id="invoice-items-table">
                                     <thead>
                                         <tr>
-                                            <th>المنتج</th>
+                                            <th class="product-name-col">المنتج</th>
                                             <th>الكمية</th>
                                             <th>سعر الوحدة</th>
                                             <th class="tax-related">الضريبة</th>
@@ -298,7 +308,7 @@
                                     </thead>
                                     <tbody>
                                         <tr>
-                                            <td><select class="form-select-modern product-select"><option value="">اختر منتج</option></select></td>
+                                            <td class="product-name-col"><select class="form-select-modern product-select" id="invoice-product-select"><option value="">اختر منتج</option></select></td>
                                             <td><input type="number" class="form-control-modern quantity" value="1" min="1"></td>
                                             <td><input type="number" class="form-control-modern unit-price" readonly></td>
                                             <td class="item-tax tax-related">0.000</td>
@@ -453,7 +463,7 @@
                         <table class="table-modern" id="materials-table">
                             <thead>
                                 <tr>
-                                    <th>المنتج</th>
+                                    <th class="product-name-col">المنتج</th>
                                     <th>العدد</th>
                                     <th>السعر (د.ب)</th>
                                     <th>العدد المستخدم</th>
@@ -463,7 +473,7 @@
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td><input type="text" class="form-control-modern" required></td>
+                                    <td class="product-name-col"><input type="text" class="form-control-modern" required></td>
                                     <td><input type="number" class="form-control-modern" required></td>
                                     <td class="price-input-container"><input type="number" class="form-control-modern" step="0.001" required></td>
                                     <td><input type="number" class="form-control-modern" required></td>
@@ -489,7 +499,7 @@
                         <table class="table-modern" id="packaging-table">
                             <thead>
                                 <tr>
-                                    <th>المنتج</th>
+                                    <th class="product-name-col">المنتج</th>
                                     <th>العدد</th>
                                     <th>السعر (د.ب)</th>
                                     <th>العدد المستخدم</th>
@@ -499,7 +509,7 @@
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td><input type="text" class="form-control-modern" required></td>
+                                    <td class="product-name-col"><input type="text" class="form-control-modern" required></td>
                                     <td><input type="number" class="form-control-modern" required></td>
                                     <td class="price-input-container"><input type="number" class="form-control-modern" step="0.001" required></td>
                                     <td><input type="number" class="form-control-modern" required></td>
@@ -614,7 +624,7 @@
                         </div>
                         <div class="col-md-4 text-center">
                             <h6 class="text-muted">سعر البيع النهائي</h6>
-                            <input type="number" class="form-control-modern text-center text-final" id="final-price" step="0.001" placeholder="أدخل السعر">
+                            <input type="number" class="form-control-modern text-center final-price-input" id="final-price" step="0.001" placeholder="أدخل السعر">
                             <small class="text-profit" id="final-profit">هامش الربح: 0.000 د.ب (0%)</small>
                         </div>
                     </div>
@@ -763,6 +773,9 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         /* =====  التنقل بين الصفحات  ===== */
+        let productCounter = 1;
+        let products = [];
+
         function showPage(pageId){
             document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
             document.getElementById(pageId)?.classList.add('active');
@@ -785,13 +798,14 @@
 
         /* =====  تهيئة بسيطة  ===== */
         document.getElementById('invoice-number').value = "INV-" + new Date().getFullYear() + "-0001";
-        document.getElementById('product-code').value = "PRD-0001";
+        document.getElementById('product-code').value = "PRD-" + String(productCounter).padStart(4, '0');
         document.getElementById('invoice-date').value = new Date().toISOString().split('T')[0];
 
         /* =====  دوال حساب تكلفة المنتج  ===== */
         function updateCosts(){
             // حساب المواد
             let materialsCost = 0;
+            let materialsTotal = 0;
             document.querySelectorAll('#materials-table tbody tr').forEach(row=>{
                 const inputs = row.querySelectorAll('input');
                 const count = parseFloat(inputs[1].value) || 1;
@@ -800,11 +814,14 @@
                 const cost = (price / count) * used;
                 const total = cost * (parseFloat(document.getElementById('sale-quantity').value) || 1);
                 row.querySelector('.material-cost').textContent = cost.toFixed(3);
-                materialsCost += total;
+                materialsCost += cost;
+                materialsTotal += total;
             });
+            document.getElementById('materials-per-box').textContent = materialsCost.toFixed(3) + ' د.ب';
 
             // حساب التغليف
             let packagingCost = 0;
+            let packagingTotal = 0;
             document.querySelectorAll('#packaging-table tbody tr').forEach(row=>{
                 const inputs = row.querySelectorAll('input');
                 const count = parseFloat(inputs[1].value) || 1;
@@ -813,61 +830,45 @@
                 const cost = (price / count) * used;
                 const total = cost * (parseFloat(document.getElementById('sale-quantity').value) || 1);
                 row.querySelector('.packaging-cost').textContent = cost.toFixed(3);
-                packagingCost += total;
+                packagingCost += cost;
+                packagingTotal += total;
             });
+            document.getElementById('packaging-per-box').textContent = packagingCost.toFixed(3) + ' د.ب';
 
             // حساب العمالة
             let totalLaborCost = 0;
-            document.querySelectorAll('#workers-table-1 tbody tr').forEach(row=>{
-                const salary = parseFloat(row.querySelector('.salary').value) || 0;
-                const hours = parseFloat(row.querySelector('.hours').value) || 1;
+            const workers = document.querySelectorAll('#workers-table-1 tbody tr');
+            const productions = document.querySelectorAll('#workers-table-2 tbody tr');
+            
+            workers.forEach((worker, index) => {
+                const salary = parseFloat(worker.querySelector('.salary')?.value) || 0;
+                const hours = parseFloat(worker.querySelector('.hours')?.value) || 1;
                 const hourlyCost = (salary / 30) / 8;
-                row.querySelector('.hourly-cost').textContent = hourlyCost.toFixed(3);
+                worker.querySelector('.hourly-cost').textContent = hourlyCost.toFixed(3);
+
+                if(productions[index]) {
+                    const pieces = parseFloat(productions[index].querySelector('.pieces')?.value) || 1;
+                    const piecesPerHour = pieces / hours;
+                    const pieceCost = piecesPerHour > 0 ? hourlyCost / piecesPerHour : 0;
+                    const boxCost = pieceCost * (parseFloat(document.getElementById('sale-quantity').value) || 1);
+                    
+                    productions[index].querySelector('.pieces-per-hour').textContent = piecesPerHour.toFixed(0);
+                    productions[index].querySelector('.piece-cost').textContent = pieceCost.toFixed(3);
+                    productions[index].querySelector('.box-cost').textContent = boxCost.toFixed(3);
+                    totalLaborCost += boxCost;
+                }
             });
-            
-            // إنشاء صفوف حسابات الإنتاج مطابقة لعدد العمال
-            const workersCount = document.querySelectorAll('#workers-table-1 tbody tr').length;
-            const productionTbody = document.querySelector('#workers-table-2 tbody');
-            productionTbody.innerHTML = '';
-            
-            for(let i = 0; i < workersCount; i++) {
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td><input type="number" class="form-control-modern pieces" required></td>
-                    <td class="pieces-per-hour">0</td>
-                    <td class="piece-cost">0.000</td>
-                    <td class="box-cost">0.000</td>
-                `;
-                productionTbody.appendChild(tr);
-                setupRowEvents(tr);
-            }
-            
-            document.querySelectorAll('#workers-table-2 tbody tr').forEach(row=>{
-                const hours = parseFloat(document.querySelector('#workers-table-1 tbody tr .hours')?.value) || 1;
-                const pieces = parseFloat(row.querySelector('.pieces').value) || 1;
-                const salary = parseFloat(document.querySelector('#workers-table-1 tbody tr .salary')?.value) || 0;
-                const piecesPerHour = pieces / hours;
-                const pieceCost = piecesPerHour > 0 ? ((salary / 30) / 8) / piecesPerHour : 0;
-                const boxCost = pieceCost * (parseFloat(document.getElementById('sale-quantity').value) || 1);
-                row.querySelector('.pieces-per-hour').textContent = piecesPerHour.toFixed(0);
-                row.querySelector('.piece-cost').textContent = pieceCost.toFixed(3);
-                row.querySelector('.box-cost').textContent = boxCost.toFixed(3);
-                totalLaborCost += boxCost;
-            });
+            document.getElementById('labor-per-box').textContent = totalLaborCost.toFixed(3) + ' د.ب';
 
             // إهلاك المعدات
             const depreciationRate = parseFloat(document.getElementById('depreciation-rate').value) || 0;
             const depreciationCost = (materialsCost + packagingCost) * (depreciationRate / 100);
-            const depreciationPerBox = depreciationCost;
-            document.getElementById('depreciation-per-box').textContent = depreciationPerBox.toFixed(3) + ' د.ب';
-            document.getElementById('equipment-depreciation').value = depreciationPerBox.toFixed(3);
+            document.getElementById('depreciation-per-box').textContent = depreciationCost.toFixed(3) + ' د.ب';
+            document.getElementById('equipment-depreciation').value = depreciationCost.toFixed(3);
 
             // الإجماليات
-            const totalCostPerBox = materialsCost + packagingCost + totalLaborCost + depreciationPerBox;
+            const totalCostPerBox = materialsCost + packagingCost + totalLaborCost + depreciationCost;
             document.getElementById('grand-total-cost').textContent = totalCostPerBox.toFixed(3) + ' د.ب';
-            document.getElementById('materials-per-box').textContent = materialsCost.toFixed(3) + ' د.ب';
-            document.getElementById('packaging-per-box').textContent = packagingCost.toFixed(3) + ' د.ب';
-            document.getElementById('labor-per-box').textContent = totalLaborCost.toFixed(3) + ' د.ب';
 
             const profitRate = parseFloat(document.getElementById('profit-rate').value) || 0;
             const profitAmount = totalCostPerBox * (profitRate / 100);
@@ -895,7 +896,7 @@
             const newRow=document.createElement('tr');
             if(tableId==='materials-table'){
                 newRow.innerHTML=`
-                    <td><input type="text" class="form-control-modern" required></td>
+                    <td class="product-name-col"><input type="text" class="form-control-modern" required></td>
                     <td><input type="number" class="form-control-modern" required></td>
                     <td class="price-input-container"><input type="number" class="form-control-modern" step="0.001" required></td>
                     <td><input type="number" class="form-control-modern" required></td>
@@ -903,7 +904,7 @@
                     <td><button class="btn btn-danger-modern btn-action remove-row"><i class="bi bi-trash"></i></button></td>`;
             }else if(tableId==='packaging-table'){
                 newRow.innerHTML=`
-                    <td><input type="text" class="form-control-modern" required></td>
+                    <td class="product-name-col"><input type="text" class="form-control-modern" required></td>
                     <td><input type="number" class="form-control-modern" required></td>
                     <td class="price-input-container"><input type="number" class="form-control-modern" step="0.001" required></td>
                     <td><input type="number" class="form-control-modern" required></td>
@@ -917,6 +918,7 @@
 
         function addWorkerRow(){
             const tbody1=document.querySelector('#workers-table-1 tbody');
+            const tbody2=document.querySelector('#workers-table-2 tbody');
             const row1=document.createElement('tr');
             row1.innerHTML=`
                 <td><input type="text" class="form-control-modern" required></td>
@@ -924,8 +926,16 @@
                 <td><input type="number" class="form-control-modern hours" required></td>
                 <td class="hourly-cost">0.000</td>
                 <td><button class="btn btn-danger-modern btn-action remove-row"><i class="bi bi-trash"></i></button></td>`;
+            const row2=document.createElement('tr');
+            row2.innerHTML=`
+                <td><input type="number" class="form-control-modern pieces" required></td>
+                <td class="pieces-per-hour">0</td>
+                <td class="piece-cost">0.000</td>
+                <td class="box-cost">0.000</td>`;
             tbody1.appendChild(row1);
+            tbody2.appendChild(row2);
             setupRowEvents(row1);
+            setupRowEvents(row2);
             updateCosts();
         }
 
@@ -951,28 +961,90 @@
                 alert('يرجى تعبئة جميع الحقول المطلوبة');
                 return;
             }
-            const tbody=document.getElementById('products-list');
-            if(tbody.querySelector('td[colspan]'))tbody.innerHTML='';
+
             const finalPrice=document.getElementById('final-price').value || document.getElementById('suggested-price').textContent.replace(' د.ب','');
-            const tr=document.createElement('tr');
-            tr.innerHTML=`
-                <td>${code}</td>
-                <td>${name}</td>
-                <td>${qty}</td>
-                <td>${document.getElementById('grand-total-cost').textContent}</td>
-                <td>${finalPrice} د.ب</td>
-                <td>${profitRate}%</td>
-                <td>${(parseFloat(finalPrice) - parseFloat(document.getElementById('grand-total-cost').textContent.replace(' د.ب',''))).toFixed(3)} د.ب</td>
-                <td>${document.getElementById('labor-per-box').textContent}</td>
-                <td>${document.getElementById('depreciation-per-box').textContent}</td>
-                <td>
-                    <button class="btn btn-primary-modern btn-action"><i class="bi bi-eye"></i></button>
-                    <button class="btn btn-danger-modern btn-action"><i class="bi bi-trash"></i></button>
-                </td>`;
-            tbody.appendChild(tr);
+            const product = {
+                code: code,
+                name: name,
+                quantity: qty,
+                totalCost: document.getElementById('grand-total-cost').textContent,
+                finalPrice: finalPrice + ' د.ب',
+                profitRate: profitRate + '%',
+                profitMargin: (parseFloat(finalPrice) - parseFloat(document.getElementById('grand-total-cost').textContent.replace(' د.ب',''))).toFixed(3) + ' د.ب',
+                laborCost: document.getElementById('labor-per-box').textContent,
+                depreciation: document.getElementById('depreciation-per-box').textContent
+            };
+            products.push(product);
+            updateProductsTable();
+            updateInvoiceProducts();
+
+            // مسح النموذج وزيادة رقم المنتج
+            document.getElementById('product-name').value='';
+            document.getElementById('sale-quantity').value='';
+            document.getElementById('profit-rate').value='';
+            document.getElementById('final-price').value='';
+            productCounter++;
+            document.getElementById('product-code').value = "PRD-" + String(productCounter).padStart(4, '0');
             alert('تم حفظ المنتج بنجاح!');
             updateCosts();
         });
+
+        function updateProductsTable() {
+            const tbody = document.getElementById('products-list');
+            if(products.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="10" class="text-center">لا توجد منتجات مسجلة بعد</td></tr>';
+                return;
+            }
+            tbody.innerHTML = '';
+            products.forEach((product, index) => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${product.code}</td>
+                    <td>${product.name}</td>
+                    <td>${product.quantity}</td>
+                    <td>${product.totalCost}</td>
+                    <td>${product.finalPrice}</td>
+                    <td>${product.profitRate}</td>
+                    <td>${product.profitMargin}</td>
+                    <td>${product.laborCost}</td>
+                    <td>${product.depreciation}</td>
+                    <td>
+                        <button class="btn btn-primary-modern btn-action" onclick="editProduct(${index})"><i class="bi bi-pencil"></i></button>
+                        <button class="btn btn-danger-modern btn-action" onclick="deleteProduct(${index})"><i class="bi bi-trash"></i></button>
+                    </td>`;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function editProduct(index) {
+            const product = products[index];
+            showPage('product-cost');
+            document.getElementById('product-name').value = product.name;
+            document.getElementById('product-code').value = product.code;
+            document.getElementById('sale-quantity').value = product.quantity;
+            document.getElementById('final-price').value = product.finalPrice.replace(' د.ب','');
+            document.getElementById('profit-rate').value = product.profitRate.replace('%','');
+            updateCosts();
+        }
+
+        function deleteProduct(index) {
+            if(confirm('هل أنت متأكد من حذف هذا المنتج؟')) {
+                products.splice(index, 1);
+                updateProductsTable();
+                updateInvoiceProducts();
+            }
+        }
+
+        function updateInvoiceProducts() {
+            const select = document.getElementById('invoice-product-select');
+            select.innerHTML = '<option value="">اختر منتج</option>';
+            products.forEach(product => {
+                const option = document.createElement('option');
+                option.value = product.code;
+                option.textContent = product.name + ' - ' + product.finalPrice;
+                select.appendChild(option);
+            });
+        }
 
         // عند تغيير أي مدخل
         ['depreciation-rate','profit-rate','sale-quantity','final-price'].forEach(id=>{
