@@ -112,6 +112,30 @@
         .stat-value { font-size: 2rem; font-weight: 700; color: var(--primary-color); margin-bottom: 0.5rem; }
         .stat-label { color: var(--text-secondary); font-size: 0.9rem; }
 
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+        .summary-item {
+            background: var(--surface);
+            border-radius: 12px;
+            padding: 1rem;
+            text-align: center;
+            box-shadow: var(--shadow-sm);
+        }
+        .summary-label {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+        .summary-value {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
         @media (max-width: 768px) {
             .sidebar { transform: translateX(100%); }
             .sidebar.show { transform: translateX(0); }
@@ -311,18 +335,14 @@
                                 <tr>
                                     <th>رمز المنتج</th>
                                     <th>اسم المنتج</th>
-                                    <th>عدد القطع في العلبة</th>
-                                    <th>إجمالي تكلفة العلبة</th>
-                                    <th>سعر البيع النهائي</th>
-                                    <th>نسبة الربح</th>
-                                    <th>هامش الربح</th>
-                                    <th>تكلفة اليد العاملة للعلبة</th>
-                                    <th>قيمة إهلاك المعدات</th>
+                                    <th>عدد القطع</th>
+                                    <th>التكلفة الكلية</th>
+                                    <th>السعر</th>
                                     <th>الإجراءات</th>
                                 </tr>
                             </thead>
                             <tbody id="products-list">
-                                <tr><td colspan="10" class="text-center">لا توجد منتجات مسجلة بعد</td></tr>
+                                <tr><td colspan="6" class="text-center">لا توجد منتجات مسجلة بعد</td></tr>
                             </tbody>
                         </table>
                     </div>
@@ -484,7 +504,9 @@
                             <div class="mb-3"><label class="form-label">قيمة الإهلاك (د.ب)</label><input type="number" class="form-control-modern auto-generate" id="equipment-depreciation" step="0.001" readonly></div>
                         </div>
                     </div>
-                    <div class="warning-text">* نسبة الإهلاك هي تقدير لتكلفة استهلاك المعدات والأجهزة المستخدمة في إنتاج المنتج ونقترح أن تكون 10%</div>
+                    <div style="color: var(--error); font-size: 1.1rem; font-weight: 500; margin-top: 1rem;">
+                        * نسبة الإهلاك هي تقدير لتكلفة استهلاك المعدات والأجهزة المستخدمة في إنتاج المنتج ونقترح أن تكون 10%
+                    </div>
                     <div class="cost-summary-box">
                         <div class="cost-summary-title">إجمالي إهلاك المعدات للعلبة</div>
                         <div class="cost-summary-value" id="depreciation-per-box">0.000 د.ب</div>
@@ -495,7 +517,34 @@
             <div class="card-modern">
                 <div class="card-header-modern"><i class="bi bi-currency-dollar"></i> ملخص التكاليف والأسعار</div>
                 <div class="card-body-modern">
-                    <div class="row">
+                    <div class="summary-grid">
+                        <div class="summary-item">
+                            <div class="summary-label">إجمالي تكلفة المواد للعلبة الواحدة:</div>
+                            <div class="summary-value" id="material-summary">0.000 د.ب</div>
+                        </div>
+                        <div class="summary-item">
+                            <div class="summary-label">إجمالي تكاليف التغليف للعلبة الواحدة:</div>
+                            <div class="summary-value" id="packaging-summary">0.000 د.ب</div>
+                        </div>
+                        <div class="summary-item">
+                            <div class="summary-label">إهلاك المعدات للعلبة الواحدة:</div>
+                            <div class="summary-value" id="depreciation-summary">0.000 د.ب</div>
+                        </div>
+                        <div class="summary-item">
+                            <div class="summary-label">تكلفة اليد العاملة للعلبة الواحدة:</div>
+                            <div class="summary-value" id="labor-summary">0.000 د.ب</div>
+                        </div>
+                        <div class="summary-item">
+                            <div class="summary-label">سعر البيع النهائي للعلبة الواحدة:</div>
+                            <div class="summary-value" id="final-price-summary">0.000 د.ب</div>
+                        </div>
+                        <div class="summary-item">
+                            <div class="summary-label">هامش الربح (بالمبلغ وبالنسبة):</div>
+                            <div class="summary-value" id="profit-summary">0.000 د.ب (0%)</div>
+                        </div>
+                    </div>
+
+                    <div class="row mt-4">
                         <div class="col-md-4 text-center">
                             <h6 class="text-muted">التكلفة الإجمالية للعلبة</h6>
                             <h3 class="text-cost" id="grand-total-cost">0.000 د.ب</h3>
@@ -537,7 +586,7 @@
                     <div class="row mb-3">
                         <div class="col-md-4"><label class="form-label">لون النظام</label><div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px;"><div class="color-option-modern selected" style="width:30px;height:30px;border-radius:50%;cursor:pointer;background:#1a1a1a;" data-color="default"></div><div class="color-option-modern" style="width:30px;height:30px;border-radius:50%;cursor:pointer;background:#3498db;" data-color="blue"></div><div class="color-option-modern" style="width:30px;height:30px;border-radius:50%;cursor:pointer;background:#e74c3c;" data-color="red"></div><div class="color-option-modern" style="width:30px;height:30px;border-radius:50%;cursor:pointer;background:#2ecc71;" data-color="green"></div><div class="color-option-modern" style="width:30px;height:30px;border-radius:50%;cursor:pointer;background:#9b59b6;" data-color="purple"></div><div class="color-option-modern" style="width:30px;height:30px;border-radius:50%;cursor:pointer;background:#1abc9c;" data-color="teal"></div></div><input type="hidden" id="system-color" value="default"></div>
                         <div class="col-md-4"><label class="form-label">اللغة</label><select class="form-select-modern" id="system-language"><option value="ar">العربية</option><option value="en">English</option></select></div>
-                        <div class="col-md-4"><label class="form-label">العملة</label><select class="form-select-modern" id="system-currency"><option value="BHD">دينار بحريني (د.ب)</option><option value="SAR">ريال سعودي (ر.س)</option><option value="AED">درهم إماراتي (د.إ)</option><option value="QAR">ريال قطري (ر.ق)</option><option value="KWD">دينار كويتي (د.ك)</option><option value="OMR">ريال عماني (ر.ع)</option></select></div>
+                        <div class="col-md-4"><label class="form-label">العملة</label><select class="form-select-modern" id="system-currency" onchange="updateCurrencyFormat()"><option value="BHD">دينار بحريني (0.000 د.ب)</option><option value="SAR">ريال سعودي (0.00 ر.س)</option><option value="AED">درهم إماراتي (0.00 د.إ)</option><option value="QAR">ريال قطري (0.00 ر.ق)</option><option value="KWD">دينار كويتي (0.000 د.ك)</option><option value="OMR">ريال عماني (0.000 ر.ع)</option></select></div>
                     </div>
                     <button type="submit" class="btn btn-primary-modern"><i class="bi bi-save"></i> حفظ إعدادات النظام</button>
                 </form>
@@ -636,6 +685,8 @@
         let productCounter = 1;
         let products = [];
         let editingIndex = -1;
+        let currentCurrency = 'د.ب';
+        let currencyDecimals = 3;
 
         function showPage(pageId){
             document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
@@ -661,6 +712,21 @@
         document.getElementById('product-code').value = "PRD-" + String(productCounter).padStart(4, '0');
         document.getElementById('invoice-date').value = new Date().toISOString().split('T')[0];
 
+        function updateCurrencyFormat() {
+            const currencySelect = document.getElementById('system-currency');
+            const selectedText = currencySelect.options[currencySelect.selectedIndex].text;
+            const match = selectedText.match(/\(([^)]+)\)/);
+            if(match) {
+                currentCurrency = match[1];
+                currencyDecimals = selectedText.includes('0.000') ? 3 : 2;
+            }
+            updateCosts();
+        }
+
+        function formatCurrency(value) {
+            return value.toFixed(currencyDecimals) + ' ' + currentCurrency;
+        }
+
         function updateCosts(){
             // حساب المواد
             let materialsCost = 0;
@@ -670,10 +736,11 @@
                 const price = parseFloat(inputs[2].value) || 0;
                 const used = parseFloat(inputs[3].value) || 0;
                 const cost = (price / count) * used;
-                row.querySelector('.material-cost').textContent = cost.toFixed(3);
+                row.querySelector('.material-cost').textContent = cost.toFixed(currencyDecimals);
                 materialsCost += cost;
             });
-            document.getElementById('materials-per-box').textContent = materialsCost.toFixed(3) + ' د.ب';
+            document.getElementById('materials-per-box').textContent = formatCurrency(materialsCost);
+            document.getElementById('material-summary').textContent = formatCurrency(materialsCost);
 
             // حساب التغليف
             let packagingCost = 0;
@@ -683,10 +750,11 @@
                 const price = parseFloat(inputs[2].value) || 0;
                 const used = parseFloat(inputs[3].value) || 0;
                 const cost = (price / count) * used;
-                row.querySelector('.packaging-cost').textContent = cost.toFixed(3);
+                row.querySelector('.packaging-cost').textContent = cost.toFixed(currencyDecimals);
                 packagingCost += cost;
             });
-            document.getElementById('packaging-per-box').textContent = packagingCost.toFixed(3) + ' د.ب';
+            document.getElementById('packaging-per-box').textContent = formatCurrency(packagingCost);
+            document.getElementById('packaging-summary').textContent = formatCurrency(packagingCost);
 
             // حساب العمالة
             let totalLaborCost = 0;
@@ -697,7 +765,7 @@
                 const salary = parseFloat(worker.querySelector('.salary')?.value) || 0;
                 const hours = parseFloat(worker.querySelector('.hours')?.value) || 1;
                 const hourlyCost = ((salary / 30) / 8) * hours;
-                worker.querySelector('.hourly-cost').textContent = hourlyCost.toFixed(3);
+                worker.querySelector('.hourly-cost').textContent = hourlyCost.toFixed(currencyDecimals);
 
                 if(productions[index]) {
                     const pieces = parseFloat(productions[index].querySelector('.pieces')?.value) || 1;
@@ -706,36 +774,41 @@
                     const boxCost = pieceCost * (parseFloat(document.getElementById('sale-quantity').value) || 1);
                     
                     productions[index].querySelector('.pieces-per-hour').textContent = piecesPerHour.toFixed(0);
-                    productions[index].querySelector('.piece-cost').textContent = pieceCost.toFixed(3);
-                    productions[index].querySelector('.box-cost').textContent = boxCost.toFixed(3);
+                    productions[index].querySelector('.piece-cost').textContent = pieceCost.toFixed(currencyDecimals);
+                    productions[index].querySelector('.box-cost').textContent = boxCost.toFixed(currencyDecimals);
                     totalLaborCost += boxCost;
                 }
             });
-            document.getElementById('labor-per-box').textContent = totalLaborCost.toFixed(3) + ' د.ب';
+            document.getElementById('labor-per-box').textContent = formatCurrency(totalLaborCost);
+            document.getElementById('labor-summary').textContent = formatCurrency(totalLaborCost);
 
             // إهلاك المعدات
             const depreciationRate = parseFloat(document.getElementById('depreciation-rate').value) || 0;
             const depreciationCost = (materialsCost + packagingCost) * (depreciationRate / 100);
-            document.getElementById('depreciation-per-box').textContent = depreciationCost.toFixed(3) + ' د.ب';
-            document.getElementById('equipment-depreciation').value = depreciationCost.toFixed(3);
+            document.getElementById('depreciation-per-box').textContent = formatCurrency(depreciationCost);
+            document.getElementById('equipment-depreciation').value = depreciationCost.toFixed(currencyDecimals);
+            document.getElementById('depreciation-summary').textContent = formatCurrency(depreciationCost);
 
             const totalCostPerBox = materialsCost + packagingCost + totalLaborCost + depreciationCost;
-            document.getElementById('grand-total-cost').textContent = totalCostPerBox.toFixed(3) + ' د.ب';
+            document.getElementById('grand-total-cost').textContent = formatCurrency(totalCostPerBox);
 
             const profitRate = parseFloat(document.getElementById('profit-rate').value) || 0;
             const profitAmount = totalCostPerBox * (profitRate / 100);
             const suggestedPrice = totalCostPerBox + profitAmount;
-            document.getElementById('suggested-price').textContent = suggestedPrice.toFixed(3) + ' د.ب';
-            const suggestedProfit = profitAmount.toFixed(3) + ' د.ب (' + profitRate + '%)';
+            document.getElementById('suggested-price').textContent = formatCurrency(suggestedPrice);
+            const suggestedProfit = formatCurrency(profitAmount) + ' (' + profitRate + '%)';
             document.getElementById('suggested-profit').textContent = 'هامش الربح: ' + suggestedProfit;
             
             const finalPrice = parseFloat(document.getElementById('final-price').value) || suggestedPrice;
             const finalProfit = finalPrice - totalCostPerBox;
             const finalProfitRate = totalCostPerBox > 0 ? (finalProfit / totalCostPerBox) * 100 : 0;
-            const finalProfitText = finalProfit.toFixed(3) + ' د.ب (' + finalProfitRate.toFixed(1) + '%)';
+            const finalProfitText = formatCurrency(finalProfit) + ' (' + finalProfitRate.toFixed(1) + '%)';
             document.getElementById('final-profit').textContent = 'هامش الربح: ' + finalProfitText;
             document.getElementById('final-profit').className = finalProfit >= 0 ? 'text-profit' : 'text-profit negative';
             document.getElementById('suggested-profit').className = profitAmount >= 0 ? 'text-profit' : 'text-profit negative';
+            
+            document.getElementById('final-price-summary').textContent = formatCurrency(finalPrice);
+            document.getElementById('profit-summary').textContent = formatCurrency(finalProfit) + ' (' + finalProfitRate.toFixed(1) + '%)';
         }
 
         function addTableRow(tableId){
@@ -775,7 +848,17 @@
             });
         }
 
-        document.getElementById('save-product').addEventListener('click',()=>{
+        function clearForm() {
+            document.getElementById('product-name').value='';
+            document.getElementById('sale-quantity').value='';
+            document.getElementById('profit-rate').value='';
+            document.getElementById('final-price').value='';
+            productCounter++;
+            document.getElementById('product-code').value = "PRD-" + String(productCounter).padStart(4, '0');
+            updateCosts();
+        }
+
+        document.getElementById('save-product').addEventListener('click",()=>{
             const name=document.getElementById('product-name').value;
             const code=document.getElementById('product-code').value;
             const qty=document.getElementById('sale-quantity').value;
@@ -792,9 +875,9 @@
                 name: name,
                 quantity: qty,
                 totalCost: document.getElementById('grand-total-cost').textContent,
-                finalPrice: finalPrice + ' د.ب',
+                finalPrice: formatCurrency(parseFloat(finalPrice)),
                 profitRate: profitRate + '%',
-                profitMargin: (parseFloat(finalPrice) - parseFloat(document.getElementById('grand-total-cost').textContent.replace(' د.ب',''))).toFixed(3) + ' د.ب',
+                profitMargin: formatCurrency(parseFloat(finalPrice) - parseFloat(document.getElementById('grand-total-cost').textContent.replace(/[^0-9.]/g, ''))),
                 laborCost: document.getElementById('labor-per-box').textContent,
                 depreciation: document.getElementById('depreciation-per-box').textContent
             };
@@ -812,20 +895,10 @@
             alert('تم حفظ المنتج بنجاح!');
         });
 
-        function clearForm() {
-            document.getElementById('product-name').value='';
-            document.getElementById('sale-quantity').value='';
-            document.getElementById('profit-rate').value='';
-            document.getElementById('final-price').value='';
-            productCounter++;
-            document.getElementById('product-code').value = "PRD-" + String(productCounter).padStart(4, '0');
-            updateCosts();
-        }
-
         function updateProductsTable() {
             const tbody = document.getElementById('products-list');
             if(products.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="10" class="text-center">لا توجد منتجات مسجلة بعد</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="6" class="text-center">لا توجد منتجات مسجلة بعد</td></tr>';
                 return;
             }
             tbody.innerHTML = '';
@@ -837,10 +910,6 @@
                     <td>${product.quantity}</td>
                     <td>${product.totalCost}</td>
                     <td>${product.finalPrice}</td>
-                    <td>${product.profitRate}</td>
-                    <td>${product.profitMargin}</td>
-                    <td>${product.laborCost}</td>
-                    <td>${product.depreciation}</td>
                     <td>
                         <button class="btn btn-primary-modern btn-action" onclick="editProduct(${index})"><i class="bi bi-pencil"></i></button>
                         <button class="btn btn-danger-modern btn-action" onclick="deleteProduct(${index})"><i class="bi bi-trash"></i></button>
@@ -859,8 +928,10 @@
             document.getElementById('product-name').value = product.name;
             document.getElementById('product-code').value = product.code;
             document.getElementById('sale-quantity').value = product.quantity;
-            document.getElementById('final-price').value = product.finalPrice.replace(' د.ب','');
-            document.getElementById('profit-rate').value = product.profitRate.replace('%','');
+            const finalPriceText = product.finalPrice.replace(/[^0-9.]/g, '');
+            document.getElementById('final-price').value = finalPriceText;
+            const profitRateText = product.profitRate.replace('%', '');
+            document.getElementById('profit-rate').value = profitRateText;
             updateCosts();
         }
 
@@ -884,7 +955,7 @@
                 products.forEach(product => {
                     const option = document.createElement('option');
                     option.value = product.code;
-                    option.dataset.price = product.finalPrice.replace(' د.ب','');
+                    option.dataset.price = product.finalPrice.replace(/[^0-9.]/g, '');
                     option.textContent = product.name + ' - ' + product.finalPrice;
                     select.appendChild(option);
                 });
@@ -907,8 +978,8 @@
             const qty = parseInt(row.querySelector('.quantity').value) || 1;
             const tax = price * qty * 0.05; // مثال 5%
             const total = price * qty + tax;
-            row.querySelector('.item-tax').textContent = tax.toFixed(3);
-            row.querySelector('.item-total').textContent = total.toFixed(3);
+            row.querySelector('.item-tax').textContent = tax.toFixed(currencyDecimals);
+            row.querySelector('.item-total').textContent = total.toFixed(currencyDecimals);
         }
 
         document.getElementById('project-settings-form').addEventListener('submit', (e) => {
@@ -930,6 +1001,7 @@
                 currency: document.getElementById('system-currency').value
             }));
             alert('تم حفظ إعدادات النظام بنجاح!');
+            updateCurrencyFormat();
         });
 
         document.getElementById('tax-settings-form').addEventListener('submit', (e) => {
@@ -977,6 +1049,7 @@
             document.getElementById('system-color').value = s.color || 'default';
             document.getElementById('system-language').value = s.language || 'ar';
             document.getElementById('system-currency').value = s.currency || 'BHD';
+            updateCurrencyFormat();
         }
 
         const savedTax = localStorage.getItem('taxSettings');
