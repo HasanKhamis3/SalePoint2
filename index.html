@@ -1,434 +1,1515 @@
-<!-- قسم معلومات المنتج المحدث -->
-<div class="card-modern">
-    <div class="card-header-modern">
-        <i class="bi bi-info-circle"></i>
-        معلومات المنتج
-    </div>
-    <div class="card-body-modern">
-        <div class="row">
-            <div class="col-md-3">
-                <div class="mb-3">
-                    <label class="form-label">رمز المنتج</label>
-                    <input type="text" class="form-control-modern auto-generate" id="product-code" readonly dir="ltr">
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="mb-3">
-                    <label class="form-label">اسم المنتج</label>
-                    <input type="text" class="form-control-modern" id="product-name" required>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="mb-3">
-                    <label class="form-label">عدد القطع في العلبة</label>
-                    <input type="number" class="form-control-modern" id="sale-quantity" required>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="mb-3">
-                    <label class="form-label">نسبة الربح (%)</label>
-                    <input type="number" class="form-control-modern" id="profit-rate" required>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>برنامج الحسابات - Ajwaapilot</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            /* ألوان Ajwaapilot */
+            --primary-color: #1a1a1a;
+            --primary-light: #2a2a2a;
+            --secondary-color: #ff6b35;
+            --accent-color: #f7931e;
+            --background: #fafafa;
+            --surface: #ffffff;
+            --surface-hover: #f5f5f5;
+            --text-primary: #1a1a1a;
+            --text-secondary: #666666;
+            --text-muted: #999999;
+            --border-color: #e0e0e0;
+            --success: #00c853;
+            --warning: #ff9800;
+            --error: #f44336;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+            --shadow-md: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+            --shadow-lg: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
+        }
 
-<!-- جداول التكاليف مع الإجماليات -->
-<div class="row">
-    <!-- Materials -->
-    <div class="col-md-6">
-        <div class="card-modern">
-            <div class="card-header-modern">
-                <i class="bi bi-boxes"></i>
-                تكاليف المواد
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'IBM Plex Sans Arabic', sans-serif;
+            background-color: var(--background);
+            color: var(--text-primary);
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            background: linear-gradient(180deg, var(--primary-color) 0%, var(--primary-light) 100%);
+            min-height: 100vh;
+            color: white;
+            box-shadow: var(--shadow-lg);
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 280px;
+            z-index: 1000;
+            overflow-y: auto;
+        }
+
+        .sidebar-header {
+            padding: 2rem 1.5rem;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            text-align: center;
+        }
+
+        .sidebar-logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: white;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .sidebar-logo i {
+            color: var(--accent-color);
+            font-size: 2rem;
+        }
+
+        .sidebar-nav {
+            padding: 1rem 0;
+        }
+
+        .sidebar .nav-link {
+            color: rgba(255,255,255,0.8);
+            padding: 1rem 1.5rem;
+            margin: 0.25rem 1rem;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-weight: 500;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .sidebar .nav-link:hover,
+        .sidebar .nav-link.active {
+            color: white;
+            background: rgba(255,255,255,0.1);
+            transform: translateX(-5px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .main-content {
+            margin-right: 280px;
+            padding: 2rem;
+            min-height: 100vh;
+        }
+
+        .page {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        .invoice-tab {
+            display: none;
+        }
+
+        .invoice-tab.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .nav-tabs-modern {
+            border: none;
+            margin-bottom: 2rem;
+        }
+
+        .nav-tabs-modern .nav-link {
+            border: none;
+            border-radius: 12px;
+            padding: 1rem 1.5rem;
+            margin-right: 0.5rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .nav-tabs-modern .nav-link.active {
+            background: linear-gradient(135deg, var(--secondary-color), var(--accent-color));
+            color: white;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .card-modern {
+            background: var(--surface);
+            border: none;
+            border-radius: 16px;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.3s ease;
+            overflow: hidden;
+            margin-bottom: 2rem;
+        }
+
+        .card-header-modern {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+            color: white;
+            padding: 1.5rem;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .card-body-modern {
+            padding: 2rem;
+        }
+
+        .form-control-modern {
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            padding: 0.875rem 1rem;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: var(--surface);
+            width: 100%;
+        }
+
+        .form-control-modern:focus {
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 0 0.2rem rgba(255, 107, 53, 0.25);
+        }
+
+        .form-select-modern {
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            padding: 0.875rem 1rem;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: var(--surface);
+            width: 100%;
+        }
+
+        .btn-modern {
+            border: none;
+            border-radius: 12px;
+            padding: 0.75rem 1.5rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary-modern {
+            background: linear-gradient(135deg, var(--secondary-color), var(--accent-color));
+            color: white;
+        }
+
+        .btn-success-modern {
+            background: linear-gradient(135deg, var(--success), #00e676);
+            color: white;
+        }
+
+        .btn-danger-modern {
+            background: linear-gradient(135deg, var(--error), #ff5252);
+            color: white;
+        }
+
+        .table-modern {
+            background: var(--surface);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+            width: 100%;
+        }
+
+        .table-modern th, .table-modern td {
+            padding: 1rem;
+            text-align: center;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .table-modern th {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+            color: white;
+            font-weight: 600;
+        }
+
+        .summary-container-modern {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .summary-box-modern {
+            background: linear-gradient(135deg, var(--surface), var(--surface-hover));
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.3s ease;
+        }
+
+        .summary-title-modern {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .summary-value-modern {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .settings-section-modern {
+            background: var(--surface);
+            border-radius: 20px;
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .settings-section-modern h4 {
+            color: var(--text-primary);
+            font-weight: 700;
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .settings-section-modern h4 i {
+            color: var(--secondary-color);
+            font-size: 1.5rem;
+        }
+
+        .color-options-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(50px, 1fr));
+            gap: 1rem;
+            max-width: 300px;
+        }
+
+        .color-option-modern {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .color-option-modern:hover {
+            transform: scale(1.1);
+            box-shadow: var(--shadow-md);
+        }
+
+        .color-option-modern.selected {
+            transform: scale(1.2);
+            box-shadow: 0 0 0 3px var(--border-color);
+        }
+
+        .color-option-modern.selected::after {
+            content: '✓';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .invoice-container {
+            background: var(--surface);
+            border-radius: 20px;
+            box-shadow: var(--shadow-lg);
+            padding: 3rem;
+            margin: 2rem auto;
+            max-width: 800px;
+        }
+
+        .invoice-header {
+            text-align: center;
+            margin-bottom: 3rem;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 2rem;
+        }
+
+        .address-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .address-field {
+            padding: 0.75rem;
+            background: var(--surface-hover);
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(100%);
+                transition: transform 0.3s ease;
+            }
+            
+            .sidebar.show {
+                transform: translateX(0);
+            }
+            
+            .main-content {
+                margin-right: 0;
+                padding: 1rem;
+            }
+        }
+
+        .tax-related {
+            display: none;
+        }
+
+        .tax-related.show {
+            display: table-cell;
+        }
+
+        .btn-action {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+        }
+
+        .btn-view { background: var(--primary-color); color: white; }
+        .btn-edit { background: var(--accent-color); color: white; }
+        .btn-delete { background: var(--error); color: white; }
+        .btn-action:hover { transform: scale(1.1); box-shadow: var(--shadow-md); }
+
+        /* إضافات جديدة */
+        .error-message {
+            color: var(--error);
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        .input-group-custom {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .input-group-custom .form-control-modern {
+            flex: 1;
+        }
+
+        .input-group-custom .static-text {
+            padding: 0.875rem 1rem;
+            background: var(--surface-hover);
+            border-radius: 12px;
+            border: 2px solid var(--border-color);
+            min-width: 80px;
+            text-align: center;
+        }
+
+        .total-row {
+            font-weight: 700;
+            font-size: 1.1rem;
+            background: var(--surface-hover);
+        }
+
+        .swal2-popup {
+            font-family: 'IBM Plex Sans Arabic', sans-serif;
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar Toggle Button for Mobile -->
+    <button class="btn btn-primary-modern d-md-none position-fixed" style="top: 1rem; right: 1rem; z-index: 1001;" id="sidebarToggle">
+        <i class="bi bi-list"></i>
+    </button>
+
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h4 class="sidebar-logo">
+                <i class="bi bi-calculator-fill"></i>
+                <span id="project-name-sidebar">برنامج الحسابات</span>
+            </h4>
+        </div>
+        
+        <nav class="sidebar-nav">
+            <ul class="nav flex-column">
+                <li class="nav-item">
+                    <a class="nav-link active" href="#" data-page="dashboard">
+                        <i class="bi bi-speedometer2"></i>
+                        <span>لوحة التحكم</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" data-page="invoice">
+                        <i class="bi bi-receipt"></i>
+                        <span>الفواتير</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" data-page="products">
+                        <i class="bi bi-box-seam"></i>
+                        <span>المنتجات</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" data-page="product-cost">
+                        <i class="bi bi-calculator"></i>
+                        <span>تكلفة المنتج</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" data-page="settings">
+                        <i class="bi bi-gear"></i>
+                        <span>الإعدادات</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Dashboard Page -->
+        <div id="dashboard" class="page active">
+            <div class="content-header">
+                <h2 class="content-title">
+                    <i class="bi bi-speedometer2"></i>
+                    لوحة التحكم
+                </h2>
             </div>
-            <div class="card-body-modern">
-                <div class="table-responsive">
-                    <table class="table-modern" id="materials-table">
-                        <thead>
-                            <tr>
-                                <th>المنتج</th>
-                                <th>العدد</th>
-                                <th>السعر (د.ب)</th>
-                                <th>العدد المستخدم</th>
-                                <th>الإجمالي</th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td><input type="text" class="form-control-modern" required></td>
-                                <td><input type="number" class="form-control-modern" required></td>
-                                <td><input type="number" class="form-control-modern" step="0.001" required></td>
-                                <td><input type="number" class="form-control-modern" required></td>
-                                <td class="material-cost">0.000</td>
-                                <td>
-                                    <button class="btn btn-danger-modern btn-action remove-row">
-                                        <i class="bi bi-trash"></i>
-                                    </button>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+            
+            <div class="summary-container-modern">
+                <div class="summary-box-modern">
+                    <div class="summary-title-modern">إجمالي المنتجات</div>
+                    <div class="summary-value-modern" id="dashboard-products">0</div>
                 </div>
-                <button type="button" class="btn btn-success-modern" id="add-material">
-                    <i class="bi bi-plus"></i> إضافة منتج
-                </button>
-                <div class="mt-3 text-start">
-                    <strong>إجمالي تكاليف المواد للعلبة: <span id="total-materials-cost">0.000 د.ب</span></strong>
+                <div class="summary-box-modern">
+                    <div class="summary-title-modern">إجمالي الفواتير</div>
+                    <div class="summary-value-modern" id="dashboard-invoices">0</div>
                 </div>
+                <div class="summary-box-modern">
+                    <div class="summary-title-modern">الإيرادات</div>
+                    <div class="summary-value-modern" id="dashboard-revenue">0.000 <span class="currency-symbol">د.ب</span></div>
+                </div>
+                <div class="summary-box-modern">
+                    <div class="summary-title-modern">العملاء</div>
+                    <div class="summary-value-modern" id="dashboard-customers">0</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Products Page -->
+        <div id="products" class="page">
+            <div class="content-header">
+                <h2 class="content-title">
+                    <i class="bi bi-box-seam"></i>
+                    إدارة المنتجات
+                </h2>
+            </div>
+            
+            <div class="card-modern">
+                <div class="card-header-modern">
+                    <i class="bi bi-table"></i>
+                    قائمة المنتجات
+                </div>
+                <div class="card-body-modern">
+                    <div class="table-responsive">
+                        <table class="table-modern">
+                            <thead>
+                                <tr>
+                                    <th>رمز المنتج</th>
+                                    <th>اسم المنتج</th>
+                                    <th>عدد القطع في العلبة</th>
+                                    <th>إجمالي تكلفة العلبة</th>
+                                    <th>سعر البيع النهائي</th>
+                                    <th>نسبة الربح</th>
+                                    <th>هامش الربح</th>
+                                    <th>تكلفة اليد العاملة للعلبة</th>
+                                    <th>قيمة إهلاك المعدات</th>
+                                    <th>الإجراءات</th>
+                                </tr>
+                            </thead>
+                            <tbody id="products-list">
+                                <tr>
+                                    <td colspan="10" class="text-center">لا توجد منتجات مسجلة بعد</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Product Cost Calculator Page -->
+        <div id="product-cost" class="page">
+            <div class="content-header">
+                <h2 class="content-title">
+                    <i class="bi bi-calculator"></i>
+                    حساب تكلفة المنتج
+                </h2>
+            </div>
+            
+            <!-- Product Info -->
+            <div class="card-modern">
+                <div class="card-header-modern">
+                    <i class="bi bi-info-circle"></i>
+                    معلومات المنتج
+                </div>
+                <div class="card-body-modern">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label class="form-label">اسم المنتج</label>
+                                <input type="text" class="form-control-modern" id="product-name" required>
+                                <div class="error-message" id="error-product-name">يرجى إدخال اسم المنتج</div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="mb-3">
+                                <label class="form-label">رمز المنتج</label>
+                                <input type="text" class="form-control-modern auto-generate" id="product-code" readonly style="text-align: right;">
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="mb-3">
+                                <label class="form-label">عدد القطع في العلبة</label>
+                                <input type="number" class="form-control-modern" id="sale-quantity" required min="1">
+                                <div class="error-message" id="error-sale-quantity">يرجى إدخال عدد القطع</div>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="mb-3">
+                                <label class="form-label">نسبة الربح (%)</label>
+                                <input type="number" class="form-control-modern" id="profit-rate" required min="0" max="100">
+                                <div class="error-message" id="error-profit-rate">يرجى إدخال نسبة الربح</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Summary Cards -->
+                    <div class="summary-container-modern">
+                        <div class="summary-box-modern">
+                            <div class="summary-title-modern">تكلفة المواد</div>
+                            <div class="summary-value-modern" id="summary-materials-cost">0.000 <span class="currency-symbol">د.ب</span></div>
+                        </div>
+                        <div class="summary-box-modern">
+                            <div class="summary-title-modern">تكاليف التغليف</div>
+                            <div class="summary-value-modern" id="summary-packaging-cost">0.000 <span class="currency-symbol">د.ب</span></div>
+                        </div>
+                        <div class="summary-box-modern">
+                            <div class="summary-title-modern">إهلاك المعدات</div>
+                            <div class="summary-value-modern" id="summary-depreciation-cost">0.000 <span class="currency-symbol">د.ب</span></div>
+                        </div>
+                        <div class="summary-box-modern">
+                            <div class="summary-title-modern">اليد العاملة</div>
+                            <div class="summary-value-modern" id="summary-labor-cost">0.000 <span class="currency-symbol">د.ب</span></div>
+                        </div>
+                        <div class="summary-box-modern">
+                            <div class="summary-title-modern">سعر البيع النهائي</div>
+                            <div class="summary-value-modern" id="summary-final-price">0.000 <span class="currency-symbol">د.ب</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <!-- Materials -->
+                <div class="col-md-6">
+                    <div class="card-modern">
+                        <div class="card-header-modern">
+                            <i class="bi bi-boxes"></i>
+                            تكاليف المواد
+                        </div>
+                        <div class="card-body-modern">
+                            <div class="table-responsive">
+                                <table class="table-modern" id="materials-table">
+                                    <thead>
+                                        <tr>
+                                            <th>المنتج</th>
+                                            <th>العدد</th>
+                                            <th>السعر</th>
+                                            <th>العدد المستخدم</th>
+                                            <th>سعر التكلفة</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td><input type="text" class="form-control-modern" required></td>
+                                            <td><input type="number" class="form-control-modern" required></td>
+                                            <td><input type="number" class="form-control-modern" step="0.001" required></td>
+                                            <td><input type="number" class="form-control-modern" required></td>
+                                            <td class="material-cost">0.000</td>
+                                            <td>
+                                                <button class="btn btn-danger-modern btn-action remove-row">
+                                                    <i class="bi bi-trash"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                    <tfoot>
+                                        <tr class="total-row">
+                                            <td colspan="4" style="text-align: left;"><strong>إجمالي تكاليف المواد للعلبة:</strong></td>
+                                            <td><strong id="materials-per-box">0.000</strong></td>
+                                            <td></td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                            <button type="button" class="btn btn-success-modern" id="add-material">
+                                <i class="bi bi-plus"></i> إضافة منتج
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Packaging -->
+                <div class="col-md-6">
+                    <div class="card-modern">
+                        <div class="card-header-modern">
+                            <i class="bi bi-gift"></i>
+                            تكاليف التغليف
+                        </div>
+                        <div class="card-body-modern">
+                            <div class="table-responsive">
+                                <table class="table-modern" id="packaging-table">
+                                    <thead>
+                                        <tr>
+                                            <th>المنتج</th>
+                                            <th>العدد</th>
+                                            <th>السعر</th>
+                                            <th>العدد المستخدم</th>
+                                            <th>سعر التكلفة</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td><input type="text" class="form-control-modern" required></td>
+                                            <td><input type="number" class="form-control-modern" required></td>
+                                            <td><input type="number" class="form-control-modern" step="0.001" required></td>
+                                            <td><input type="number" class="form-control-modern" required></td>
+                                            <td class="packaging-cost">0.000</td>
+                                            <td>
+                                                <button class="btn btn-danger-modern btn-action remove-row">
+                                                    <i class="bi bi-trash"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                    <tfoot>
+                                        <tr class="total-row">
+                                            <td colspan="4" style="text-align: left;"><strong>إجمالي تكاليف التغليف:</strong></td>
+                                            <td><strong id="packaging-total">0.000</strong></td>
+                                            <td></td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                            <button type="button" class="btn btn-success-modern" id="add-packaging">
+                                <i class="bi bi-plus"></i> إضافة منتج
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <!-- Workers -->
+                <div class="col-md-6">
+                    <div class="card-modern">
+                        <div class="card-header-modern">
+                            <i class="bi bi-people"></i>
+                            تكاليف اليد العاملة
+                        </div>
+                        <div class="card-body-modern">
+                            <div class="table-responsive">
+                                <table class="table-modern" id="workers-table">
+                                    <thead>
+                                        <tr>
+                                            <th>اسم العامل</th>
+                                            <th>الراتب الشهري</th>
+                                            <th>عدد ساعات العمل</th>
+                                            <th>عدد القطع المنتجة</th>
+                                            <th>عدد القطع لكل ساعة</th>
+                                            <th>تكلفة القطعة</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td><input type="text" class="form-control-modern" required></td>
+                                            <td><input type="number" class="form-control-modern" step="0.001" required></td>
+                                            <td><input type="number" class="form-control-modern" required></td>
+                                            <td><input type="number" class="form-control-modern" required></td>
+                                            <td class="pieces-per-hour">0</td>
+                                            <td class="piece-cost">0.000</td>
+                                            <td>
+                                                <button class="btn btn-danger-modern btn-action remove-row">
+                                                    <i class="bi bi-trash"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                    <tfoot>
+                                        <tr class="total-row">
+                                            <td colspan="5" style="text-align: left;"><strong>إجمالي تكلفة اليد العاملة للعلبة:</strong></td>
+                                            <td><strong id="labor-total">0.000</strong></td>
+                                            <td></td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                            <button type="button" class="btn btn-success-modern" id="add-worker">
+                                <i class="bi bi-plus"></i> إضافة عامل
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Equipment Depreciation -->
+                <div class="col-md-6">
+                    <div class="card-modern">
+                        <div class="card-header-modern">
+                            <i class="bi bi-tools"></i>
+                            إهلاك المعدات
+                        </div>
+                        <div class="card-body-modern">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label">نسبة الإهلاك</label>
+                                        <div class="input-group-custom">
+                                            <input type="number" class="form-control-modern" id="depreciation-rate" required min="0" max="100" placeholder="0">
+                                            <span class="static-text">%</span>
+                                        </div>
+                                        <div class="error-message" id="error-depreciation-rate">يرجى إدخال نسبة الإهلاك</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label">قيمة الإهلاك</label>
+                                        <input type="number" class="form-control-modern auto-generate" id="equipment-depreciation" step="0.001" readonly>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mt-3">
+                                <strong>إجمالي إهلاك المعدات للعلبة: <span id="depreciation-per-box" class="currency-symbol">0.000</span></strong>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Final Price -->
+            <div class="card-modern">
+                <div class="card-header-modern">
+                    <i class="bi bi-currency-dollar"></i>
+                    ملخص التكاليف والأسعار
+                </div>
+                <div class="card-body-modern">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="text-center p-3 border rounded">
+                                <h6 class="text-muted">التكلفة الإجمالية للعلبة</h6>
+                                <h3 class="text-primary" id="grand-total-cost">0.000 <span class="currency-symbol">د.ب</span></h3>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="text-center p-3 border rounded">
+                                <h6 class="text-muted">قيمة الربح</h6>
+                                <h3 class="text-success" id="profit-margin">0.000 <span class="currency-symbol">د.ب</span> (0%)</h3>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="text-center p-3 border rounded">
+                                <h6 class="text-muted">سعر البيع النهائي للعلبة</h6>
+                                <input type="number" class="form-control-modern text-center" id="final-price" step="0.001" readonly>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="text-center mt-4">
+                        <button type="button" class="btn btn-success-modern btn-lg" id="save-product">
+                            <i class="bi bi-save"></i> حفظ المنتج
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Settings Page -->
+        <div id="settings" class="page">
+            <div class="content-header">
+                <h2 class="content-title">
+                    <i class="bi bi-gear"></i>
+                    إعدادات النظام
+                </h2>
+            </div>
+            
+            <!-- Project Details -->
+            <div class="settings-section-modern">
+                <h4><i class="bi bi-building"></i> تفاصيل المشروع</h4>
+                <form id="project-settings-form">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">اسم المشروع</label>
+                                <input type="text" class="form-control-modern" id="project-name" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">الهاتف</label>
+                                <div class="input-group">
+                                    <select class="form-select-modern" id="country-code" style="max-width: 120px;">
+                                        <option value="+973">+973 (البحرين)</option>
+                                        <option value="+966">+966 (السعودية)</option>
+                                        <option value="+971">+971 (الإمارات)</option>
+                                        <option value="+974">+974 (قطر)</option>
+                                        <option value="+965">+965 (الكويت)</option>
+                                        <option value="+968">+968 (عمان)</option>
+                                    </select>
+                                    <input type="tel" class="form-control-modern" id="phone-number" required>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">العنوان</label>
+                        <textarea class="form-control-modern" id="project-address" rows="3"></textarea>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label class="form-label">
+                                    <i class="bi bi-instagram social-icon" style="color: #E1306C;"></i>
+                                    حساب انستقرام
+                                </label>
+                                <input type="text" class="form-control-modern" id="instagram-account">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label class="form-label">
+                                    <i class="bi bi-snapchat social-icon" style="color: #FFFC00;"></i>
+                                    حساب سناب شات
+                                </label>
+                                <input type="text" class="form-control-modern" id="snapchat-account">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label class="form-label">
+                                    <i class="bi bi-tiktok social-icon"></i>
+                                    حساب تيك توك
+                                </label>
+                                <input type="text" class="form-control-modern" id="tiktok-account">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary-modern">
+                        <i class="bi bi-save"></i> حفظ الإعدادات
+                    </button>
+                </form>
+            </div>
+            
+            <!-- System Settings -->
+            <div class="settings-section-modern">
+                <h4><i class="bi bi-gear"></i> إعدادات النظام</h4>
+                <form id="system-settings-form">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label class="form-label">لون النظام</label>
+                                <div class="color-options-grid">
+                                    <div class="color-option-modern selected" style="background-color: #1a1a1a;" data-color="default"></div>
+                                    <div class="color-option-modern" style="background-color: #3498db;" data-color="blue"></div>
+                                    <div class="color-option-modern" style="background-color: #e74c3c;" data-color="red"></div>
+                                    <div class="color-option-modern" style="background-color: #2ecc71;" data-color="green"></div>
+                                    <div class="color-option-modern" style="background-color: #9b59b6;" data-color="purple"></div>
+                                    <div class="color-option-modern" style="background-color: #1abc9c;" data-color="teal"></div>
+                                </div>
+                                <input type="hidden" id="system-color" value="default">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label class="form-label">اللغة</label>
+                                <select class="form-select-modern" id="system-language">
+                                    <option value="ar">العربية</option>
+                                    <option value="en">English</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label class="form-label">العملة</label>
+                                <select class="form-select-modern" id="system-currency">
+                                    <option value="BHD">دينار بحريني (د.ب)</option>
+                                    <option value="SAR">ريال سعودي (ر.س)</option>
+                                    <option value="AED">درهم إماراتي (د.إ)</option>
+                                    <option value="QAR">ريال قطري (ر.ق)</option>
+                                    <option value="KWD">دينار كويتي (د.ك)</option>
+                                    <option value="OMR">ريال عماني (ر.ع)</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary-modern">
+                        <i class="bi bi-save"></i> حفظ إعدادات النظام
+                    </button>
+                </form>
             </div>
         </div>
     </div>
 
-    <!-- Packaging -->
-    <div class="col-md-6">
-        <div class="card-modern">
-            <div class="card-header-modern">
-                <i class="bi bi-gift"></i>
-                تكاليف التغليف
-            </div>
-            <div class="card-body-modern">
-                <div class="table-responsive">
-                    <table class="table-modern" id="packaging-table">
-                        <thead>
-                            <tr>
-                                <th>المنتج</th>
-                                <th>العدد</th>
-                                <th>السعر (د.ب)</th>
-                                <th>العدد المستخدم</th>
-                                <th>الإجمالي</th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td><input type="text" class="form-control-modern" required></td>
-                                <td><input type="number" class="form-control-modern" required></td>
-                                <td><input type="number" class="form-control-modern" step="0.001" required></td>
-                                <td><input type="number" class="form-control-modern" required></td>
-                                <td class="packaging-cost">0.000</td>
-                                <td>
-                                    <button class="btn btn-danger-modern btn-action remove-row">
-                                        <i class="bi bi-trash"></i>
-                                    </button>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <button type="button" class="btn btn-success-modern" id="add-packaging">
-                    <i class="bi bi-plus"></i> إضافة منتج
-                </button>
-                <div class="mt-3 text-start">
-                    <strong>إجمالي تكاليف التغليف للعلبة: <span id="total-packaging-cost">0.000 د.ب</span></strong>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        // النظام الكامل للتنقل والوظائف
+        document.addEventListener('DOMContentLoaded', function() {
+            // المتغيرات العامة
+            const currencySymbols = {
+                'BHD': 'د.ب',
+                'SAR': 'ر.س',
+                'AED': 'د.إ',
+                'QAR': 'ر.ق',
+                'KWD': 'د.ك',
+                'OMR': 'ر.ع',
+                'USD': '$'
+            };
+            let currentCurrency = 'BHD';
+            let lastProductCode = 0;
+            let products = JSON.parse(localStorage.getItem('products')) || [];
+            let invoices = [];
+            let settings = JSON.parse(localStorage.getItem('settings')) || {};
 
-<!-- Workers -->
-<div class="col-md-6">
-    <div class="card-modern">
-        <div class="card-header-modern">
-            <i class="bi bi-people"></i>
-            تكاليف اليد العاملة
-        </div>
-        <div class="card-body-modern">
-            <div class="table-responsive">
-                <table class="table-modern" id="workers-table">
-                    <thead>
-                        <tr>
-                            <th>اسم العامل</th>
-                            <th>الراتب الشهري (د.ب)</th>
-                            <th>عدد ساعات العمل</th>
-                            <th>عدد القطع المنتجة</th>
-                            <th>الإجمالي</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
+            // عناصر التنقل
+            const navLinks = document.querySelectorAll('[data-page]');
+            const pages = document.querySelectorAll('.page');
+
+            // دالة لتبديل الصفحات
+            function showPage(pageId) {
+                pages.forEach(page => page.classList.remove('active'));
+                const targetPage = document.getElementById(pageId);
+                if (targetPage) targetPage.classList.add('active');
+                
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('data-page') === pageId) link.classList.add('active');
+                });
+
+                // تحديث عرض العملة
+                updateCurrencyDisplay();
+            }
+
+            // ربط أحداث التنقل
+            navLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    showPage(link.getAttribute('data-page'));
+                });
+            });
+
+            // تهيئة الصفحات
+            showPage('dashboard');
+
+            // Sidebar toggle for mobile
+            const sidebarToggle = document.getElementById('sidebarToggle');
+            if (sidebarToggle) {
+                sidebarToggle.addEventListener('click', () => {
+                    document.getElementById('sidebar').classList.toggle('show');
+                });
+            }
+
+            // تحديث عرض العملة
+            function updateCurrencyDisplay() {
+                document.querySelectorAll('.currency-symbol').forEach(el => {
+                    el.textContent = currencySymbols[currentCurrency];
+                });
+            }
+
+            // إنشاء كود منتج تلقائي
+            function generateProductCode() {
+                lastProductCode = Math.max(lastProductCode, products.length);
+                lastProductCode++;
+                const code = String(lastProductCode).padStart(4, '0');
+                return `PRD-${code}`;
+            }
+
+            // تحديث كود المنتج
+            document.getElementById('product-code').value = generateProductCode();
+
+            // دالة لحساب التكلفة
+            function updateCosts() {
+                // حساب تكاليف المواد
+                let materialsCost = 0;
+                let materialsPerBox = 0;
+                document.querySelectorAll('#materials-table tbody tr').forEach(row => {
+                    const inputs = row.querySelectorAll('input');
+                    const count = parseFloat(inputs[1].value) || 1;
+                    const price = parseFloat(inputs[2].value) || 0;
+                    const used = parseFloat(inputs[3].value) || 0;
+                    const cost = (price / count) * used;
+                    row.querySelector('.material-cost').textContent = cost.toFixed(3);
+                    materialsCost += cost;
+                    materialsPerBox += cost;
+                });
+
+                // حساب تكاليف التغليف
+                let packagingCost = 0;
+                let packagingTotal = 0;
+                document.querySelectorAll('#packaging-table tbody tr').forEach(row => {
+                    const inputs = row.querySelectorAll('input');
+                    const count = parseFloat(inputs[1].value) || 1;
+                    const price = parseFloat(inputs[2].value) || 0;
+                    const used = parseFloat(inputs[3].value) || 0;
+                    const cost = (price / count) * used;
+                    row.querySelector('.packaging-cost').textContent = cost.toFixed(3);
+                    packagingCost += cost;
+                    packagingTotal += cost;
+                });
+
+                // حساب تكاليف العمالة
+                let totalLaborCost = 0;
+                let laborTotal = 0;
+                let workerCount = 0;
+                document.querySelectorAll('#workers-table tbody tr').forEach(row => {
+                    const inputs = row.querySelectorAll('input');
+                    const salary = parseFloat(inputs[1].value) || 0;
+                    const hours = parseFloat(inputs[2].value) || 1;
+                    const pieces = parseFloat(inputs[3].value) || 1;
+                    
+                    const hourlySalary = (salary / 30) / 8;
+                    const piecesPerHour = pieces / hours;
+                    const pieceCost = piecesPerHour > 0 ? hourlySalary / piecesPerHour : 0;
+                    
+                    row.querySelector('.pieces-per-hour').textContent = piecesPerHour.toFixed(0);
+                    row.querySelector('.piece-cost').textContent = pieceCost.toFixed(3);
+                    totalLaborCost += pieceCost;
+                    laborTotal += pieceCost;
+                    workerCount++;
+                });
+
+                // تحديث الإجماليات
+                const saleQuantity = parseFloat(document.getElementById('sale-quantity').value) || 1;
+                const laborPerBox = (totalLaborCost / Math.max(workerCount, 1)) * saleQuantity;
+                const depreciationRate = parseFloat(document.getElementById('depreciation-rate').value) || 0;
+                
+                // حساب إهلاك المعدات بناءً على إجمالي المواد
+                const depreciationCost = materialsCost * (depreciationRate / 100);
+                const depreciationPerBox = depreciationCost * saleQuantity;
+
+                document.getElementById('summary-materials-cost').textContent = materialsCost.toFixed(3);
+                document.getElementById('summary-packaging-cost').textContent = packagingCost.toFixed(3);
+                document.getElementById('summary-depreciation-cost').textContent = depreciationPerBox.toFixed(3);
+                document.getElementById('summary-labor-cost').textContent = laborPerBox.toFixed(3);
+
+                document.getElementById('materials-per-box').textContent = materialsPerBox.toFixed(3);
+                document.getElementById('packaging-total').textContent = packagingTotal.toFixed(3);
+                document.getElementById('labor-total').textContent = laborTotal.toFixed(3);
+                document.getElementById('depreciation-per-box').textContent = depreciationPerBox.toFixed(3);
+
+                // حساب الإجمالي النهائي
+                const totalCostPerBox = materialsCost + packagingCost + laborPerBox + depreciationPerBox;
+                document.getElementById('grand-total-cost').textContent = totalCostPerBox.toFixed(3);
+
+                const profitRate = parseFloat(document.getElementById('profit-rate').value) || 0;
+                const profitAmount = totalCostPerBox * (profitRate / 100);
+                const suggestedPrice = totalCostPerBox + profitAmount;
+
+                document.getElementById('profit-margin').textContent = profitAmount.toFixed(3) + ' ' + currencySymbols[currentCurrency] + ' (' + profitRate + '%)';
+                document.getElementById('final-price').value = suggestedPrice.toFixed(3);
+                document.getElementById('summary-final-price').textContent = suggestedPrice.toFixed(3);
+            }
+
+            // أحداث الحساب
+            ['depreciation-rate', 'profit-rate', 'sale-quantity'].forEach(id => {
+                document.getElementById(id).addEventListener('input', updateCosts);
+            });
+
+            // إضافة صفوف
+            document.getElementById('add-material').addEventListener('click', () => addTableRow('materials-table'));
+            document.getElementById('add-packaging').addEventListener('click', () => addTableRow('packaging-table'));
+            document.getElementById('add-worker').addEventListener('click', () => addWorkerRow());
+
+            function addTableRow(tableId) {
+                const tbody = document.querySelector(`#${tableId} tbody`);
+                const newRow = document.createElement('tr');
+                if (tableId === 'materials-table' || tableId === 'packaging-table') {
+                    newRow.innerHTML = `
+                        <td><input type="text" class="form-control-modern" required></td>
+                        <td><input type="number" class="form-control-modern" required></td>
+                        <td><input type="number" class="form-control-modern" step="0.001" required></td>
+                        <td><input type="number" class="form-control-modern" required></td>
+                        <td class="${tableId === 'materials-table' ? 'material-cost' : 'packaging-cost'}">0.000</td>
+                        <td>
+                            <button class="btn btn-danger-modern btn-action remove-row">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </td>
+                    `;
+                }
+                tbody.appendChild(newRow);
+                setupRowEvents(newRow);
+            }
+
+            function addWorkerRow() {
+                const tbody = document.querySelector('#workers-table tbody');
+                const newRow = document.createElement('tr');
+                newRow.innerHTML = `
+                    <td><input type="text" class="form-control-modern" required></td>
+                    <td><input type="number" class="form-control-modern" step="0.001" required></td>
+                    <td><input type="number" class="form-control-modern" required></td>
+                    <td><input type="number" class="form-control-modern" required></td>
+                    <td class="pieces-per-hour">0</td>
+                    <td class="piece-cost">0.000</td>
+                    <td>
+                        <button class="btn btn-danger-modern btn-action remove-row">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(newRow);
+                setupRowEvents(newRow);
+            }
+
+            function setupRowEvents(row) {
+                row.querySelector('.remove-row').addEventListener('click', function() {
+                    row.remove();
+                    updateCosts();
+                });
+                
+                const inputs = row.querySelectorAll('input');
+                inputs.forEach(input => {
+                    input.addEventListener('input', updateCosts);
+                });
+            }
+
+            // التحقق من صحة البيانات
+            function validateProductData() {
+                let isValid = true;
+                
+                // إعادة تعيين الأخطاء
+                document.querySelectorAll('.error-message').forEach(error => error.classList.remove('show'));
+                
+                // التحقق من الحقول المطلوبة
+                const requiredFields = [
+                    { id: 'product-name', error: 'error-product-name' },
+                    { id: 'sale-quantity', error: 'error-sale-quantity' },
+                    { id: 'profit-rate', error: 'error-profit-rate' },
+                    { id: 'depreciation-rate', error: 'error-depreciation-rate' }
+                ];
+                
+                requiredFields.forEach(field => {
+                    const element = document.getElementById(field.id);
+                    const error = document.getElementById(field.error);
+                    
+                    if (!element.value || element.value <= 0) {
+                        error.classList.add('show');
+                        isValid = false;
+                    }
+                });
+                
+                // التحقق من الجداول
+                const tables = ['materials-table', 'packaging-table', 'workers-table'];
+                tables.forEach(tableId => {
+                    const rows = document.querySelectorAll(`#${tableId} tbody tr`);
+                    rows.forEach(row => {
+                        const inputs = row.querySelectorAll('input');
+                        inputs.forEach(input => {
+                            if (!input.value || input.value <= 0) {
+                                input.style.borderColor = 'var(--error)';
+                                isValid = false;
+                            } else {
+                                input.style.borderColor = 'var(--border-color)';
+                            }
+                        });
+                    });
+                });
+                
+                return isValid;
+            }
+
+            // حفظ المنتج
+            document.getElementById('save-product').addEventListener('click', function() {
+                if (!validateProductData()) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'خطأ في البيانات',
+                        text: 'يرجى ملء جميع الحقول المطلوبة بشكل صحيح',
+                        confirmButtonText: 'حسناً',
+                        confirmButtonColor: '#ff6b35'
+                    });
+                    return;
+                }
+
+                const productData = {
+                    code: document.getElementById('product-code').value,
+                    name: document.getElementById('product-name').value,
+                    pieces: parseFloat(document.getElementById('sale-quantity').value),
+                    packageCost: parseFloat(document.getElementById('grand-total-cost').textContent),
+                    finalPrice: parseFloat(document.getElementById('final-price').value),
+                    profitRate: parseFloat(document.getElementById('profit-rate').value),
+                    profitMargin: parseFloat(document.getElementById('profit-margin').textContent.split(' ')[0]),
+                    laborCost: parseFloat(document.getElementById('labor-total').textContent),
+                    depreciationCost: parseFloat(document.getElementById('depreciation-per-box').textContent),
+                    materials: [],
+                    packaging: [],
+                    workers: []
+                };
+
+                // جمع بيانات المواد
+                document.querySelectorAll('#materials-table tbody tr').forEach(row => {
+                    const inputs = row.querySelectorAll('input');
+                    if (inputs[0].value) {
+                        productData.materials.push({
+                            name: inputs[0].value,
+                            count: inputs[1].value,
+                            price: inputs[2].value,
+                            used: inputs[3].value
+                        });
+                    }
+                });
+
+                // جمع بيانات التغليف
+                document.querySelectorAll('#packaging-table tbody tr').forEach(row => {
+                    const inputs = row.querySelectorAll('input');
+                    if (inputs[0].value) {
+                        productData.packaging.push({
+                            name: inputs[0].value,
+                            count: inputs[1].value,
+                            price: inputs[2].value,
+                            used: inputs[3].value
+                        });
+                    }
+                });
+
+                // جمع بيانات العمال
+                document.querySelectorAll('#workers-table tbody tr').forEach(row => {
+                    const inputs = row.querySelectorAll('input');
+                    if (inputs[0].value) {
+                        productData.workers.push({
+                            name: inputs[0].value,
+                            salary: inputs[1].value,
+                            hours: inputs[2].value,
+                            pieces: inputs[3].value
+                        });
+                    }
+                });
+
+                // إضافة المنتج
+                products.push(productData);
+                localStorage.setItem('products', JSON.stringify(products));
+
+                // تحديث جدول المنتجات
+                updateProductsTable();
+
+                // إعادة تعيين النموذج
+                resetProductForm();
+
+                Swal.fire({
+                    icon: 'success',
+                    title: 'تم الحفظ بنجاح',
+                    text: 'تم حفظ المنتج بنجاح وإضافته إلى قائمة المنتجات',
+                    confirmButtonText: 'حسناً',
+                    confirmButtonColor: '#00c853'
+                });
+            });
+
+            // تحديث جدول المنتجات
+            function updateProductsTable() {
+                const tbody = document.querySelector('#products-list');
+                if (products.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="10" class="text-center">لا توجد منتجات مسجلة بعد</td></tr>';
+                    return;
+                }
+
+                tbody.innerHTML = '';
+                products.forEach(product => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${product.code}</td>
+                        <td>${product.name}</td>
+                        <td>${product.pieces}</td>
+                        <td>${product.packageCost.toFixed(3)} <span class="currency-symbol">${currencySymbols[currentCurrency]}</span></td>
+                        <td>${product.finalPrice.toFixed(3)} <span class="currency-symbol">${currencySymbols[currentCurrency]}</span></td>
+                        <td>${product.profitRate}%</td>
+                        <td>${product.profitMargin.toFixed(3)} <span class="currency-symbol">${currencySymbols[currentCurrency]}</span></td>
+                        <td>${product.laborCost.toFixed(3)} <span class="currency-symbol">${currencySymbols[currentCurrency]}</span></td>
+                        <td>${product.depreciationCost.toFixed(3)} <span class="currency-symbol">${currencySymbols[currentCurrency]}</span></td>
+                        <td>
+                            <button class="btn btn-primary-modern btn-sm me-1" onclick="viewProduct('${product.code}')">
+                                <i class="bi bi-eye"></i>
+                            </button>
+                            <button class="btn btn-danger-modern btn-sm" onclick="deleteProduct('${product.code}')">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </td>
+                    `;
+                    tbody.appendChild(row);
+                });
+
+                // تحديث عداد لوحة التحكم
+                document.getElementById('dashboard-products').textContent = products.length;
+            }
+
+            // إعادة تعيين النموذج
+            function resetProductForm() {
+                document.getElementById('product-name').value = '';
+                document.getElementById('product-code').value = generateProductCode();
+                document.getElementById('sale-quantity').value = '';
+                document.getElementById('profit-rate').value = '';
+                document.getElementById('depreciation-rate').value = '';
+                
+                // مسح الجداول
+                ['materials-table', 'packaging-table', 'workers-table'].forEach(tableId => {
+                    const tbody = document.querySelector(`#${tableId} tbody`);
+                    tbody.innerHTML = '';
+                    
+                    // إضافة صف واحد فارغ
+                    if (tableId === 'materials-table' || tableId === 'packaging-table') {
+                        const newRow = document.createElement('tr');
+                        newRow.innerHTML = `
                             <td><input type="text" class="form-control-modern" required></td>
+                            <td><input type="number" class="form-control-modern" required></td>
                             <td><input type="number" class="form-control-modern" step="0.001" required></td>
                             <td><input type="number" class="form-control-modern" required></td>
-                            <td><input type="number" class="form-control-modern" required></td>
-                            <td class="worker-total">0.000</td>
+                            <td class="${tableId === 'materials-table' ? 'material-cost' : 'packaging-cost'}">0.000</td>
                             <td>
                                 <button class="btn btn-danger-modern btn-action remove-row">
                                     <i class="bi bi-trash"></i>
                                 </button>
                             </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            <button type="button" class="btn btn-success-modern" id="add-worker">
-                <i class="bi bi-plus"></i> إضافة عامل
-            </button>
-            <div class="mt-3 text-start">
-                <strong>تكلفة اليد العاملة للعلبة: <span id="labor-per-box">0.000 د.ب</span></strong>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Equipment Depreciation محدث -->
-<div class="col-md-6">
-    <div class="card-modern">
-        <div class="card-header-modern">
-            <i class="bi bi-tools"></i>
-            إهلاك المعدات
-        </div>
-        <div class="card-body-modern">
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="mb-3">
-                        <label class="form-label">نسبة الإهلاك (%)</label>
-                        <input type="number" class="form-control-modern" id="depreciation-rate" required>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="mb-3">
-                        <label class="form-label">قيمة الإهلاك (د.ب)</label>
-                        <input type="number" class="form-control-modern auto-generate" id="equipment-depreciation" step="0.001" readonly>
-                    </div>
-                </div>
-            </div>
-            <div class="mt-3 text-start">
-                <strong>إجمالي إهلاك المعدات للعلبة: <span id="depreciation-per-box">0.000 د.ب</span></strong>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- JavaScript المحدث -->
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    // تحديث رمز المنتج تلقائياً
-    function generateProductCode() {
-        lastProductCode++;
-        return "PRD-" + String(lastProductCode).padStart(4, '0');
-    }
-    
-    // عرض الرمز تلقائياً
-    document.getElementById('product-code').value = generateProductCode();
-    
-    // تحديث الإهلاك تلقائياً
-    document.getElementById('depreciation-rate').addEventListener('input', function() {
-        const rate = parseFloat(this.value) || 0;
-        const materialsCost = parseFloat(document.getElementById('total-materials-cost').textContent) || 0;
-        const depreciation = materialsCost * (rate / 100);
-        document.getElementById('equipment-depreciation').value = depreciation.toFixed(3);
-        updateCosts();
-    });
-    
-    // دالة حساب الإجماليات
-    function updateCosts() {
-        // حساب المواد
-        let materialsCost = 0;
-        document.querySelectorAll('#materials-table tbody tr').forEach(row => {
-            const inputs = row.querySelectorAll('input');
-            const count = parseFloat(inputs[1].value) || 1;
-            const price = parseFloat(inputs[2].value) || 0;
-            const used = parseFloat(inputs[3].value) || 0;
-            const cost = (price / count) * used;
-            row.querySelector('.material-cost').textContent = cost.toFixed(3);
-            materialsCost += cost;
-        });
-        document.getElementById('total-materials-cost').textContent = materialsCost.toFixed(3);
-
-        // حساب التغليف
-        let packagingCost = 0;
-        document.querySelectorAll('#packaging-table tbody tr').forEach(row => {
-            const inputs = row.querySelectorAll('input');
-            const count = parseFloat(inputs[1].value) || 1;
-            const price = parseFloat(inputs[2].value) || 0;
-            const used = parseFloat(inputs[3].value) || 0;
-            const cost = (price / count) * used;
-            row.querySelector('.packaging-cost').textContent = cost.toFixed(3);
-            packagingCost += cost;
-        });
-        document.getElementById('total-packaging-cost').textContent = packagingCost.toFixed(3);
-
-        // حساب العمالة
-        let totalLaborCost = 0;
-        let workerCount = 0;
-        document.querySelectorAll('#workers-table tbody tr').forEach(row => {
-            const inputs = row.querySelectorAll('input');
-            const salary = parseFloat(inputs[1].value) || 0;
-            const hours = parseFloat(inputs[2].value) || 1;
-            const pieces = parseFloat(inputs[3].value) || 1;
-            
-            const hourlySalary = (salary / 30) / 8;
-            const piecesPerHour = pieces / hours;
-            const pieceCost = piecesPerHour > 0 ? hourlySalary / piecesPerHour : 0;
-            
-            const workerTotal = pieceCost * (parseFloat(document.getElementById('sale-quantity').value) || 1);
-            row.querySelector('.worker-total').textContent = workerTotal.toFixed(3);
-            totalLaborCost += pieceCost;
-            workerCount++;
-        });
-        document.getElementById('labor-per-box').textContent = (totalLaborCost * (parseFloat(document.getElementById('sale-quantity').value) || 1)).toFixed(3);
-
-        // حساب الإهلاك
-        const depreciationRate = parseFloat(document.getElementById('depreciation-rate').value) || 0;
-        const depreciationCost = materialsCost * (depreciationRate / 100);
-        document.getElementById('depreciation-per-box').textContent = depreciationCost.toFixed(3);
-
-        // الإجمالي النهائي
-        const totalCostPerBox = materialsCost + packagingCost + 
-                                (totalLaborCost * (parseFloat(document.getElementById('sale-quantity').value) || 1)) + 
-                                depreciationCost;
-        document.getElementById('grand-total-cost').textContent = totalCostPerBox.toFixed(3);
-
-        const profitRate = parseFloat(document.getElementById('profit-rate').value) || 0;
-        const profitAmount = totalCostPerBox * (profitRate / 100);
-        const suggestedPrice = totalCostPerBox + profitAmount;
-
-        document.getElementById('profit-margin').textContent = profitAmount.toFixed(3) + ' د.ب (' + profitRate + '%)';
-        
-        if (!document.getElementById('final-price').value) {
-            document.getElementById('final-price').value = suggestedPrice.toFixed(3);
-        }
-    }
-
-    // دالة التحقق من الحقول قبل الحفظ
-    function validateForm() {
-        const requiredFields = [
-            'product-name',
-            'product-code',
-            'sale-quantity',
-            'profit-rate'
-        ];
-        
-        let isValid = true;
-        let missingFields = [];
-        
-        requiredFields.forEach(id => {
-            const field = document.getElementById(id);
-            if (!field.value.trim()) {
-                field.classList.add('is-invalid');
-                missingFields.push(field.placeholder || 'حقل مطلوب');
-                isValid = false;
-            } else {
-                field.classList.remove('is-invalid');
-            }
-        });
-        
-        // التحقق من الجداول
-        const tables = ['materials-table', 'packaging-table', 'workers-table'];
-        tables.forEach(tableId => {
-            const rows = document.querySelectorAll(`#${tableId} tbody tr`);
-            rows.forEach(row => {
-                const inputs = row.querySelectorAll('input');
-                inputs.forEach(input => {
-                    if (!input.value.trim()) {
-                        input.classList.add('is-invalid');
-                        isValid = false;
+                        `;
+                        tbody.appendChild(newRow);
+                        setupRowEvents(newRow);
                     } else {
-                        input.classList.remove('is-invalid');
+                        const newRow = document.createElement('tr');
+                        newRow.innerHTML = `
+                            <td><input type="text" class="form-control-modern" required></td>
+                            <td><input type="number" class="form-control-modern" step="0.001" required></td>
+                            <td><input type="number" class="form-control-modern" required></td>
+                            <td><input type="number" class="form-control-modern" required></td>
+                            <td class="pieces-per-hour">0</td>
+                            <td class="piece-cost">0.000</td>
+                            <td>
+                                <button class="btn btn-danger-modern btn-action remove-row">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </td>
+                        `;
+                        tbody.appendChild(newRow);
+                        setupRowEvents(newRow);
                     }
                 });
-            });
-        });
-        
-        if (!isValid) {
-            alert('الرجاء إكمال جميع الحقول المطلوبة: ' + missingFields.join(', '));
-        }
-        
-        return isValid;
-    }
 
-    // دالة الحفظ والنقل
-    document.getElementById('save-product').addEventListener('click', function() {
-        if (!validateForm()) return;
-        
-        const productData = {
-            name: document.getElementById('product-name').value,
-            code: document.getElementById('product-code').value,
-            piecesPerPackage: document.getElementById('sale-quantity').value,
-            packageCost: parseFloat(document.getElementById('grand-total-cost').textContent),
-            finalPrice: parseFloat(document.getElementById('final-price').value),
-            profitRate: document.getElementById('profit-rate').value,
-            materialsCost: parseFloat(document.getElementById('total-materials-cost').textContent),
-            packagingCost: parseFloat(document.getElementById('total-packaging-cost').textContent),
-            laborCost: parseFloat(document.getElementById('labor-per-box').textContent),
-            depreciationCost: parseFloat(document.getElementById('depreciation-per-box').textContent)
-        };
-        
-        // إضافة إلى صفحة المنتجات
-        const tbody = document.querySelector('#products-list');
-        if (tbody.querySelector('td[colspan]')) {
-            tbody.innerHTML = '';
-        }
-        
-        const newRow = document.createElement('tr');
-        newRow.innerHTML = `
-            <td>${productData.code}</td>
-            <td>${productData.name}</td>
-            <td>${productData.piecesPerPackage}</td>
-            <td>${productData.packageCost} د.ب</td>
-            <td>${productData.finalPrice} د.ب</td>
-            <td>${productData.profitRate}%</td>
-            <td>${(productData.finalPrice - productData.packageCost).toFixed(3)} د.ب</td>
-            <td>${productData.laborCost} د.ب</td>
-            <td>${productData.depreciationCost} د.ب</td>
-            <td>
-                <button class="btn btn-info-modern btn-action">
-                    <i class="bi bi-eye"></i>
-                </button>
-                <button class="btn btn-warning-modern btn-action">
-                    <i class="bi bi-pencil"></i>
-                </button>
-                <button class="btn btn-danger-modern btn-action">
-                    <i class="bi bi-trash"></i>
-                </button>
-            </td>
-        `;
-        tbody.appendChild(newRow);
-        
-        // مسح البيانات من صفحة التكلفة
-        resetForm();
-        
-        // الانتقال إلى صفحة المنتجات
-        document.querySelector('[data-page="products"]').click();
-        
-        alert('تم حفظ المنتج بنجاح!');
-    });
-
-    // إعادة تعيين النموذج
-    function resetForm() {
-        document.getElementById('product-name').value = '';
-        document.getElementById('product-code').value = generateProductCode();
-        document.getElementById('sale-quantity').value = '';
-        document.getElementById('profit-rate').value = '';
-        document.getElementById('final-price').value = '';
-        
-        // إعادة تعيين الجداول
-        ['materials-table', 'packaging-table', 'workers-table'].forEach(tableId => {
-            const tbody = document.querySelector(`#${tableId} tbody`);
-            tbody.innerHTML = '';
-            addTableRow(tableId);
-        });
-        
-        updateCosts();
-    }
-
-    // أحداث التحديث التلقائي
-    ['materials-table', 'packaging-table', 'workers-table'].forEach(tableId => {
-        document.addEventListener('input', (e) => {
-            if (e.target.closest(`#${tableId}`)) {
                 updateCosts();
             }
-        });
-    });
 
-    // تهيئة
-    updateCosts();
-});
-</script>
+            // حذف منتج
+            window.deleteProduct = function(code) {
+                Swal.fire({
+                    title: 'هل أنت متأكد؟',
+                    text: "سيتم حذف المنتج نهائياً",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#f44336',
+                    cancelButtonColor: '#666',
+                    confirmButtonText: 'نعم، احذفه',
+                    cancelButtonText: 'إلغاء'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        products = products.filter(p => p.code !== code);
+                        localStorage.setItem('products', JSON.stringify(products));
+                        updateProductsTable();
+                        Swal.fire('تم الحذف!', 'تم حذف المنتج بنجاح', 'success');
+                    }
+                });
+            };
+
+            // عرض تفاصيل المنتج
+            window.viewProduct = function(code) {
+                const product = products.find(p => p.code === code);
+                if (product) {
+                    Swal.fire({
+                        title: 'تفاصيل المنتج',
+                        html: `
+                            <div style="text-align: right;">
+                                <p><strong>الاسم:</strong> ${product.name}</p>
+                                <p><strong>الرمز:</strong> ${product.code}</p>
+                                <p><strong>عدد القطع:</strong> ${product.pieces}</p>
+                                <p><strong>تكلفة العلبة:</strong> ${product.packageCost.toFixed(3)} ${currencySymbols[currentCurrency]}</p>
+                                <p><strong>سعر البيع:</strong> ${product.finalPrice.toFixed(3)} ${currencySymbols[currentCurrency]}</p>
+                                <p><strong>نسبة الربح:</strong> ${product.profitRate}%</p>
+                            </div>
+                        `,
+                        confirmButtonText: 'حسناً',
+                        confirmButtonColor: '#ff6b35'
+                    });
+                }
+            };
+
+            // إعدادات النظام
+            document.getElementById('system-currency').addEventListener('change', function() {
+                currentCurrency = this.value;
+                updateCurrencyDisplay();
+                updateCosts();
+            });
+
+            document.getElementById('project-name').addEventListener('input', function() {
+                document.getElementById('project-name-sidebar').textContent = this.value;
+                settings.projectName = this.value;
+                localStorage.setItem('settings', JSON.stringify(settings));
+            });
+
+            // تحميل الإعدادات
+            if (settings.projectName) {
+                document.getElementById('project-name').value = settings.projectName;
+                document.getElementById('project-name-sidebar').textContent = settings.projectName;
+            }
+
+            // تهيئة الصفحة
+            updateProductsTable();
+            updateCosts();
+            updateCurrencyDisplay();
+        });
+    </script>
 </body>
 </html>
