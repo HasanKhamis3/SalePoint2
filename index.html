@@ -120,14 +120,14 @@
             font-weight: 700;
         }
         .profit-box {
-            background: rgba(0, 200, 83, 0.1);
-            border: 2px solid var(--success);
+            background: rgba(255, 107, 53, 0.1);
+            border: 2px solid var(--orange-suggested);
             border-radius: 12px;
             padding: 0.5rem 1rem;
             margin-top: 0.5rem;
             text-align: center;
             font-weight: 600;
-            color: var(--success);
+            color: var(--orange-suggested);
         }
         @media (max-width: 768px) {
             .sidebar { transform: translateX(100%); }
@@ -377,7 +377,7 @@
                         </div>
                         <div class="summary-box">
                             <div class="summary-box-label">هامش الربح</div>
-                            <div class="summary-box-value" id="profit-summary" style="color: var(--green-final);">0.000 د.ب (0%)</div>
+                            <div class="summary-box-value" id="profit-summary" style="color: var(--orange-suggested);">0.000 د.ب (0%)</div>
                         </div>
                     </div>
                 </div>
@@ -410,6 +410,7 @@
                             </tbody>
                         </table>
                     </div>
+                    <button type="button" class="btn btn-success-modern" id="add-material"><i class="bi bi-plus"></i> إضافة منتج</button>
                     <div class="cost-total-box">
                         <div class="cost-total-label">إجمالي تكاليف المواد</div>
                         <div class="cost-total-value" id="materials-per-box" style="color: var(--blue-cost);">0.000 د.ب</div>
@@ -444,6 +445,7 @@
                             </tbody>
                         </table>
                     </div>
+                    <button type="button" class="btn btn-success-modern" id="add-packaging"><i class="bi bi-plus"></i> إضافة منتج</button>
                     <div class="cost-total-box">
                         <div class="cost-total-label">إجمالي تكاليف التغليف</div>
                         <div class="cost-total-value" id="packaging-per-box" style="color: var(--blue-cost);">0.000 د.ب</div>
@@ -484,10 +486,10 @@
                                 <table class="table-modern" id="workers-table-2">
                                     <thead>
                                         <tr>
-                                            <th>عدد القطع المنتجة</th>
-                                            <th>عدد القطع لكل ساعة</th>
-                                            <th>تكلفة القطعة</th>
-                                            <th>تكلفة العلبة</th>
+                                            <th style="width: 25%">عدد القطع المنتجة</th>
+                                            <th style="width: 25%">عدد القطع لكل ساعة</th>
+                                            <th style="width: 25%">تكلفة القطعة</th>
+                                            <th style="width: 25%">تكلفة العلبة</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -537,7 +539,7 @@
                         </div>
                         <div class="col-md-4 text-center">
                             <h6 class="text-muted">سعر البيع النهائي</h6>
-                            <h3 class="text-final" id="final-price-display" style="color: var(--green-final); font-size: 1.8rem;">0.000 د.ب</h3>
+                            <input type="number" class="form-control-modern" id="final-price" placeholder="أدخل السعر النهائي" step="0.001" style="font-size: 1.8rem; text-align: center; margin: 0 auto; max-width: 200px;">
                             <div class="profit-box">
                                 <span>هامش الربح: </span>
                                 <span id="final-profit">0.000 د.ب (0%)</span>
@@ -797,7 +799,6 @@
             document.getElementById('suggested-profit').textContent = suggestedProfit;
             
             const finalPrice = parseFloat(document.getElementById('final-price').value) || suggestedPrice;
-            document.getElementById('final-price-display').textContent = formatCurrency(finalPrice);
             const finalProfit = finalPrice - totalCostPerBox;
             const finalProfitRate = totalCostPerBox > 0 ? (finalProfit / totalCostPerBox) * 100 : 0;
             const finalProfitText = formatCurrency(finalProfit) + ' (' + finalProfitRate.toFixed(1) + '%)';
@@ -807,7 +808,6 @@
             
             document.getElementById('grand-total-cost').style.color = 'var(--blue-cost)';
             document.getElementById('suggested-price').style.color = 'var(--orange-suggested)';
-            document.getElementById('final-price-display').style.color = 'var(--green-final)';
         }
 
         function addTableRow(tableId){
@@ -945,12 +945,50 @@
             });
         }
 
+        function saveProduct(){
+            const name=document.getElementById('product-name').value;
+            const code=document.getElementById('product-code').value;
+            const qty=document.getElementById('sale-quantity').value;
+            const profitRate=document.getElementById('profit-rate').value;
+            const finalPrice=document.getElementById('final-price').value;
+            
+            if(!name || !qty || !profitRate || !finalPrice){
+                alert('يرجى تعبئة جميع الحقول المطلوبة');
+                return;
+            }
+
+            const product = {
+                code: code,
+                name: name,
+                quantity: qty,
+                totalCost: document.getElementById('grand-total-cost').textContent,
+                finalPrice: formatCurrency(parseFloat(finalPrice)),
+                profitRate: profitRate + '%',
+                profitMargin: formatCurrency(parseFloat(finalPrice) - parseFloat(document.getElementById('grand-total-cost').textContent.replace(/[^0-9.]/g, ''))),
+                laborCost: document.getElementById('labor-summary').textContent,
+                depreciation: document.getElementById('depreciation-summary').textContent
+            };
+            
+            if(editingIndex >= 0) {
+                products[editingIndex] = product;
+                editingIndex = -1;
+            } else {
+                products.push(product);
+            }
+            
+            updateProductsTable();
+            updateInvoiceProducts();
+            clearForm();
+            alert('تم حفظ المنتج بنجاح!');
+        }
+
         document.getElementById('add-material').addEventListener('click',()=>addTableRow('materials-table'));
         document.getElementById('add-packaging').addEventListener('click',()=>addTableRow('packaging-table'));
         document.getElementById('sidebarToggle').addEventListener('click',()=>document.getElementById('sidebar').classList.toggle('show'));
         document.getElementById('save-product').addEventListener('click',saveProduct);
+        document.getElementById('final-price').addEventListener('input', updateCosts);
 
-        ['depreciation-rate','profit-rate','sale-quantity','final-price'].forEach(id=>{
+        ['depreciation-rate','profit-rate','sale-quantity'].forEach(id=>{
             document.getElementById(id).addEventListener('input',updateCosts);
             document.getElementById(id).addEventListener('change',updateCosts);
             document.getElementById(id).addEventListener('keyup',updateCosts);
