@@ -692,19 +692,36 @@
             document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
             document.getElementById(pageId)?.classList.add('active');
             document.querySelectorAll('.sidebar .nav-link').forEach(l=>l.classList.remove('active'));
-            document.querySelector(`.sidebar .nav-link[data-page="${pageId}"]`)?.classList.add('active');
+            document.querySelectorAll('.sidebar .nav-link').forEach(l=>{
+                if(l.getAttribute('data-page') === pageId){
+                    l.classList.add('active');
+                }
+            });
             document.getElementById('sidebar').classList.remove('show');
         }
+        
         function showTab(tabId){
             document.querySelectorAll('.invoice-tab').forEach(t=>t.classList.remove('active'));
             document.getElementById(tabId)?.classList.add('active');
             document.querySelectorAll('.nav-tabs-modern .nav-link').forEach(l=>l.classList.remove('active'));
-            document.querySelector(`.nav-tabs-modern .nav-link[data-tab="${tabId}"]`)?.classList.add('active');
+            document.querySelectorAll('.nav-tabs-modern .nav-link').forEach(l=>{
+                if(l.getAttribute('data-tab') === tabId){
+                    l.classList.add('active');
+                }
+            });
         }
-        document.addEventListener('click',e=>{
-            if(e.target.closest('[data-page]')){e.preventDefault();showPage(e.target.closest('[data-page]').dataset.page);}
-            if(e.target.closest('[data-tab]')){e.preventDefault();showTab(e.target.closest('[data-tab]').dataset.tab);}
+
+        document.addEventListener('click', function(e){
+            if(e.target.closest('[data-page]')){
+                e.preventDefault();
+                showPage(e.target.closest('[data-page]').getAttribute('data-page'));
+            }
+            if(e.target.closest('[data-tab]')){
+                e.preventDefault();
+                showTab(e.target.closest('[data-tab]').getAttribute('data-tab'));
+            }
         });
+
         showPage('dashboard');
         showTab('new-invoice');
 
@@ -728,7 +745,6 @@
         }
 
         function updateCosts(){
-            // حساب المواد
             let materialsCost = 0;
             document.querySelectorAll('#materials-table tbody tr').forEach(row=>{
                 const inputs = row.querySelectorAll('input');
@@ -742,7 +758,6 @@
             document.getElementById('materials-per-box').textContent = formatCurrency(materialsCost);
             document.getElementById('material-summary').textContent = formatCurrency(materialsCost);
 
-            // حساب التغليف
             let packagingCost = 0;
             document.querySelectorAll('#packaging-table tbody tr').forEach(row=>{
                 const inputs = row.querySelectorAll('input');
@@ -756,7 +771,6 @@
             document.getElementById('packaging-per-box').textContent = formatCurrency(packagingCost);
             document.getElementById('packaging-summary').textContent = formatCurrency(packagingCost);
 
-            // حساب العمالة
             let totalLaborCost = 0;
             const workers = document.querySelectorAll('#workers-table-1 tbody tr');
             const productions = document.querySelectorAll('#workers-table-2 tbody tr');
@@ -782,7 +796,6 @@
             document.getElementById('labor-per-box').textContent = formatCurrency(totalLaborCost);
             document.getElementById('labor-summary').textContent = formatCurrency(totalLaborCost);
 
-            // إهلاك المعدات
             const depreciationRate = parseFloat(document.getElementById('depreciation-rate').value) || 0;
             const depreciationCost = (materialsCost + packagingCost) * (depreciationRate / 100);
             document.getElementById('depreciation-per-box').textContent = formatCurrency(depreciationCost);
@@ -858,43 +871,6 @@
             updateCosts();
         }
 
-        document.getElementById('save-product').addEventListener('click",()=>{
-            const name=document.getElementById('product-name').value;
-            const code=document.getElementById('product-code').value;
-            const qty=document.getElementById('sale-quantity').value;
-            const profitRate=document.getElementById('profit-rate').value;
-            const finalPrice=document.getElementById('final-price').value;
-            
-            if(!name || !qty || !profitRate || !finalPrice){
-                alert('يرجى تعبئة جميع الحقول المطلوبة');
-                return;
-            }
-
-            const product = {
-                code: code,
-                name: name,
-                quantity: qty,
-                totalCost: document.getElementById('grand-total-cost').textContent,
-                finalPrice: formatCurrency(parseFloat(finalPrice)),
-                profitRate: profitRate + '%',
-                profitMargin: formatCurrency(parseFloat(finalPrice) - parseFloat(document.getElementById('grand-total-cost').textContent.replace(/[^0-9.]/g, ''))),
-                laborCost: document.getElementById('labor-per-box').textContent,
-                depreciation: document.getElementById('depreciation-per-box').textContent
-            };
-            
-            if(editingIndex >= 0) {
-                products[editingIndex] = product;
-                editingIndex = -1;
-            } else {
-                products.push(product);
-            }
-            
-            updateProductsTable();
-            updateInvoiceProducts();
-            clearForm();
-            alert('تم حفظ المنتج بنجاح!');
-        });
-
         function updateProductsTable() {
             const tbody = document.getElementById('products-list');
             if(products.length === 0) {
@@ -962,65 +938,41 @@
             });
         }
 
-        document.addEventListener('change', function(e) {
-            if(e.target.classList.contains('product-select')) {
-                const row = e.target.closest('tr');
-                const selectedOption = e.target.options[e.target.selectedIndex];
-                if(selectedOption.value) {
-                    row.querySelector('.unit-price').value = selectedOption.dataset.price;
-                    updateInvoiceRow(row);
-                }
+        document.getElementById('save-product').addEventListener('click',()=>{
+            const name=document.getElementById('product-name').value;
+            const code=document.getElementById('product-code').value;
+            const qty=document.getElementById('sale-quantity').value;
+            const profitRate=document.getElementById('profit-rate').value;
+            const finalPrice=document.getElementById('final-price').value;
+            
+            if(!name || !qty || !profitRate || !finalPrice){
+                alert('يرجى تعبئة جميع الحقول المطلوبة');
+                return;
             }
-        });
 
-        function updateInvoiceRow(row) {
-            const price = parseFloat(row.querySelector('.unit-price').value) || 0;
-            const qty = parseInt(row.querySelector('.quantity').value) || 1;
-            const tax = price * qty * 0.05; // مثال 5%
-            const total = price * qty + tax;
-            row.querySelector('.item-tax').textContent = tax.toFixed(currencyDecimals);
-            row.querySelector('.item-total').textContent = total.toFixed(currencyDecimals);
-        }
-
-        document.getElementById('project-settings-form').addEventListener('submit', (e) => {
-            e.preventDefault();
-            localStorage.setItem('projectSettings', JSON.stringify({
-                name: document.getElementById('project-name').value,
-                phone: document.getElementById('phone-number').value,
-                address: document.getElementById('project-address').value,
-                countryCode: document.getElementById('country-code').value
-            }));
-            alert('تم حفظ إعدادات المشروع بنجاح!');
-        });
-
-        document.getElementById('system-settings-form').addEventListener('submit', (e) => {
-            e.preventDefault();
-            localStorage.setItem('systemSettings', JSON.stringify({
-                color: document.getElementById('system-color').value,
-                language: document.getElementById('system-language').value,
-                currency: document.getElementById('system-currency').value
-            }));
-            alert('تم حفظ إعدادات النظام بنجاح!');
-            updateCurrencyFormat();
-        });
-
-        document.getElementById('tax-settings-form').addEventListener('submit', (e) => {
-            e.preventDefault();
-            localStorage.setItem('taxSettings', JSON.stringify({
-                enabled: document.getElementById('tax-enabled').checked,
-                rate: document.getElementById('tax-rate').value,
-                number: document.getElementById('tax-number').value
-            }));
-            alert('تم حفظ إعدادات الضريبة بنجاح!');
-        });
-
-        document.getElementById('payment-methods-form').addEventListener('submit', (e) => {
-            e.preventDefault();
-            alert('تم حفظ طرق الدفع بنجاح!');
-        });
-
-        document.getElementById('save-delivery-settings').addEventListener('click', () => {
-            alert('تم حفظ إعدادات التوصيل بنجاح!');
+            const product = {
+                code: code,
+                name: name,
+                quantity: qty,
+                totalCost: document.getElementById('grand-total-cost').textContent,
+                finalPrice: formatCurrency(parseFloat(finalPrice)),
+                profitRate: profitRate + '%',
+                profitMargin: formatCurrency(parseFloat(finalPrice) - parseFloat(document.getElementById('grand-total-cost').textContent.replace(/[^0-9.]/g, ''))),
+                laborCost: document.getElementById('labor-per-box').textContent,
+                depreciation: document.getElementById('depreciation-per-box').textContent
+            };
+            
+            if(editingIndex >= 0) {
+                products[editingIndex] = product;
+                editingIndex = -1;
+            } else {
+                products.push(product);
+            }
+            
+            updateProductsTable();
+            updateInvoiceProducts();
+            clearForm();
+            alert('تم حفظ المنتج بنجاح!');
         });
 
         document.getElementById('add-material').addEventListener('click',()=>addTableRow('materials-table'));
@@ -1032,33 +984,6 @@
             document.getElementById(id).addEventListener('change',updateCosts);
             document.getElementById(id).addEventListener('keyup',updateCosts);
         });
-
-        // Load saved settings
-        const savedProject = localStorage.getItem('projectSettings');
-        if(savedProject) {
-            const p = JSON.parse(savedProject);
-            document.getElementById('project-name').value = p.name || '';
-            document.getElementById('phone-number').value = p.phone || '';
-            document.getElementById('project-address').value = p.address || '';
-            document.getElementById('country-code').value = p.countryCode || '+973';
-        }
-
-        const savedSystem = localStorage.getItem('systemSettings');
-        if(savedSystem) {
-            const s = JSON.parse(savedSystem);
-            document.getElementById('system-color').value = s.color || 'default';
-            document.getElementById('system-language').value = s.language || 'ar';
-            document.getElementById('system-currency').value = s.currency || 'BHD';
-            updateCurrencyFormat();
-        }
-
-        const savedTax = localStorage.getItem('taxSettings');
-        if(savedTax) {
-            const t = JSON.parse(savedTax);
-            document.getElementById('tax-enabled').checked = t.enabled || false;
-            document.getElementById('tax-rate').value = t.rate || '';
-            document.getElementById('tax-number').value = t.number || '';
-        }
 
         updateCosts();
     </script>
