@@ -52,43 +52,12 @@
             overflow-y: auto;
             transition: transform 0.3s ease;
         }
-        .sidebar-header {
-            padding: 2rem 1.5rem;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-            text-align: center;
-        }
-        .sidebar-logo {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: white;
-            margin: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-        }
+        .sidebar-header { padding: 2rem 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.1); text-align: center; }
+        .sidebar-logo { font-size: 1.5rem; font-weight: 700; color: white; margin: 0; display: flex; align-items: center; justify-content: center; gap: 0.5rem; }
         .sidebar-logo i { color: var(--accent-color); font-size: 2rem; }
         .sidebar-nav { padding: 1rem 0; }
-        .sidebar .nav-link {
-            color: rgba(255,255,255,0.8);
-            padding: 1rem 1.5rem;
-            margin: 0.25rem 1rem;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            font-weight: 500;
-            text-decoration: none;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        .sidebar .nav-link.active,
-        .sidebar .nav-link:hover {
-            color: white;
-            background: rgba(255,255,255,0.1);
-            transform: translateX(-5px);
-            box-shadow: var(--shadow-md);
-        }
+        .sidebar .nav-link { color: rgba(255,255,255,0.8); padding: 1rem 1.5rem; margin: 0.25rem 1rem; border-radius: 12px; display: flex; align-items: center; gap: 0.75rem; font-weight: 500; text-decoration: none; cursor: pointer; transition: all 0.3s ease; }
+        .sidebar .nav-link.active, .sidebar .nav-link:hover { color: white; background: rgba(255,255,255,0.1); transform: translateX(-5px); box-shadow: var(--shadow-md); }
         .main-content { margin-right: 280px; padding: 2rem; min-height: 100vh; }
         .page { display: none; animation: fadeIn 0.3s ease; }
         .page.active { display: block; }
@@ -97,207 +66,63 @@
         @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
         .nav-tabs-modern { border: none; margin-bottom: 2rem; }
-        .nav-tabs-modern .nav-link {
-            border: none;
-            border-radius: 12px;
-            padding: 1rem 1.5rem;
-            margin-right: 0.5rem;
-            color: var(--text-secondary);
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-decoration: none;
-        }
-        .nav-tabs-modern .nav-link.active {
-            background: linear-gradient(135deg, var(--secondary-color), var(--accent-color));
-            color: white;
-            box-shadow: var(--shadow-sm);
-        }
+        .nav-tabs-modern .nav-link { border: none; border-radius: 12px; padding: 1rem 1.5rem; margin-right: 0.5rem; color: var(--text-secondary); font-weight: 500; cursor: pointer; transition: all 0.3s ease; text-decoration: none; }
+        .nav-tabs-modern .nav-link.active { background: linear-gradient(135deg, var(--secondary-color), var(--accent-color)); color: white; box-shadow: var(--shadow-sm); }
 
-        .card-modern {
-            background: var(--surface);
-            border: none;
-            border-radius: 16px;
-            box-shadow: var(--shadow-sm);
-            margin-bottom: 2rem;
-            overflow: hidden;
-        }
-        .card-header-modern {
-            background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
-            color: white;
-            padding: 1.5rem;
-            font-weight: 600;
-            font-size: 1.1rem;
-        }
+        .card-modern { background: var(--surface); border: none; border-radius: 16px; box-shadow: var(--shadow-sm); margin-bottom: 2rem; overflow: hidden; }
+        .card-header-modern { background: linear-gradient(135deg, var(--primary-color), var(--primary-light)); color: white; padding: 1.5rem; font-weight: 600; font-size: 1.1rem; }
         .card-body-modern { padding: 2rem; }
 
-        .form-control-modern, .form-select-modern {
-            border: 2px solid var(--border-color);
-            border-radius: 12px;
-            padding: 1.125rem 1rem;
-            font-size: 1.1rem;
-            transition: all 0.3s ease;
-            background: var(--surface);
-            width: 100%;
-            min-height: 50px;
-        }
-        .form-control-modern:focus, .form-select-modern:focus {
-            border-color: var(--secondary-color);
-            box-shadow: 0 0 0 0.2rem rgba(255,107,53,0.25);
-        }
+        .form-control-modern, .form-select-modern { border: 2px solid var(--border-color); border-radius: 12px; padding: 1.125rem 1rem; font-size: 1.1rem; transition: all 0.3s ease; background: var(--surface); width: 100%; min-height: 50px; }
+        .form-control-modern:focus, .form-select-modern:focus { border-color: var(--secondary-color); box-shadow: 0 0 0 0.2rem rgba(255,107,53,0.25); }
 
-        .btn-modern {
-            border: none;
-            border-radius: 12px;
-            padding: 0.75rem 1.5rem;
-            font-weight: 500;
-            cursor: pointer;
-            text-decoration: none;
-            display: inline-block;
-            transition: all 0.3s ease;
-        }
+        .btn-modern { border: none; border-radius: 12px; padding: 0.75rem 1.5rem; font-weight: 500; cursor: pointer; text-decoration: none; display: inline-block; transition: all 0.3s ease; }
         .btn-primary-modern { background: linear-gradient(135deg, var(--secondary-color), var(--accent-color)); color: white; }
         .btn-success-modern { background: linear-gradient(135deg, var(--success), #00e676); color: white; }
         .btn-danger-modern { background: linear-gradient(135deg, var(--error), #ff5252); color: white; }
 
-        .table-modern {
-            background: var(--surface);
-            border-radius: 16px;
-            overflow: hidden;
-            box-shadow: var(--shadow-sm);
-            width: 100%;
-        }
-        .table-modern th, .table-modern td {
-            padding: 1rem;
-            text-align: center;
-            border-bottom: 1px solid var(--border-color);
-        }
-        .table-modern th {
-            background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
-            color: white;
-            font-weight: 600;
-        }
+        .table-modern { background: var(--surface); border-radius: 16px; overflow: hidden; box-shadow: var(--shadow-sm); width: 100%; }
+        .table-modern th, .table-modern td { padding: 1rem; text-align: center; border-bottom: 1px solid var(--border-color); }
+        .table-modern th { background: linear-gradient(135deg, var(--primary-color), var(--primary-light)); color: white; font-weight: 600; }
 
-        .cost-summary-box {
-            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
-            border-radius: 16px;
-            padding: 1.5rem;
-            margin: 1rem 0;
-            box-shadow: var(--shadow-sm);
-            text-align: center;
-        }
-        .cost-summary-title {
-            font-size: 0.9rem;
-            color: var(--text-secondary);
-            margin-bottom: 0.5rem;
-        }
-        .cost-summary-value {
-            font-size: 1.3rem;
-            font-weight: 700;
-            color: var(--success);
-        }
+        .cost-summary-box { background: linear-gradient(135deg, #f8f9fa, #e9ecef); border-radius: 16px; padding: 1.5rem; margin: 1rem 0; box-shadow: var(--shadow-sm); text-align: center; }
+        .cost-summary-title { font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 0.5rem; }
+        .cost-summary-value { font-size: 1.3rem; font-weight: 700; color: var(--success); }
 
-        .price-input-container {
-            position: relative;
-        }
-        .price-input-container::after {
-            content: ' د.ب';
-            position: absolute;
-            left: 1rem;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--text-secondary);
-            font-weight: 500;
-        }
+        .price-input-container { position: relative; }
+        .price-input-container::after { content: ' د.ب'; position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--text-secondary); font-weight: 500; }
 
-        /* ألوان خاصة بملخص التكاليف */
         .text-cost { color: #1976d2 !important; }
         .text-suggested { color: var(--accent-color) !important; }
         .text-final { color: var(--success) !important; }
         .text-profit { color: var(--success) !important; }
         .text-profit.negative { color: var(--error) !important; }
 
-        /* توسيع خانة المنتج */
         .product-name-col { width: 40%; }
+        .final-price-input { font-size: 1.2rem; font-weight: 700; color: var(--success) !important; max-width: 200px; margin: 0 auto; }
+        .warning-text { color: var(--error); font-size: 0.8rem; margin-top: 0.5rem; }
 
-        /* تنسيق سعر البيع النهائي */
-        .final-price-input {
-            font-size: 1.2rem;
-            font-weight: 700;
-            color: var(--success) !important;
-            max-width: 200px;
-            margin: 0 auto;
-        }
+        .settings-section-modern { background: var(--surface); border-radius: 16px; padding: 2rem; margin-bottom: 2rem; box-shadow: var(--shadow-sm); }
+        .settings-section-modern h4 { margin-bottom: 1.5rem; color: var(--primary-color); }
 
-        /* إعدادات النظام */
-        .settings-section-modern {
-            background: var(--surface);
-            border-radius: 16px;
-            padding: 2rem;
-            margin-bottom: 2rem;
-            box-shadow: var(--shadow-sm);
-        }
-        .settings-section-modern h4 {
-            margin-bottom: 1.5rem;
-            color: var(--primary-color);
-        }
-
-        /* لوحة التحكم */
-        .dashboard-stats {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 2rem;
-        }
-        .stat-card {
-            background: linear-gradient(135deg, var(--surface), var(--surface-hover));
-            border-radius: 16px;
-            padding: 2rem;
-            box-shadow: var(--shadow-sm);
-            text-align: center;
-            transition: transform 0.3s ease;
-        }
-        .stat-card:hover {
-            transform: translateY(-5px);
-            box-shadow: var(--shadow-md);
-        }
-        .stat-icon {
-            font-size: 2.5rem;
-            color: var(--secondary-color);
-            margin-bottom: 1rem;
-        }
-        .stat-value {
-            font-size: 2rem;
-            font-weight: 700;
-            color: var(--primary-color);
-            margin-bottom: 0.5rem;
-        }
-        .stat-label {
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-        }
-
-        .warning-text {
-            color: var(--error);
-            font-size: 0.8rem;
-            margin-top: 0.5rem;
-        }
+        .dashboard-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-bottom: 2rem; }
+        .stat-card { background: linear-gradient(135deg, var(--surface), var(--surface-hover)); border-radius: 16px; padding: 2rem; box-shadow: var(--shadow-sm); text-align: center; transition: transform 0.3s ease; }
+        .stat-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-md); }
+        .stat-icon { font-size: 2.5rem; color: var(--secondary-color); margin-bottom: 1rem; }
+        .stat-value { font-size: 2rem; font-weight: 700; color: var(--primary-color); margin-bottom: 0.5rem; }
+        .stat-label { color: var(--text-secondary); font-size: 0.9rem; }
 
         @media (max-width: 768px) {
             .sidebar { transform: translateX(100%); }
             .sidebar.show { transform: translateX(0); }
             .main-content { margin-right: 0; padding: 1rem; }
-            .dashboard-stats {
-                grid-template-columns: 1fr;
-            }
+            .dashboard-stats { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body>
-    <!-- Sidebar Toggle Button for Mobile -->
     <button class="btn btn-primary-modern d-md-none position-fixed" style="top:1rem;right:1rem;z-index:1001" id="sidebarToggle"><i class="bi bi-list"></i></button>
 
-    <!-- Sidebar -->
     <div class="sidebar" id="sidebar">
         <div class="sidebar-header">
             <h4 class="sidebar-logo"><i class="bi bi-calculator-fill"></i><span id="project-name-sidebar">برنامج الحسابات</span></h4>
@@ -313,9 +138,7 @@
         </nav>
     </div>
 
-    <!-- Main Content -->
     <div class="main-content">
-        <!-- Dashboard Page -->
         <div id="dashboard" class="page active">
             <div class="content-header"><h2 class="content-title"><i class="bi bi-speedometer2"></i> لوحة التحكم</h2></div>
             <div class="dashboard-stats">
@@ -342,7 +165,6 @@
             </div>
         </div>
 
-        <!-- Invoice Page -->
         <div id="invoice" class="page">
             <div class="content-header"><h2 class="content-title"><i class="bi bi-receipt"></i> إدارة الفواتير</h2></div>
             <ul class="nav nav-tabs-modern mb-4">
@@ -351,7 +173,6 @@
                 <li class="nav-item"><a class="nav-link" href="#" data-tab="track-invoices">تتبع الفواتير</a></li>
             </ul>
 
-            <!-- New Invoice Tab -->
             <div id="new-invoice" class="invoice-tab active">
                 <div class="card-modern">
                     <div class="card-header-modern"><i class="bi bi-plus-circle"></i> إنشاء فاتورة جديدة</div>
@@ -424,7 +245,6 @@
                 </div>
             </div>
 
-            <!-- Manage Invoices Tab -->
             <div id="manage-invoices" class="invoice-tab">
                 <div class="card-modern">
                     <div class="card-header-modern"><i class="bi bi-table"></i> إدارة الفواتير</div>
@@ -452,7 +272,6 @@
                 </div>
             </div>
 
-            <!-- Track Invoices Tab -->
             <div id="track-invoices" class="invoice-tab">
                 <div class="card-modern">
                     <div class="card-header-modern"><i class="bi bi-geo-alt"></i> تتبع الفواتير</div>
@@ -481,7 +300,6 @@
             </div>
         </div>
 
-        <!-- Products Page -->
         <div id="products" class="page">
             <div class="content-header"><h2 class="content-title"><i class="bi bi-box-seam"></i> إدارة المنتجات</h2></div>
             <div class="card-modern">
@@ -512,11 +330,9 @@
             </div>
         </div>
 
-        <!-- Product Cost Page -->
         <div id="product-cost" class="page">
             <div class="content-header"><h2 class="content-title"><i class="bi bi-calculator"></i> حساب تكلفة المنتج</h2></div>
 
-            <!-- Product Info -->
             <div class="card-modern">
                 <div class="card-header-modern"><i class="bi bi-info-circle"></i> معلومات المنتج</div>
                 <div class="card-body-modern">
@@ -529,7 +345,6 @@
                 </div>
             </div>
 
-            <!-- Materials -->
             <div class="card-modern">
                 <div class="card-header-modern"><i class="bi bi-boxes"></i> تكاليف المواد</div>
                 <div class="card-body-modern">
@@ -565,7 +380,6 @@
                 </div>
             </div>
 
-            <!-- Packaging -->
             <div class="card-modern">
                 <div class="card-header-modern"><i class="bi bi-gift"></i> تكاليف التغليف</div>
                 <div class="card-body-modern">
@@ -601,7 +415,6 @@
                 </div>
             </div>
 
-            <!-- Workers -->
             <div class="card-modern">
                 <div class="card-header-modern"><i class="bi bi-people"></i> تكاليف اليد العاملة</div>
                 <div class="card-body-modern">
@@ -659,11 +472,9 @@
                         <div class="cost-summary-title">إجمالي تكلفة اليد العاملة للعلبة</div>
                         <div class="cost-summary-value" id="labor-per-box">0.000 د.ب</div>
                     </div>
-                    <div class="warning-text">ملاحظة: نسبة الإهلاك هي تقدير لتكلفة استهلاك المعدات والأجهزة المستخدمة في إنتاج المنتج ونقترح أن تكون 10%</div>
                 </div>
             </div>
 
-            <!-- Equipment Depreciation -->
             <div class="card-modern">
                 <div class="card-header-modern"><i class="bi bi-tools"></i> إهلاك المعدات</div>
                 <div class="card-body-modern">
@@ -679,10 +490,10 @@
                         <div class="cost-summary-title">إجمالي إهلاك المعدات للعلبة</div>
                         <div class="cost-summary-value" id="depreciation-per-box">0.000 د.ب</div>
                     </div>
+                    <div class="warning-text">نسبة الإهلاك هي تقدير لتكلفة استهلاك المعدات والأجهزة المستخدمة في إنتاج المنتج ونقترح أن تكون 10%</div>
                 </div>
             </div>
 
-            <!-- Final Price -->
             <div class="card-modern">
                 <div class="card-header-modern"><i class="bi bi-currency-dollar"></i> ملخص التكاليف والأسعار</div>
                 <div class="card-body-modern">
@@ -707,7 +518,6 @@
             </div>
         </div>
 
-        <!-- Settings Page -->
         <div id="settings" class="page">
             <div class="content-header"><h2 class="content-title"><i class="bi bi-gear"></i> إعدادات النظام</h2></div>
             
@@ -715,29 +525,10 @@
                 <h4><i class="bi bi-building"></i> تفاصيل المشروع</h4>
                 <form id="project-settings-form">
                     <div class="row mb-3">
-                        <div class="col-md-6">
-                            <label class="form-label">اسم المشروع</label>
-                            <input type="text" class="form-control-modern" id="project-name" required>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label">الهاتف</label>
-                            <div class="input-group">
-                                <select class="form-select-modern" id="country-code" style="max-width:120px">
-                                    <option value="+973">+973 (البحرين)</option>
-                                    <option value="+966">+966 (السعودية)</option>
-                                    <option value="+971">+971 (الإمارات)</option>
-                                    <option value="+974">+974 (قطر)</option>
-                                    <option value="+965">+965 (الكويت)</option>
-                                    <option value="+968">+968 (عمان)</option>
-                                </select>
-                                <input type="tel" class="form-control-modern" id="phone-number" required>
-                            </div>
-                        </div>
+                        <div class="col-md-6"><label class="form-label">اسم المشروع</label><input type="text" class="form-control-modern" id="project-name" required></div>
+                        <div class="col-md-6"><label class="form-label">الهاتف</label><div class="input-group"><select class="form-select-modern" id="country-code" style="max-width:120px"><option value="+973">+973 (البحرين)</option><option value="+966">+966 (السعودية)</option><option value="+971">+971 (الإمارات)</option><option value="+974">+974 (قطر)</option><option value="+965">+965 (الكويت)</option><option value="+968">+968 (عمان)</option></select><input type="tel" class="form-control-modern" id="phone-number" required></div></div>
                     </div>
-                    <div class="mb-3">
-                        <label class="form-label">العنوان</label>
-                        <textarea class="form-control-modern" id="project-address" rows="3"></textarea>
-                    </div>
+                    <div class="mb-3"><label class="form-label">العنوان</label><textarea class="form-control-modern" id="project-address" rows="3"></textarea></div>
                     <button type="submit" class="btn btn-primary-modern"><i class="bi bi-save"></i> حفظ الإعدادات</button>
                 </form>
             </div>
@@ -746,36 +537,9 @@
                 <h4><i class="bi bi-gear"></i> إعدادات النظام</h4>
                 <form id="system-settings-form">
                     <div class="row mb-3">
-                        <div class="col-md-4">
-                            <label class="form-label">لون النظام</label>
-                            <div class="color-options-grid mb-2">
-                                <div class="color-option-modern selected" style="background-color: #1a1a1a;" data-color="default"></div>
-                                <div class="color-option-modern" style="background-color: #3498db;" data-color="blue"></div>
-                                <div class="color-option-modern" style="background-color: #e74c3c;" data-color="red"></div>
-                                <div class="color-option-modern" style="background-color: #2ecc71;" data-color="green"></div>
-                                <div class="color-option-modern" style="background-color: #9b59b6;" data-color="purple"></div>
-                                <div class="color-option-modern" style="background-color: #1abc9c;" data-color="teal"></div>
-                            </div>
-                            <input type="hidden" id="system-color" value="default">
-                        </div>
-                        <div class="col-md-4">
-                            <label class="form-label">اللغة</label>
-                            <select class="form-select-modern" id="system-language">
-                                <option value="ar">العربية</option>
-                                <option value="en">English</option>
-                            </select>
-                        </div>
-                        <div class="col-md-4">
-                            <label class="form-label">العملة</label>
-                            <select class="form-select-modern" id="system-currency">
-                                <option value="BHD">دينار بحريني (د.ب)</option>
-                                <option value="SAR">ريال سعودي (ر.س)</option>
-                                <option value="AED">درهم إماراتي (د.إ)</option>
-                                <option value="QAR">ريال قطري (ر.ق)</option>
-                                <option value="KWD">دينار كويتي (د.ك)</option>
-                                <option value="OMR">ريال عماني (ر.ع)</option>
-                            </select>
-                        </div>
+                        <div class="col-md-4"><label class="form-label">لون النظام</label><div class="color-options-grid mb-2"><div class="color-option-modern selected" style="background-color: #1a1a1a;" data-color="default"></div><div class="color-option-modern" style="background-color: #3498db;" data-color="blue"></div><div class="color-option-modern" style="background-color: #e74c3c;" data-color="red"></div><div class="color-option-modern" style="background-color: #2ecc71;" data-color="green"></div><div class="color-option-modern" style="background-color: #9b59b6;" data-color="purple"></div><div class="color-option-modern" style="background-color: #1abc9c;" data-color="teal"></div></div><input type="hidden" id="system-color" value="default"></div>
+                        <div class="col-md-4"><label class="form-label">اللغة</label><select class="form-select-modern" id="system-language"><option value="ar">العربية</option><option value="en">English</option></select></div>
+                        <div class="col-md-4"><label class="form-label">العملة</label><select class="form-select-modern" id="system-currency"><option value="BHD">دينار بحريني (د.ب)</option><option value="SAR">ريال سعودي (ر.س)</option><option value="AED">درهم إماراتي (د.إ)</option><option value="QAR">ريال قطري (ر.ق)</option><option value="KWD">دينار كويتي (د.ك)</option><option value="OMR">ريال عماني (ر.ع)</option></select></div>
                     </div>
                     <button type="submit" class="btn btn-primary-modern"><i class="bi bi-save"></i> حفظ إعدادات النظام</button>
                 </form>
@@ -785,26 +549,9 @@
                 <h4><i class="bi bi-percent"></i> إعدادات الضرائب</h4>
                 <form id="tax-settings-form">
                     <div class="row mb-3">
-                        <div class="col-md-4">
-                            <div class="mb-3">
-                                <label class="form-label">تفعيل الضريبة</label>
-                                <div class="form-check form-switch">
-                                    <input class="form-check-input" type="checkbox" id="tax-enabled">
-                                    <label class="form-check-label" for="tax-enabled">تفعيل الضريبة</label>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <label class="form-label">نسبة الضريبة (%)</label>
-                            <div class="input-group">
-                                <input type="number" class="form-control-modern" id="tax-rate" step="0.1" min="0" max="100">
-                                <span class="input-group-text">%</span>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <label class="form-label">الرقم الضريبي</label>
-                            <input type="text" class="form-control-modern" id="tax-number">
-                        </div>
+                        <div class="col-md-4"><div class="mb-3"><label class="form-label">تفعيل الضريبة</label><div class="form-check form-switch"><input class="form-check-input" type="checkbox" id="tax-enabled"><label class="form-check-label" for="tax-enabled">تفعيل الضريبة</label></div></div></div>
+                        <div class="col-md-4"><label class="form-label">نسبة الضريبة (%)</label><div class="input-group"><input type="number" class="form-control-modern" id="tax-rate" step="0.1" min="0" max="100"><span class="input-group-text">%</span></div></div>
+                        <div class="col-md-4"><label class="form-label">الرقم الضريبي</label><input type="text" class="form-control-modern" id="tax-number"></div>
                     </div>
                     <button type="submit" class="btn btn-primary-modern"><i class="bi bi-save"></i> حفظ إعدادات الضريبة</button>
                 </form>
@@ -888,7 +635,6 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        /* =====  التنقل بين الصفحات  ===== */
         let productCounter = 1;
         let products = [];
         let editingIndex = -1;
@@ -913,42 +659,34 @@
         showPage('dashboard');
         showTab('new-invoice');
 
-        /* =====  تهيئة بسيطة  ===== */
         document.getElementById('invoice-number').value = "INV-" + new Date().getFullYear() + "-0001";
         document.getElementById('product-code').value = "PRD-" + String(productCounter).padStart(4, '0');
         document.getElementById('invoice-date').value = new Date().toISOString().split('T')[0];
 
-        /* =====  دوال حساب تكلفة المنتج  ===== */
         function updateCosts(){
             // حساب المواد
             let materialsCost = 0;
-            let materialsTotal = 0;
             document.querySelectorAll('#materials-table tbody tr').forEach(row=>{
                 const inputs = row.querySelectorAll('input');
                 const count = parseFloat(inputs[1].value) || 1;
                 const price = parseFloat(inputs[2].value) || 0;
                 const used = parseFloat(inputs[3].value) || 0;
                 const cost = (price / count) * used;
-                const total = cost * (parseFloat(document.getElementById('sale-quantity').value) || 1);
                 row.querySelector('.material-cost').textContent = cost.toFixed(3);
                 materialsCost += cost;
-                materialsTotal += total;
             });
             document.getElementById('materials-per-box').textContent = materialsCost.toFixed(3) + ' د.ب';
 
             // حساب التغليف
             let packagingCost = 0;
-            let packagingTotal = 0;
             document.querySelectorAll('#packaging-table tbody tr').forEach(row=>{
                 const inputs = row.querySelectorAll('input');
                 const count = parseFloat(inputs[1].value) || 1;
                 const price = parseFloat(inputs[2].value) || 0;
                 const used = parseFloat(inputs[3].value) || 0;
                 const cost = (price / count) * used;
-                const total = cost * (parseFloat(document.getElementById('sale-quantity').value) || 1);
                 row.querySelector('.packaging-cost').textContent = cost.toFixed(3);
                 packagingCost += cost;
-                packagingTotal += total;
             });
             document.getElementById('packaging-per-box').textContent = packagingCost.toFixed(3) + ' د.ب';
 
@@ -983,7 +721,6 @@
             document.getElementById('depreciation-per-box').textContent = depreciationCost.toFixed(3) + ' د.ب';
             document.getElementById('equipment-depreciation').value = depreciationCost.toFixed(3);
 
-            // الإجماليات
             const totalCostPerBox = materialsCost + packagingCost + totalLaborCost + depreciationCost;
             document.getElementById('grand-total-cost').textContent = totalCostPerBox.toFixed(3) + ' د.ب';
 
@@ -1002,10 +739,6 @@
             document.getElementById('final-profit').className = finalProfit >= 0 ? 'text-profit' : 'text-profit negative';
             document.getElementById('suggested-profit').className = profitAmount >= 0 ? 'text-profit' : 'text-profit negative';
         }
-
-        // إضافة صفوف
-        document.getElementById('add-material').addEventListener('click',()=>addTableRow('materials-table'));
-        document.getElementById('add-packaging').addEventListener('click',()=>addTableRow('packaging-table'));
 
         function addTableRow(tableId){
             const tbody=document.querySelector(`#${tableId} tbody`);
@@ -1044,19 +777,18 @@
             });
         }
 
-        // حفظ المنتج
         document.getElementById('save-product').addEventListener('click',()=>{
             const name=document.getElementById('product-name').value;
             const code=document.getElementById('product-code').value;
             const qty=document.getElementById('sale-quantity').value;
             const profitRate=document.getElementById('profit-rate').value;
+            const finalPrice=document.getElementById('final-price').value;
             
-            if(!name || !qty || !profitRate || !document.getElementById('final-price').value){
+            if(!name || !qty || !profitRate || !finalPrice){
                 alert('يرجى تعبئة جميع الحقول المطلوبة');
                 return;
             }
 
-            const finalPrice=document.getElementById('final-price').value;
             const product = {
                 code: code,
                 name: name,
@@ -1154,7 +886,6 @@
             });
         }
 
-        // تحديث سعر الوحدة عند اختيار المنتج
         document.getElementById('invoice-product-select').addEventListener('change', function() {
             const selectedOption = this.options[this.selectedIndex];
             if(selectedOption.value) {
@@ -1162,7 +893,6 @@
             }
         });
 
-        // إرسال النماذج
         document.getElementById('project-settings-form').addEventListener('submit', (e) => {
             e.preventDefault();
             alert('تم حفظ إعدادات المشروع بنجاح!');
@@ -1187,20 +917,16 @@
             alert('تم حفظ إعدادات التوصيل بنجاح!');
         });
 
-        // عند تغيير أي مدخل
+        document.getElementById('add-material').addEventListener('click',()=>addTableRow('materials-table'));
+        document.getElementById('add-packaging').addEventListener('click',()=>addTableRow('packaging-table'));
+        document.getElementById('sidebarToggle').addEventListener('click',()=>document.getElementById('sidebar').classList.toggle('show'));
+
         ['depreciation-rate','profit-rate','sale-quantity','final-price'].forEach(id=>{
             document.getElementById(id).addEventListener('input',updateCosts);
             document.getElementById(id).addEventListener('change',updateCosts);
             document.getElementById(id).addEventListener('keyup',updateCosts);
         });
 
-        // معاينة الفاتورة
-        document.getElementById('preview-invoice').addEventListener('click',()=>alert('معاينة الفاتورة'));
-
-        // تبديل القائمة الجانبية للموبايل
-        document.getElementById('sidebarToggle').addEventListener('click',()=>document.getElementById('sidebar').classList.toggle('show'));
-
-        // تشغيل الحسابات تلقائياً عند تحميل الصفحة
         updateCosts();
     </script>
 </body>
