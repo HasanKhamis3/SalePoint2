@@ -7,7 +7,6 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css " rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css ">
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300 ;400;500;600;700&display=swap" rel="stylesheet">
-
     <style>
         :root {
             --primary-color: #1a1a1a;
@@ -28,7 +27,6 @@
             --shadow-md: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
             --shadow-lg: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
         }
-
         * { box-sizing: border-box; }
         body {
             font-family: 'IBM Plex Sans Arabic', sans-serif;
@@ -38,7 +36,6 @@
             margin: 0;
             padding: 0;
         }
-
         .sidebar {
             background: linear-gradient(180deg, var(--primary-color) 0%, var(--primary-light) 100%);
             min-height: 100vh;
@@ -64,83 +61,55 @@
         .invoice-tab { display: none; }
         .invoice-tab.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-
         .nav-tabs-modern { border: none; margin-bottom: 2rem; }
         .nav-tabs-modern .nav-link { border: none; border-radius: 12px; padding: 1rem 1.5rem; margin-right: 0.5rem; color: var(--text-secondary); font-weight: 500; cursor: pointer; transition: all 0.3s ease; text-decoration: none; }
         .nav-tabs-modern .nav-link.active { background: linear-gradient(135deg, var(--secondary-color), var(--accent-color)); color: white; box-shadow: var(--shadow-sm); }
-
         .card-modern { background: var(--surface); border: none; border-radius: 16px; box-shadow: var(--shadow-sm); margin-bottom: 2rem; overflow: hidden; }
         .card-header-modern { background: linear-gradient(135deg, var(--primary-color), var(--primary-light)); color: white; padding: 1.5rem; font-weight: 600; font-size: 1.1rem; }
         .card-body-modern { padding: 2rem; }
-
         .form-control-modern, .form-select-modern { border: 2px solid var(--border-color); border-radius: 12px; padding: 1.125rem 1rem; font-size: 1.1rem; transition: all 0.3s ease; background: var(--surface); width: 100%; min-height: 50px; }
         .form-control-modern:focus, .form-select-modern:focus { border-color: var(--secondary-color); box-shadow: 0 0 0 0.2rem rgba(255,107,53,0.25); }
-
         .btn-modern { border: none; border-radius: 12px; padding: 0.75rem 1.5rem; font-weight: 500; cursor: pointer; text-decoration: none; display: inline-block; transition: all 0.3s ease; }
         .btn-primary-modern { background: linear-gradient(135deg, var(--secondary-color), var(--accent-color)); color: white; }
         .btn-success-modern { background: linear-gradient(135deg, var(--success), #00e676); color: white; }
         .btn-danger-modern { background: linear-gradient(135deg, var(--error), #ff5252); color: white; }
-
         .table-modern { background: var(--surface); border-radius: 16px; overflow: hidden; box-shadow: var(--shadow-sm); width: 100%; }
         .table-modern th, .table-modern td { padding: 1rem; text-align: center; border-bottom: 1px solid var(--border-color); }
         .table-modern th { background: linear-gradient(135deg, var(--primary-color), var(--primary-light)); color: white; font-weight: 600; }
-
-        .cost-summary-box { background: linear-gradient(135deg, #f8f9fa, #e9ecef); border-radius: 16px; padding: 1.5rem; margin: 1rem 0; box-shadow: var(--shadow-sm); text-align: center; }
-        .cost-summary-title { font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 0.5rem; }
-        .cost-summary-value { font-size: 1.3rem; font-weight: 700; color: var(--success); }
-
-        .price-input-container { position: relative; }
-        .price-input-container::after { content: ' د.ب'; position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--text-secondary); font-weight: 500; }
-
-        .text-cost { color: #1976d2 !important; }
-        .text-suggested { color: var(--accent-color) !important; }
-        .text-final { color: var(--success) !important; }
-        .text-profit { color: var(--success) !important; }
-        .text-profit.negative { color: var(--error) !important; }
-
-        .product-name-col { width: 40%; }
-        .final-price-input { font-size: 1.2rem; font-weight: 700; color: var(--success) !important; max-width: 200px; margin: 0 auto; }
-        .warning-text { color: var(--error); font-size: 0.8rem; margin-top: 0.5rem; }
-
-        .settings-section-modern { background: var(--surface); border-radius: 16px; padding: 2rem; margin-bottom: 2rem; box-shadow: var(--shadow-sm); }
-        .settings-section-modern h4 { margin-bottom: 1.5rem; color: var(--primary-color); }
-
-        .dashboard-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-bottom: 2rem; }
-        .stat-card { background: linear-gradient(135deg, var(--surface), var(--surface-hover)); border-radius: 16px; padding: 2rem; box-shadow: var(--shadow-sm); text-align: center; transition: transform 0.3s ease; }
-        .stat-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-md); }
-        .stat-icon { font-size: 2.5rem; color: var(--secondary-color); margin-bottom: 1rem; }
-        .stat-value { font-size: 2rem; font-weight: 700; color: var(--primary-color); margin-bottom: 0.5rem; }
-        .stat-label { color: var(--text-secondary); font-size: 0.9rem; }
-
-        .summary-grid {
+        .summary-grid-single {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            grid-template-columns: 1fr;
             gap: 1rem;
             margin: 1rem 0;
         }
-        .summary-item {
+        .summary-single {
             background: var(--surface);
             border-radius: 12px;
-            padding: 1rem;
-            text-align: center;
+            padding: 1.5rem;
             box-shadow: var(--shadow-sm);
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            text-align: center;
         }
-        .summary-label {
+        .summary-single-item {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        .summary-single-label {
             font-size: 0.9rem;
             color: var(--text-secondary);
-            margin-bottom: 0.5rem;
         }
-        .summary-value {
-            font-size: 1.2rem;
+        .summary-single-value {
+            font-size: 1.1rem;
             font-weight: 700;
             color: var(--primary-color);
         }
-
         @media (max-width: 768px) {
             .sidebar { transform: translateX(100%); }
             .sidebar.show { transform: translateX(0); }
             .main-content { margin-right: 0; padding: 1rem; }
-            .dashboard-stats { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -149,7 +118,7 @@
 
     <div class="sidebar" id="sidebar">
         <div class="sidebar-header">
-            <h4 class="sidebar-logo"><i class="bi bi-calculator-fill"></i><span id="project-name-sidebar">برنامج الحسابات</span></h4>
+            <h4 class="sidebar-logo"><i class="bi bi-calculator-fill"></i><span>برنامج الحسابات</span></h4>
         </div>
         <nav class="sidebar-nav">
             <ul class="nav flex-column">
@@ -362,6 +331,32 @@
                         <div class="col-md-2"><label class="form-label">نسبة الربح (%)</label><input type="number" class="form-control-modern" id="profit-rate" required></div>
                         <div class="col-md-3"><label class="form-label">رمز المنتج</label><input type="text" class="form-control-modern auto-generate" id="product-code" readonly style="text-align:right"></div>
                     </div>
+                    <div class="summary-single">
+                        <div class="summary-single-item">
+                            <div class="summary-single-label">تكلفة المواد</div>
+                            <div class="summary-single-value" id="material-summary">0.000 د.ب</div>
+                        </div>
+                        <div class="summary-single-item">
+                            <div class="summary-single-label">تكلفة التغليف</div>
+                            <div class="summary-single-value" id="packaging-summary">0.000 د.ب</div>
+                        </div>
+                        <div class="summary-single-item">
+                            <div class="summary-single-label">إهلاك المعدات</div>
+                            <div class="summary-single-value" id="depreciation-summary">0.000 د.ب</div>
+                        </div>
+                        <div class="summary-single-item">
+                            <div class="summary-single-label">اليد العاملة</div>
+                            <div class="summary-single-value" id="labor-summary">0.000 د.ب</div>
+                        </div>
+                        <div class="summary-single-item">
+                            <div class="summary-single-label">سعر البيع</div>
+                            <div class="summary-single-value" id="final-price-summary">0.000 د.ب</div>
+                        </div>
+                        <div class="summary-single-item">
+                            <div class="summary-single-label">هامش الربح</div>
+                            <div class="summary-single-value" id="profit-summary">0.000 د.ب (0%)</div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -393,10 +388,6 @@
                         </table>
                     </div>
                     <button type="button" class="btn btn-success-modern" id="add-material"><i class="bi bi-plus"></i> إضافة منتج</button>
-                    <div class="cost-summary-box">
-                        <div class="cost-summary-title">إجمالي تكاليف المواد للعلبة</div>
-                        <div class="cost-summary-value" id="materials-per-box">0.000 د.ب</div>
-                    </div>
                 </div>
             </div>
 
@@ -428,10 +419,6 @@
                         </table>
                     </div>
                     <button type="button" class="btn btn-success-modern" id="add-packaging"><i class="bi bi-plus"></i> إضافة منتج</button>
-                    <div class="cost-summary-box">
-                        <div class="cost-summary-title">إجمالي تكاليف التغليف للعلبة</div>
-                        <div class="cost-summary-value" id="packaging-per-box">0.000 د.ب</div>
-                    </div>
                 </div>
             </div>
 
@@ -486,10 +473,6 @@
                             </div>
                         </div>
                     </div>
-                    <div class="cost-summary-box">
-                        <div class="cost-summary-title">إجمالي تكلفة اليد العاملة للعلبة</div>
-                        <div class="cost-summary-value" id="labor-per-box">0.000 د.ب</div>
-                    </div>
                 </div>
             </div>
 
@@ -507,44 +490,13 @@
                     <div style="color: var(--error); font-size: 1.1rem; font-weight: 500; margin-top: 1rem;">
                         * نسبة الإهلاك هي تقدير لتكلفة استهلاك المعدات والأجهزة المستخدمة في إنتاج المنتج ونقترح أن تكون 10%
                     </div>
-                    <div class="cost-summary-box">
-                        <div class="cost-summary-title">إجمالي إهلاك المعدات للعلبة</div>
-                        <div class="cost-summary-value" id="depreciation-per-box">0.000 د.ب</div>
-                    </div>
                 </div>
             </div>
 
             <div class="card-modern">
                 <div class="card-header-modern"><i class="bi bi-currency-dollar"></i> ملخص التكاليف والأسعار</div>
                 <div class="card-body-modern">
-                    <div class="summary-grid">
-                        <div class="summary-item">
-                            <div class="summary-label">إجمالي تكلفة المواد للعلبة الواحدة:</div>
-                            <div class="summary-value" id="material-summary">0.000 د.ب</div>
-                        </div>
-                        <div class="summary-item">
-                            <div class="summary-label">إجمالي تكاليف التغليف للعلبة الواحدة:</div>
-                            <div class="summary-value" id="packaging-summary">0.000 د.ب</div>
-                        </div>
-                        <div class="summary-item">
-                            <div class="summary-label">إهلاك المعدات للعلبة الواحدة:</div>
-                            <div class="summary-value" id="depreciation-summary">0.000 د.ب</div>
-                        </div>
-                        <div class="summary-item">
-                            <div class="summary-label">تكلفة اليد العاملة للعلبة الواحدة:</div>
-                            <div class="summary-value" id="labor-summary">0.000 د.ب</div>
-                        </div>
-                        <div class="summary-item">
-                            <div class="summary-label">سعر البيع النهائي للعلبة الواحدة:</div>
-                            <div class="summary-value" id="final-price-summary">0.000 د.ب</div>
-                        </div>
-                        <div class="summary-item">
-                            <div class="summary-label">هامش الربح (بالمبلغ وبالنسبة):</div>
-                            <div class="summary-value" id="profit-summary">0.000 د.ب (0%)</div>
-                        </div>
-                    </div>
-
-                    <div class="row mt-4">
+                    <div class="row">
                         <div class="col-md-4 text-center">
                             <h6 class="text-muted">التكلفة الإجمالية للعلبة</h6>
                             <h3 class="text-cost" id="grand-total-cost">0.000 د.ب</h3>
@@ -557,6 +509,7 @@
                         <div class="col-md-4 text-center">
                             <h6 class="text-muted">سعر البيع النهائي</h6>
                             <input type="number" class="form-control-modern text-center final-price-input" id="final-price" step="0.001" placeholder="أدخل السعر" style="max-width:150px;margin:0 auto;">
+                            <br>
                             <small class="text-profit" id="final-profit">هامش الربح: 0.000 د.ب (0%)</small>
                         </div>
                     </div>
@@ -755,7 +708,6 @@
                 row.querySelector('.material-cost').textContent = cost.toFixed(currencyDecimals);
                 materialsCost += cost;
             });
-            document.getElementById('materials-per-box').textContent = formatCurrency(materialsCost);
             document.getElementById('material-summary').textContent = formatCurrency(materialsCost);
 
             let packagingCost = 0;
@@ -768,7 +720,6 @@
                 row.querySelector('.packaging-cost').textContent = cost.toFixed(currencyDecimals);
                 packagingCost += cost;
             });
-            document.getElementById('packaging-per-box').textContent = formatCurrency(packagingCost);
             document.getElementById('packaging-summary').textContent = formatCurrency(packagingCost);
 
             let totalLaborCost = 0;
@@ -793,12 +744,10 @@
                     totalLaborCost += boxCost;
                 }
             });
-            document.getElementById('labor-per-box').textContent = formatCurrency(totalLaborCost);
             document.getElementById('labor-summary').textContent = formatCurrency(totalLaborCost);
 
             const depreciationRate = parseFloat(document.getElementById('depreciation-rate').value) || 0;
             const depreciationCost = (materialsCost + packagingCost) * (depreciationRate / 100);
-            document.getElementById('depreciation-per-box').textContent = formatCurrency(depreciationCost);
             document.getElementById('equipment-depreciation').value = depreciationCost.toFixed(currencyDecimals);
             document.getElementById('depreciation-summary').textContent = formatCurrency(depreciationCost);
 
@@ -817,9 +766,6 @@
             const finalProfitRate = totalCostPerBox > 0 ? (finalProfit / totalCostPerBox) * 100 : 0;
             const finalProfitText = formatCurrency(finalProfit) + ' (' + finalProfitRate.toFixed(1) + '%)';
             document.getElementById('final-profit').textContent = 'هامش الربح: ' + finalProfitText;
-            document.getElementById('final-profit').className = finalProfit >= 0 ? 'text-profit' : 'text-profit negative';
-            document.getElementById('suggested-profit').className = profitAmount >= 0 ? 'text-profit' : 'text-profit negative';
-            
             document.getElementById('final-price-summary').textContent = formatCurrency(finalPrice);
             document.getElementById('profit-summary').textContent = formatCurrency(finalProfit) + ' (' + finalProfitRate.toFixed(1) + '%)';
         }
@@ -870,6 +816,43 @@
             document.getElementById('product-code').value = "PRD-" + String(productCounter).padStart(4, '0');
             updateCosts();
         }
+
+        document.getElementById('save-product').addEventListener('click',()=>{
+            const name=document.getElementById('product-name').value;
+            const code=document.getElementById('product-code').value;
+            const qty=document.getElementById('sale-quantity').value;
+            const profitRate=document.getElementById('profit-rate').value;
+            const finalPrice=document.getElementById('final-price').value;
+            
+            if(!name || !qty || !profitRate || !finalPrice){
+                alert('يرجى تعبئة جميع الحقول المطلوبة');
+                return;
+            }
+
+            const product = {
+                code: code,
+                name: name,
+                quantity: qty,
+                totalCost: document.getElementById('grand-total-cost').textContent,
+                finalPrice: formatCurrency(parseFloat(finalPrice)),
+                profitRate: profitRate + '%',
+                profitMargin: formatCurrency(parseFloat(finalPrice) - parseFloat(document.getElementById('grand-total-cost').textContent.replace(/[^0-9.]/g, ''))),
+                laborCost: document.getElementById('labor-per-box').textContent,
+                depreciation: document.getElementById('depreciation-per-box').textContent
+            };
+            
+            if(editingIndex >= 0) {
+                products[editingIndex] = product;
+                editingIndex = -1;
+            } else {
+                products.push(product);
+            }
+            
+            updateProductsTable();
+            updateInvoiceProducts();
+            clearForm();
+            alert('تم حفظ المنتج بنجاح!');
+        });
 
         function updateProductsTable() {
             const tbody = document.getElementById('products-list');
@@ -937,43 +920,6 @@
                 });
             });
         }
-
-        document.getElementById('save-product').addEventListener('click',()=>{
-            const name=document.getElementById('product-name').value;
-            const code=document.getElementById('product-code').value;
-            const qty=document.getElementById('sale-quantity').value;
-            const profitRate=document.getElementById('profit-rate').value;
-            const finalPrice=document.getElementById('final-price').value;
-            
-            if(!name || !qty || !profitRate || !finalPrice){
-                alert('يرجى تعبئة جميع الحقول المطلوبة');
-                return;
-            }
-
-            const product = {
-                code: code,
-                name: name,
-                quantity: qty,
-                totalCost: document.getElementById('grand-total-cost').textContent,
-                finalPrice: formatCurrency(parseFloat(finalPrice)),
-                profitRate: profitRate + '%',
-                profitMargin: formatCurrency(parseFloat(finalPrice) - parseFloat(document.getElementById('grand-total-cost').textContent.replace(/[^0-9.]/g, ''))),
-                laborCost: document.getElementById('labor-per-box').textContent,
-                depreciation: document.getElementById('depreciation-per-box').textContent
-            };
-            
-            if(editingIndex >= 0) {
-                products[editingIndex] = product;
-                editingIndex = -1;
-            } else {
-                products.push(product);
-            }
-            
-            updateProductsTable();
-            updateInvoiceProducts();
-            clearForm();
-            alert('تم حفظ المنتج بنجاح!');
-        });
 
         document.getElementById('add-material').addEventListener('click',()=>addTableRow('materials-table'));
         document.getElementById('add-packaging').addEventListener('click',()=>addTableRow('packaging-table'));
