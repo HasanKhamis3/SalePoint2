@@ -156,6 +156,7 @@
             background: var(--surface);
             width: 100%;
             min-height: 50px;
+            text-align: center;
         }
         .form-control-modern:focus, .form-select-modern:focus {
             border-color: var(--secondary-color);
@@ -567,7 +568,7 @@
                             <thead>
                                 <tr>
                                     <th class="product-name-col">المنتج</th>
-                                    <th>العدد / الوزن</th>
+                                    <th>العدد</th>
                                     <th>السعر (د.ب)</th>
                                     <th>العدد المستخدم</th>
                                     <th>سعر التكلفة</th>
@@ -626,7 +627,6 @@
                                     <thead>
                                         <tr>
                                             <th style="width: 25%">عدد القطع المنتجة</th>
-                                            <th style="width: 25%">عدد القطع لكل ساعة</th>
                                             <th style="width: 25%">تكلفة القطعة</th>
                                             <th style="width: 25%">تكلفة العلبة</th>
                                         </tr>
@@ -634,7 +634,6 @@
                                     <tbody>
                                         <tr>
                                             <td><input type="number" class="form-control-modern pieces" required></td>
-                                            <td class="pieces-per-hour">0</td>
                                             <td class="piece-cost">0.000</td>
                                             <td class="box-cost">0.000</td>
                                         </tr>
@@ -920,11 +919,9 @@
 
                 if(productions[index]) {
                     const pieces = parseFloat(productions[index].querySelector('.pieces')?.value) || 1;
-                    const piecesPerHour = pieces / hours;
                     const pieceCost = pieces > 0 ? ((salary / 30) / 8) / pieces : 0;
                     const boxCost = pieceCost * (parseFloat(document.getElementById('sale-quantity').value) || 1);
                     
-                    productions[index].querySelector('.pieces-per-hour').textContent = piecesPerHour.toFixed(0);
                     productions[index].querySelector('.piece-cost').textContent = pieceCost.toFixed(currencyDecimals);
                     productions[index].querySelector('.box-cost').textContent = boxCost.toFixed(currencyDecimals);
                     totalLaborCost += boxCost;
@@ -1033,15 +1030,27 @@
         }
 
         function saveProjectSettings() {
+            const projectName = document.getElementById('project-name').value;
+            const phoneNumber = document.getElementById('phone-number').value;
+            const projectAddress = document.getElementById('project-address').value;
+            localStorage.setItem('projectSettings', JSON.stringify({projectName, phoneNumber, projectAddress}));
             alert('تم حفظ إعدادات المشروع بنجاح!');
         }
 
         function saveSystemSettings() {
+            const systemColor = document.getElementById('system-color').value;
+            const systemLanguage = document.getElementById('system-language').value;
+            const systemCurrency = document.getElementById('system-currency').value;
+            localStorage.setItem('systemSettings', JSON.stringify({systemColor, systemLanguage, systemCurrency}));
             alert('تم حفظ إعدادات النظام بنجاح!');
             updateCurrencyFormat();
         }
 
         function saveTaxSettings() {
+            const taxEnabled = document.getElementById('tax-enabled').checked;
+            const taxRate = document.getElementById('tax-rate').value;
+            const taxNumber = document.getElementById('tax-number').value;
+            localStorage.setItem('taxSettings', JSON.stringify({taxEnabled, taxRate, taxNumber}));
             alert('تم حفظ إعدادات الضريبة بنجاح!');
         }
 
@@ -1104,7 +1113,18 @@
         }
 
         function previewProduct(index) {
-            alert('عرض تفاصيل المنتج: ' + products[index].name);
+            const product = products[index];
+            const summary = `
+                اسم المنتج: ${product.name}
+                رمز المنتج: ${product.code}
+                عدد القطع في العلبة: ${product.quantity}
+                التكلفة الكلية: ${product.totalCost}
+                سعر البيع: ${product.finalPrice}
+                هامش الربح: ${product.profitMargin}
+                تكلفة اليد العاملة: ${product.laborCost}
+                إهلاك المعدات: ${product.depreciation}
+            `;
+            alert(summary);
         }
 
         function updateInvoiceProducts() {
