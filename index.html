@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -573,10 +571,11 @@
 
         function setupEventListeners() {
             document.getElementById('sidebarToggle').addEventListener('click', () => document.getElementById('sidebar').classList.toggle('show'));
-document.querySelectorAll('.sidebar .nav-link').forEach(link => link.addEventListener('click', e => { e.preventDefault(); showPage(link.dataset.page); }));
-document.querySelectorAll('.nav-tabs-modern .nav-link').forEach(link => link.addEventListener('click', e => { e.preventDefault(); showTab(link.dataset.tab); }));
+
+            // ✅ منع القفزة إلى # عند النقر على روابط التنقل
             document.querySelectorAll('.sidebar .nav-link').forEach(link => link.addEventListener('click', e => { e.preventDefault(); showPage(link.dataset.page); }));
             document.querySelectorAll('.nav-tabs-modern .nav-link').forEach(link => link.addEventListener('click', e => { e.preventDefault(); showTab(link.dataset.tab); }));
+
             document.getElementById('invoice-form').addEventListener('submit', saveInvoice);
             document.getElementById('customer-form').addEventListener('submit', saveCustomer);
             document.getElementById('add-invoice-item').addEventListener('click', addInvoiceItem);
@@ -601,10 +600,7 @@ document.querySelectorAll('.nav-tabs-modern .nav-link').forEach(link => link.add
             document.querySelectorAll('.sidebar .nav-link').forEach(l => l.classList.remove('active'));
             document.getElementById(pageId).classList.add('active');
             document.querySelector(`[data-page="${pageId}"]`).classList.add('active');
-            // إزالة الهاش من الرابط
-            if (window.location.hash) {
-                history.replaceState(null, null, ' ');
-            }
+            if (window.location.hash) history.replaceState(null, null, ' ');
         }
 
         function showTab(tabId) {
@@ -612,10 +608,7 @@ document.querySelectorAll('.nav-tabs-modern .nav-link').forEach(link => link.add
             document.querySelectorAll('.nav-tabs-modern .nav-link').forEach(l => l.classList.remove('active'));
             document.getElementById(tabId).classList.add('active');
             document.querySelector(`[data-tab="${tabId}"]`).classList.add('active');
-            // إزالة الهاش من الرابط
-            if (window.location.hash) {
-                history.replaceState(null, null, ' ');
-            }
+            if (window.location.hash) history.replaceState(null, null, ' ');
         }
 
         function generateInvoiceNumber() {
@@ -1054,14 +1047,10 @@ document.querySelectorAll('.nav-tabs-modern .nav-link').forEach(link => link.add
 
         // منع الانتقال التلقائي عند النقر على روابط التنقل
         document.addEventListener('DOMContentLoaded', function() {
-            // إزالة الهاش من الرابط عند تحميل الصفحة
-            if (window.location.hash) {
-                history.replaceState(null, null, ' ');
-            }
+            if (window.location.hash) history.replaceState(null, null, ' ');
         });
 
         init();
     </script>
 </body>
 </html>
-
