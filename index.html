@@ -320,11 +320,14 @@
         <nav class="sidebar-nav">
             <ul class="nav flex-column">
                 <li class="nav-item"><a class="nav-link active" href="#" data-page="dashboard"><i class="bi bi-speedometer2"></i><span>لوحة التحكم</span></a></li>
-                <li class="nav-item"><a class="nav-link" href="#" data-page="invoice"><i class="bi bi-receipt"></i><span>فاتورة جديدة</span></a></li>
-                <li class="nav-item"><a class="nav-link" href="#" data-page="manage-invoices"><i class="bi bi-table"></i><span>إدارة الفواتير</span></a></li>
-                <li class="nav-item"><a class="nav-link" href="#" data-page="track-invoices"><i class="bi bi-geo-alt"></i><span>تتبع الفواتير</span></a></li>
-                <li class="nav-item"><a class="nav-link" href="#" data-page="calculate-product"><i class="bi bi-calculator"></i><span>حساب تكلفة المنتج</span></a></li>
-                <li class="nav-item"><a class="nav-link" href="#" data-page="manage-products"><i class="bi bi-box-seam"></i><span>إدارة المنتجات</span></a></li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" data-page="invoices"><i class="bi bi-receipt"></i><span>الفواتير</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" data-page="products"><i class="bi bi-box-seam"></i><span>المنتجات</span></a>
+                </li>
+                <li class="nav-item"><a class="nav-link" href="#" data-page="customers"><i class="bi bi-people"></i><span>العملاء</span></a></li>
+                <li class="nav-item"><a class="nav-link" href="#" data-page="reports"><i class="bi bi-bar-chart"></i><span>التقارير</span></a></li>
                 <li class="nav-item"><a class="nav-link" href="#" data-page="settings"><i class="bi bi-gear"></i><span>الإعدادات</span></a></li>
             </ul>
         </nav>
@@ -357,75 +360,79 @@
             </div>
         </div>
 
-        <div id="invoice" class="page">
-            <div class="content-header"><h2 class="content-title"><i class="bi bi-receipt"></i> فاتورة جديدة</h2></div>
-            <div class="card-modern">
-                <div class="card-header-modern"><i class="bi bi-plus-circle"></i> إنشاء فاتورة جديدة</div>
-                <div class="card-body-modern">
-                    <form id="invoice-form">
-                        <div class="row">
-                            <div class="col-md-3"><label class="form-label">رقم الفاتورة</label><input type="text" class="form-control-modern" id="invoice-number" readonly></div>
-                            <div class="col-md-3"><label class="form-label">اسم العميل</label><input type="text" class="form-control-modern" id="customer-name"></div>
-                            <div class="col-md-3"><label class="form-label">هاتف العميل</label><input type="tel" class="form-control-modern" id="customer-phone"></div>
-                            <div class="col-md-3"><label class="form-label">تاريخ الفاتورة</label><input type="date" class="form-control-modern" id="invoice-date"></div>
+        <div id="invoices" class="page">
+            <div class="content-header"><h2 class="content-title"><i class="bi bi-receipt"></i> الفواتير</h2></div>
+            <ul class="nav nav-tabs-modern">
+                <li class="nav-item"><a class="nav-link active" data-tab="new-invoice">فاتورة جديدة</a></li>
+                <li class="nav-item"><a class="nav-link" data-tab="manage-invoices">إدارة الفواتير</a></li>
+                <li class="nav-item"><a class="nav-link" data-tab="track-invoices">تتبع الفواتير</a></li>
+            </ul>
+            <div class="tab-content">
+                <div class="tab-pane active" id="new-invoice">
+                    <div class="card-modern">
+                        <div class="card-header-modern"><i class="bi bi-plus-circle"></i> إنشاء فاتورة جديدة</div>
+                        <div class="card-body-modern">
+                            <form id="invoice-form">
+                                <div class="row">
+                                    <div class="col-md-3"><label class="form-label">رقم الفاتورة</label><input type="text" class="form-control-modern" id="invoice-number" readonly></div>
+                                    <div class="col-md-3"><label class="form-label">اسم العميل</label><input type="text" class="form-control-modern" id="customer-name"></div>
+                                    <div class="col-md-3"><label class="form-label">هاتف العميل</label><input type="tel" class="form-control-modern" id="customer-phone"></div>
+                                    <div class="col-md-3"><label class="form-label">تاريخ الفاتورة</label><input type="date" class="form-control-modern" id="invoice-date"></div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4"><label class="form-label">طريقة الدفع</label><select class="form-select-modern" id="payment-method"><option value="">اختر طريقة الدفع</option></select></div>
+                                    <div class="col-md-4"><label class="form-label">حالة الدفع</label><select class="form-select-modern" id="payment-status"><option value="paid">مدفوع</option><option value="unpaid">غير مدفوع</option></select></div>
+                                    <div class="col-md-4 tax-related"><label class="form-label">الضريبة (%)</label><input type="number" class="form-control-modern" id="tax-rate" value="0" step="0.01"></div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4"><label class="form-label">المدينة</label><select class="form-select-modern" id="city-select"><option value="">اختر المدينة</option></select></div>
+                                    <div class="col-md-4"><label class="form-label">المنطقة</label><select class="form-select-modern" id="region-select"><option value="">اختر المنطقة</option></select></div>
+                                </div>
+                                <h5 class="mb-3">منتجات الفاتورة</h5>
+                                <div class="table-responsive">
+                                    <table class="table-modern">
+                                        <thead><tr><th>المنتج</th><th>الكمية</th><th>السعر</th><th>الإجمالي</th><th></th></tr></thead>
+                                        <tbody id="invoice-items"></tbody>
+                                    </table>
+                                </div>
+                                <button type="button" class="btn-modern btn-primary-modern" id="add-invoice-item"><i class="bi bi-plus"></i> إضافة منتج</button>
+                                <div class="summary-boxes">
+                                    <div class="summary-box"><div class="summary-box-label">الإجمالي الفرعي</div><div class="summary-box-value" id="invoice-subtotal">0.000 د.ب</div></div>
+                                    <div class="summary-box tax-related"><div class="summary-box-label">الضريبة</div><div class="summary-box-value" id="invoice-tax">0.000 د.ب</div></div>
+                                    <div class="summary-box"><div class="summary-box-label">الإجمالي النهائي</div><div class="summary-box-value" id="invoice-total">0.000 د.ب</div></div>
+                                </div>
+                                <button type="submit" class="btn-modern btn-success-modern w-100">حفظ الفاتورة</button>
+                            </form>
                         </div>
-                        <div class="row">
-                            <div class="col-md-4"><label class="form-label">طريقة الدفع</label><select class="form-select-modern" id="payment-method"><option value="">اختر طريقة الدفع</option></select></div>
-                            <div class="col-md-4"><label class="form-label">حالة الدفع</label><select class="form-select-modern" id="payment-status"><option value="paid">مدفوع</option><option value="unpaid">غير مدفوع</option></select></div>
-                            <div class="col-md-4 tax-related"><label class="form-label">الضريبة (%)</label><input type="number" class="form-control-modern" id="tax-rate" value="0" step="0.01"></div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-4"><label class="form-label">المدينة</label><select class="form-select-modern" id="city-select"><option value="">اختر المدينة</option></select></div>
-                            <div class="col-md-4"><label class="form-label">المنطقة</label><select class="form-select-modern" id="region-select"><option value="">اختر المنطقة</option></select></div>
-                        </div>
-                        <h5 class="mb-3">منتجات الفاتورة</h5>
-                        <div class="table-responsive">
-                            <table class="table-modern">
-                                <thead><tr><th>المنتج</th><th>الكمية</th><th>السعر</th><th>الإجمالي</th><th></th></tr></thead>
-                                <tbody id="invoice-items"></tbody>
-                            </table>
-                        </div>
-                        <button type="button" class="btn-modern btn-primary-modern" id="add-invoice-item"><i class="bi bi-plus"></i> إضافة منتج</button>
-                        <div class="summary-boxes">
-                            <div class="summary-box"><div class="summary-box-label">الإجمالي الفرعي</div><div class="summary-box-value" id="invoice-subtotal">0.000 د.ب</div></div>
-                            <div class="summary-box tax-related"><div class="summary-box-label">الضريبة</div><div class="summary-box-value" id="invoice-tax">0.000 د.ب</div></div>
-                            <div class="summary-box"><div class="summary-box-label">الإجمالي النهائي</div><div class="summary-box-value" id="invoice-total">0.000 د.ب</div></div>
-                        </div>
-                        <button type="submit" class="btn-modern btn-success-modern w-100">حفظ الفاتورة</button>
-                    </form>
+                    </div>
+                </div>
+                <div class="tab-pane" id="manage-invoices">
+                    <div class="card-modern"><div class="card-body-modern"><div class="table-responsive"><table class="table-modern"><thead><tr><th>رقم الفاتورة</th><th>العميل</th><th>التاريخ</th><th>الإجمالي</th><th>الحالة</th><th>الإجراءات</th></tr></thead><tbody id="invoices-list"></tbody></table></div></div></div>
+                </div>
+                <div class="tab-pane" id="track-invoices">
+                    <div class="card-modern"><div class="card-body-modern"><div class="table-responsive"><table class="table-modern"><thead><tr><th>رقم الفاتورة</th><th>العميل</th><th>الحالة</th><th>الموقع</th></tr></thead><tbody id="track-invoices-list"></tbody></table></div></div></div>
                 </div>
             </div>
         </div>
 
-        <div id="manage-invoices" class="page">
-            <div class="content-header"><h2 class="content-title"><i class="bi bi-table"></i> إدارة الفواتير</h2></div>
-            <div class="card-modern"><div class="card-body-modern"><div class="table-responsive"><table class="table-modern"><thead><tr><th>رقم الفاتورة</th><th>العميل</th><th>التاريخ</th><th>الإجمالي</th><th>الحالة</th><th>الإجراءات</th></tr></thead><tbody id="invoices-list"></tbody></table></div></div></div>
-        </div>
-
-        <div id="track-invoices" class="page">
-            <div class="content-header"><h2 class="content-title"><i class="bi bi-geo-alt"></i> تتبع الفواتير</h2></div>
-            <div class="card-modern"><div class="card-body-modern"><div class="table-responsive"><table class="table-modern"><thead><tr><th>رقم الفاتورة</th><th>العميل</th><th>الحالة</th><th>الموقع</th></tr></thead><tbody id="track-invoices-list"></tbody></table></div></div></div>
-        </div>
-
-        <div id="calculate-product" class="page">
-            <div class="content-header"><h2 class="content-title"><i class="bi bi-calculator"></i> حساب تكلفة المنتج</h2></div>
-            <ul class="nav nav-tabs-modern"><li class="nav-item"><a class="nav-link active" data-tab="materials">تكاليف المواد</a></li><li class="nav-item"><a class="nav-link" data-tab="packaging">تكاليف التغليف</a></li><li class="nav-item"><a class="nav-link" data-tab="labor">تكاليف اليد العاملة</a></li></ul>
+        <div id="products" class="page">
+            <div class="content-header"><h2 class="content-title"><i class="bi bi-box-seam"></i> المنتجات</h2></div>
+            <ul class="nav nav-tabs-modern">
+                <li class="nav-item"><a class="nav-link active" data-tab="calculate-product">حساب تكلفة المنتج</a></li>
+                <li class="nav-item"><a class="nav-link" data-tab="manage-products">إدارة المنتجات</a></li>
+            </ul>
             <div class="tab-content">
-                <div class="tab-pane active" id="materials">
+                <div class="tab-pane active" id="calculate-product">
                     <div class="card-modern"><div class="card-header-modern">تكاليف المواد</div><div class="card-body-modern">
                         <div class="table-responsive"><table class="table-modern"><thead><tr><th>اسم المادة</th><th>الكمية المستخدمة</th><th>سعر الوحدة (د.ب)</th><th>التكلفة (د.ب)</th><th></th></tr></thead><tbody id="materials-list"></tbody></table></div>
                         <button class="btn-modern btn-primary-modern" id="add-material"><i class="bi bi-plus"></i> إضافة مادة</button>
                         <div class="cost-total-box"><div class="cost-total-label">إجمالي تكاليف المواد</div><div class="cost-total-value" id="materials-total">0.000 د.ب</div></div>
                     </div></div>
-                </div>
-                <div class="tab-pane" id="packaging">
                     <div class="card-modern"><div class="card-header-modern">تكاليف التغليف</div><div class="card-body-modern">
                         <div class="table-responsive"><table class="table-modern"><thead><tr><th>اسم المادة</th><th>الكمية المستخدمة</th><th>سعر الوحدة (د.ب)</th><th>التكلفة (د.ب)</th><th></th></tr></thead><tbody id="packaging-list"></tbody></table></div>
                         <button class="btn-modern btn-primary-modern" id="add-packaging"><i class="bi bi-plus"></i> إضافة مادة تغليف</button>
                         <div class="cost-total-box"><div class="cost-total-label">إجمالي تكاليف التغليف</div><div class="cost-total-value" id="packaging-total">0.000 د.ب</div></div>
                     </div></div>
-                </div>
-                <div class="tab-pane" id="labor">
                     <div class="card-modern"><div class="card-header-modern">تكاليف اليد العاملة</div><div class="card-body-modern">
                         <div class="row">
                             <div class="col-md-4"><label class="form-label">اسم العامل</label><input type="text" class="form-control-modern" id="worker-name"></div>
@@ -438,30 +445,89 @@
                         </div>
                         <div class="cost-total-box"><div class="cost-total-label">تكلفة العلبة</div><div class="cost-total-value" id="labor-total">0.000 د.ب</div></div>
                     </div></div>
+                    <div class="card-modern"><div class="card-header-modern">ملخص التكاليف</div><div class="card-body-modern">
+                        <div class="summary-boxes">
+                            <div class="summary-box"><div class="summary-box-label">تكاليف المواد</div><div class="summary-box-value" id="summary-materials">0.000 د.ب</div></div>
+                            <div class="summary-box"><div class="summary-box-label">تكاليف التغليف</div><div class="summary-box-value" id="summary-packaging">0.000 د.ب</div></div>
+                            <div class="summary-box"><div class="summary-box-label">تكاليف اليد العاملة</div><div class="summary-box-value" id="summary-labor">0.000 د.ب</div></div>
+                        </div>
+                        <div class="cost-total-box"><div class="cost-total-label">التكلفة الإجمالية للمنتج</div><div class="cost-total-value" id="product-cost-total">0.000 د.ب</div></div>
+                        <div class="row align-items-center mt-3">
+                            <div class="col-md-6"><label class="form-label">نسبة الربح (%)</label><input type="number" class="form-control-modern" id="profit-margin" value="30" step="1"></div>
+                            <div class="col-md-6"><div class="profit-box">السعر المقترح: <span id="suggested-price">0.000 د.ب</span></div></div>
+                        </div>
+                        <div class="row align-items-center mt-3">
+                            <div class="col-md-6"><label class="form-label">السعر النهائي (د.ب)</label><input type="number" class="form-control-modern" id="final-price" step="0.001"></div>
+                            <div class="col-md-6"><div class="profit-box">الربح: <span id="final-profit">0.000 د.ب</span></div></div>
+                        </div>
+                        <button class="btn-modern btn-success-modern w-100" id="save-product"><i class="bi bi-save"></i> حفظ المنتج</button>
+                    </div></div>
+                </div>
+                <div class="tab-pane" id="manage-products">
+                    <div class="card-modern"><div class="card-body-modern"><div class="table-responsive"><table class="table-modern"><thead><tr><th>اسم المنتج</th><th>التكلفة</th><th>السعر</th><th>الإجراءات</th></tr></thead><tbody id="products-list"></tbody></table></div></div></div>
                 </div>
             </div>
-            <div class="card-modern"><div class="card-header-modern">ملخص التكاليف</div><div class="card-body-modern">
-                <div class="summary-boxes">
-                    <div class="summary-box"><div class="summary-box-label">تكاليف المواد</div><div class="summary-box-value" id="summary-materials">0.000 د.ب</div></div>
-                    <div class="summary-box"><div class="summary-box-label">تكاليف التغليف</div><div class="summary-box-value" id="summary-packaging">0.000 د.ب</div></div>
-                    <div class="summary-box"><div class="summary-box-label">تكاليف اليد العاملة</div><div class="summary-box-value" id="summary-labor">0.000 د.ب</div></div>
-                </div>
-                <div class="cost-total-box"><div class="cost-total-label">التكلفة الإجمالية للمنتج</div><div class="cost-total-value" id="product-cost-total">0.000 د.ب</div></div>
-                <div class="row align-items-center mt-3">
-                    <div class="col-md-6"><label class="form-label">نسبة الربح (%)</label><input type="number" class="form-control-modern" id="profit-margin" value="30" step="1"></div>
-                    <div class="col-md-6"><div class="profit-box">السعر المقترح: <span id="suggested-price">0.000 د.ب</span></div></div>
-                </div>
-                <div class="row align-items-center mt-3">
-                    <div class="col-md-6"><label class="form-label">السعر النهائي (د.ب)</label><input type="number" class="form-control-modern" id="final-price" step="0.001"></div>
-                    <div class="col-md-6"><div class="profit-box">الربح: <span id="final-profit">0.000 د.ب</span></div></div>
-                </div>
-                <button class="btn-modern btn-success-modern w-100" id="save-product"><i class="bi bi-save"></i> حفظ المنتج</button>
-            </div></div>
         </div>
 
-        <div id="manage-products" class="page">
-            <div class="content-header"><h2 class="content-title"><i class="bi bi-box-seam"></i> إدارة المنتجات</h2></div>
-            <div class="card-modern"><div class="card-body-modern"><div class="table-responsive"><table class="table-modern"><thead><tr><th>اسم المنتج</th><th>التكلفة</th><th>السعر</th><th>الإجراءات</th></tr></thead><tbody id="products-list"></tbody></table></div></div></div>
+        <div id="customers" class="page">
+            <div class="content-header"><h2 class="content-title"><i class="bi bi-people"></i> العملاء</h2></div>
+            <div class="card-modern">
+                <div class="card-header-modern"><i class="bi bi-plus-circle"></i> إضافة عميل جديد</div>
+                <div class="card-body-modern">
+                    <form id="customer-form">
+                        <div class="row">
+                            <div class="col-md-4"><label class="form-label">اسم العميل</label><input type="text" class="form-control-modern" id="customer-name-input"></div>
+                            <div class="col-md-4"><label class="form-label">رقم الهاتف</label><input type="tel" class="form-control-modern" id="customer-phone-input"></div>
+                            <div class="col-md-4"><label class="form-label">البريد الإلكتروني</label><input type="email" class="form-control-modern" id="customer-email"></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4"><label class="form-label">المدينة</label><select class="form-select-modern" id="customer-city"><option value="">اختر المدينة</option></select></div>
+                            <div class="col-md-4"><label class="form-label">المنطقة</label><select class="form-select-modern" id="customer-region"><option value="">اختر المنطقة</option></select></div>
+                            <div class="col-md-4"><label class="form-label">العنوان</label><input type="text" class="form-control-modern" id="customer-address"></div>
+                        </div>
+                        <button type="submit" class="btn-modern btn-success-modern w-100">حفظ العميل</button>
+                    </form>
+                </div>
+            </div>
+            <div class="card-modern"><div class="card-body-modern"><div class="table-responsive"><table class="table-modern"><thead><tr><th>اسم العميل</th><th>رقم الهاتف</th><th>البريد الإلكتروني</th><th>المدينة</th><th>المنطقة</th><th>الإجراءات</th></tr></thead><tbody id="customers-list"></tbody></table></div></div></div>
+        </div>
+
+        <div id="reports" class="page">
+            <div class="content-header"><h2 class="content-title"><i class="bi bi-bar-chart"></i> التقارير</h2></div>
+            <div class="dashboard-stats">
+                <div class="stat-card">
+                    <i class="bi bi-receipt stat-icon"></i>
+                    <div class="stat-value" id="report-total-invoices">0</div>
+                    <div class="stat-label">إجمالي الفواتير</div>
+                </div>
+                <div class="stat-card">
+                    <i class="bi bi-currency-dollar stat-icon"></i>
+                    <div class="stat-value" id="report-total-revenue">0.000 د.ب</div>
+                    <div class="stat-label">إجمالي الإيرادات</div>
+                </div>
+                <div class="stat-card">
+                    <i class="bi bi-box-seam stat-icon"></i>
+                    <div class="stat-value" id="report-total-products">0</div>
+                    <div class="stat-label">إجمالي المنتجات</div>
+                </div>
+                <div class="stat-card">
+                    <i class="bi bi-people stat-icon"></i>
+                    <div class="stat-value" id="report-total-customers">0</div>
+                    <div class="stat-label">إجمالي العملاء</div>
+                </div>
+            </div>
+            <div class="card-modern">
+                <div class="card-header-modern">تقرير الفواتير حسب الحالة</div>
+                <div class="card-body-modern">
+                    <div class="table-responsive"><table class="table-modern"><thead><tr><th>الحالة</th><th>عدد الفواتير</th><th>الإجمالي</th></tr></thead><tbody id="report-status-list"></tbody></table></div>
+                </div>
+            </div>
+            <div class="card-modern">
+                <div class="card-header-modern">أفضل 5 منتجات مبيعاً</div>
+                <div class="card-body-modern">
+                    <div class="table-responsive"><table class="table-modern"><thead><tr><th>المنتج</th><th>الكمية المباعة</th><th>الإجمالي</th></tr></thead><tbody id="report-top-products"></tbody></table></div>
+                </div>
+            </div>
         </div>
 
         <div id="settings" class="page">
@@ -486,15 +552,19 @@
         let settings = JSON.parse(localStorage.getItem('settings')) || { paymentMethods: [], cities: [], regions: [], taxEnabled: false, taxRate: 0 };
         let products = JSON.parse(localStorage.getItem('products')) || [];
         let invoices = JSON.parse(localStorage.getItem('invoices')) || [];
+        let customers = JSON.parse(localStorage.getItem('customers')) || [];
         let materials = [];
         let packaging = [];
 
         function init() {
             updateDashboard();
             loadInvoiceForm();
+            loadCustomersForm();
             loadInvoicesList();
             loadProductsList();
+            loadCustomersList();
             loadSettings();
+            loadReports();
             setupEventListeners();
             generateInvoiceNumber();
         }
@@ -504,6 +574,7 @@
             document.querySelectorAll('.sidebar .nav-link').forEach(link => link.addEventListener('click', e => { e.preventDefault(); showPage(link.dataset.page); }));
             document.querySelectorAll('.nav-tabs-modern .nav-link').forEach(link => link.addEventListener('click', e => { e.preventDefault(); showTab(link.dataset.tab); }));
             document.getElementById('invoice-form').addEventListener('submit', saveInvoice);
+            document.getElementById('customer-form').addEventListener('submit', saveCustomer);
             document.getElementById('add-invoice-item').addEventListener('click', addInvoiceItem);
             document.getElementById('add-material').addEventListener('click', () => addCostRow('materials'));
             document.getElementById('add-packaging').addEventListener('click', () => addCostRow('packaging'));
@@ -560,6 +631,21 @@
 
             document.getElementById('invoice-date').value = new Date().toISOString().split('T')[0];
             toggleTax();
+        }
+
+        function loadCustomersForm() {
+            const citySelect = document.getElementById('customer-city');
+            citySelect.innerHTML = '<option value="">اختر المدينة</option>';
+            settings.cities.forEach(c => citySelect.innerHTML += `<option value="${c}">${c}</option>`);
+
+            const regionSelect = document.getElementById('customer-region');
+            regionSelect.innerHTML = '<option value="">اختر المنطقة</option>';
+
+            citySelect.addEventListener('change', () => {
+                const selected = citySelect.value;
+                regionSelect.innerHTML = '<option value="">اختر المنطقة</option>';
+                settings.regions.filter(r => r.city === selected).forEach(r => regionSelect.innerHTML += `<option value="${r.name}">${r.name}</option>`);
+            });
         }
 
         function toggleTax() {
@@ -642,9 +728,25 @@
             invoices.push(invoice);
             localStorage.setItem('invoices', JSON.stringify(invoices));
             alert('تم حفظ الفاتورة بنجاح');
-            showPage('manage-invoices');
             loadInvoicesList();
             generateInvoiceNumber();
+        }
+
+        function saveCustomer(e) {
+            e.preventDefault();
+            const customer = {
+                name: document.getElementById('customer-name-input').value,
+                phone: document.getElementById('customer-phone-input').value,
+                email: document.getElementById('customer-email').value,
+                city: document.getElementById('customer-city').value,
+                region: document.getElementById('customer-region').value,
+                address: document.getElementById('customer-address').value
+            };
+            customers.push(customer);
+            localStorage.setItem('customers', JSON.stringify(customers));
+            alert('تم حفظ العميل بنجاح');
+            loadCustomersList();
+            document.getElementById('customer-form').reset();
         }
 
         function loadInvoicesList() {
@@ -663,11 +765,35 @@
             });
         }
 
+        function loadCustomersList() {
+            const tbody = document.getElementById('customers-list');
+            tbody.innerHTML = '';
+            customers.forEach((c, i) => {
+                const row = tbody.insertRow();
+                row.innerHTML = `
+                    <td>${c.name}</td>
+                    <td>${c.phone}</td>
+                    <td>${c.email}</td>
+                    <td>${c.city}</td>
+                    <td>${c.region}</td>
+                    <td><button class="btn-modern btn-danger-modern btn-sm" onclick="deleteCustomer(${i})"><i class="bi bi-trash"></i></button></td>
+                `;
+            });
+        }
+
         function deleteInvoice(number) {
             if (confirm('هل أنت متأكد من حذف هذه الفاتورة؟')) {
                 invoices = invoices.filter(inv => inv.number !== number);
                 localStorage.setItem('invoices', JSON.stringify(invoices));
                 loadInvoicesList();
+            }
+        }
+
+        function deleteCustomer(index) {
+            if (confirm('هل أنت متأكد من حذف هذا العميل؟')) {
+                customers.splice(index, 1);
+                localStorage.setItem('customers', JSON.stringify(customers));
+                loadCustomersList();
             }
         }
 
@@ -802,7 +928,7 @@
             document.getElementById('final-profit').textContent = p.profit.toFixed(3) + ' د.ب';
             products.splice(index, 1);
             localStorage.setItem('products', JSON.stringify(products));
-            showPage('calculate-product');
+            showTab('calculate-product');
         }
 
         function deleteProduct(index) {
@@ -830,6 +956,7 @@
                 localStorage.setItem('settings', JSON.stringify(settings));
                 input.value = '';
                 loadInvoiceForm();
+                loadCustomersForm();
                 loadSettings();
             }
         }
@@ -843,6 +970,7 @@
                 input.value = '';
                 citySelect.value = '';
                 loadInvoiceForm();
+                loadCustomersForm();
             }
         }
 
@@ -863,13 +991,53 @@
             alert('تم حفظ الإعدادات بنجاح');
         }
 
+        function loadReports() {
+            document.getElementById('report-total-invoices').textContent = invoices.length;
+            const revenue = invoices.reduce((sum, inv) => sum + inv.total, 0);
+            document.getElementById('report-total-revenue').textContent = revenue.toFixed(3) + ' د.ب';
+            document.getElementById('report-total-products').textContent = products.length;
+            document.getElementById('report-total-customers').textContent = customers.length;
+
+            const statusReport = {};
+            invoices.forEach(inv => {
+                statusReport[inv.paymentStatus] = (statusReport[inv.paymentStatus] || 0) + inv.total;
+            });
+            const statusTbody = document.getElementById('report-status-list');
+            statusTbody.innerHTML = '';
+            for (const status in statusReport) {
+                const row = statusTbody.insertRow();
+                row.innerHTML = `
+                    <td>${status === 'paid' ? 'مدفوع' : 'غير مدفوع'}</td>
+                    <td>${invoices.filter(inv => inv.paymentStatus === status).length}</td>
+                    <td>${statusReport[status].toFixed(3)} د.ب</td>
+                `;
+            }
+
+            const productSales = {};
+            invoices.forEach(inv => {
+                inv.items.forEach(item => {
+                    productSales[item.product] = (productSales[item.product] || 0) + item.quantity;
+                });
+            });
+            const sortedProducts = Object.entries(productSales).sort((a, b) => b[1] - a[1]).slice(0, 5);
+            const topTbody = document.getElementById('report-top-products');
+            topTbody.innerHTML = '';
+            sortedProducts.forEach(([product, quantity]) => {
+                const row = topTbody.insertRow();
+                row.innerHTML = `
+                    <td>${product}</td>
+                    <td>${quantity}</td>
+                    <td>${(quantity * products.find(p => p.name === product)?.finalPrice || 0).toFixed(3)} د.ب</td>
+                `;
+            });
+        }
+
         function updateDashboard() {
             document.getElementById('dashboard-products').textContent = products.length;
             document.getElementById('dashboard-invoices').textContent = invoices.length;
             const revenue = invoices.reduce((sum, inv) => sum + inv.total, 0);
             document.getElementById('dashboard-revenue').textContent = revenue.toFixed(3) + ' د.ب';
-            const customers = new Set(invoices.map(inv => inv.customer)).size;
-            document.getElementById('dashboard-customers').textContent = customers;
+            document.getElementById('dashboard-customers').textContent = customers.length;
         }
 
         init();
