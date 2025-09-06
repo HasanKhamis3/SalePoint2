@@ -571,8 +571,14 @@
 
         function setupEventListeners() {
             document.getElementById('sidebarToggle').addEventListener('click', () => document.getElementById('sidebar').classList.toggle('show'));
-            document.querySelectorAll('.sidebar .nav-link').forEach(link => link.addEventListener('click', e => { e.preventDefault(); showPage(link.dataset.page); }));
-            document.querySelectorAll('.nav-tabs-modern .nav-link').forEach(link => link.addEventListener('click', e => { e.preventDefault(); showTab(link.dataset.tab); }));
+            document.querySelectorAll('.sidebar .nav-link').forEach(link => link.addEventListener('click', e => { 
+                e.preventDefault();                       // منع القفزة إلى الـ #
+                showPage(link.dataset.page);              // التنقل اليدوي
+            }));
+            document.querySelectorAll('.nav-tabs-modern .nav-link').forEach(link => link.addEventListener('click', e => { 
+                e.preventDefault();                       // منع القفزة إلى الـ #
+                showTab(link.dataset.tab);                // التنقل اليدوي
+            }));
             document.getElementById('invoice-form').addEventListener('submit', saveInvoice);
             document.getElementById('customer-form').addEventListener('submit', saveCustomer);
             document.getElementById('add-invoice-item').addEventListener('click', addInvoiceItem);
@@ -597,10 +603,6 @@
             document.querySelectorAll('.sidebar .nav-link').forEach(l => l.classList.remove('active'));
             document.getElementById(pageId).classList.add('active');
             document.querySelector(`[data-page="${pageId}"]`).classList.add('active');
-            // إزالة الهاش من الرابط
-            if (window.location.hash) {
-                history.replaceState(null, null, ' ');
-            }
         }
 
         function showTab(tabId) {
@@ -608,10 +610,6 @@
             document.querySelectorAll('.nav-tabs-modern .nav-link').forEach(l => l.classList.remove('active'));
             document.getElementById(tabId).classList.add('active');
             document.querySelector(`[data-tab="${tabId}"]`).classList.add('active');
-            // إزالة الهاش من الرابط
-            if (window.location.hash) {
-                history.replaceState(null, null, ' ');
-            }
         }
 
         function generateInvoiceNumber() {
