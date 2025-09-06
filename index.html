@@ -597,6 +597,10 @@
             document.querySelectorAll('.sidebar .nav-link').forEach(l => l.classList.remove('active'));
             document.getElementById(pageId).classList.add('active');
             document.querySelector(`[data-page="${pageId}"]`).classList.add('active');
+            // إزالة الهاش من الرابط
+            if (window.location.hash) {
+                history.replaceState(null, null, ' ');
+            }
         }
 
         function showTab(tabId) {
@@ -604,6 +608,10 @@
             document.querySelectorAll('.nav-tabs-modern .nav-link').forEach(l => l.classList.remove('active'));
             document.getElementById(tabId).classList.add('active');
             document.querySelector(`[data-tab="${tabId}"]`).classList.add('active');
+            // إزالة الهاش من الرابط
+            if (window.location.hash) {
+                history.replaceState(null, null, ' ');
+            }
         }
 
         function generateInvoiceNumber() {
@@ -1039,6 +1047,14 @@
             document.getElementById('dashboard-revenue').textContent = revenue.toFixed(3) + ' د.ب';
             document.getElementById('dashboard-customers').textContent = customers.length;
         }
+
+        // منع الانتقال التلقائي عند النقر على روابط التنقل
+        document.addEventListener('DOMContentLoaded', function() {
+            // إزالة الهاش من الرابط عند تحميل الصفحة
+            if (window.location.hash) {
+                history.replaceState(null, null, ' ');
+            }
+        });
 
         init();
     </script>
