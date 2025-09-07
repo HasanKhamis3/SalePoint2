@@ -1045,9 +1045,10 @@
             document.getElementById('dashboard-customers').textContent = customers.length;
         }
 
-        // منع الانتقال التلقائي عند النقر على روابط التنقل
-        document.addEventListener('DOMContentLoaded', function() {
-            if (window.location.hash) history.replaceState(null, null, ' ');
+        // ✅ التحديث الجديد: منع القفزة التلقائية عند تغيير الـ hash
+        window.addEventListener('hashchange', e => {
+            e.preventDefault();
+            history.replaceState(null, null, ' ');
         });
 
         init();
