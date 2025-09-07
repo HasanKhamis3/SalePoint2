@@ -550,11 +550,11 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         let settings = JSON.parse(localStorage.getItem('settings')) || { paymentMethods: [], cities: [], regions: [], taxEnabled: false, taxRate: 0 };
-        let products = JSON.parse(localStorage.getItem('products')) || [];
-        let invoices = JSON.parse(localStorage.getItem('invoices')) || [];
-        let customers = JSON.parse(localStorage.getItem('customers')) || [];
-        let materials = [];
-        let packaging = [];
+        let products   = JSON.parse(localStorage.getItem('products'))   || [];
+        let invoices   = JSON.parse(localStorage.getItem('invoices'))   || [];
+        let customers  = JSON.parse(localStorage.getItem('customers'))  || [];
+        let materials  = [];
+        let packaging  = [];
 
         function init() {
             updateDashboard();
@@ -572,10 +572,11 @@
         function setupEventListeners() {
             document.getElementById('sidebarToggle').addEventListener('click', () => document.getElementById('sidebar').classList.toggle('show'));
 
-            // ✅ منع القفزة إلى # عند النقر على روابط التنقل
-            document.querySelectorAll('.sidebar .nav-link').forEach(link => link.addEventListener('click', e => { e.preventDefault(); showPage(link.dataset.page); }));
-            document.querySelectorAll('.nav-tabs-modern .nav-link').forEach(link => link.addEventListener('click', e => { e.preventDefault(); showTab(link.dataset.tab); }));
+            // التنقل بين الصفحات/التبويبات
+            document.querySelectorAll('.sidebar .nav-link').forEach(link => link.addEventListener('click', e => { showPage(link.dataset.page); }));
+            document.querySelectorAll('.nav-tabs-modern .nav-link').forEach(link => link.addEventListener('click', e => { showTab(link.dataset.tab);  }));
 
+            // باقي الأحداث
             document.getElementById('invoice-form').addEventListener('submit', saveInvoice);
             document.getElementById('customer-form').addEventListener('submit', saveCustomer);
             document.getElementById('add-invoice-item').addEventListener('click', addInvoiceItem);
@@ -600,15 +601,12 @@
             document.querySelectorAll('.sidebar .nav-link').forEach(l => l.classList.remove('active'));
             document.getElementById(pageId).classList.add('active');
             document.querySelector(`[data-page="${pageId}"]`).classList.add('active');
-            if (window.location.hash) history.replaceState(null, null, ' ');
         }
-
         function showTab(tabId) {
             document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
             document.querySelectorAll('.nav-tabs-modern .nav-link').forEach(l => l.classList.remove('active'));
             document.getElementById(tabId).classList.add('active');
             document.querySelector(`[data-tab="${tabId}"]`).classList.add('active');
-            if (window.location.hash) history.replaceState(null, null, ' ');
         }
 
         function generateInvoiceNumber() {
@@ -1045,7 +1043,14 @@
             document.getElementById('dashboard-customers').textContent = customers.length;
         }
 
-        // ✅ التحديث الجديد: منع القفزة التلقائية عند تغيير الـ hash
+        // ✅ منع القفزة التامّة لأي رابط يحمل href="#"
+        document.addEventListener('click', e => {
+            const link = e.target.closest('a[href="#"]');
+            if (link) {
+                e.preventDefault();
+                history.replaceState(null, null, ' ');
+            }
+        });
         window.addEventListener('hashchange', e => {
             e.preventDefault();
             history.replaceState(null, null, ' ');
