@@ -319,16 +319,16 @@
         </div>
         <nav class="sidebar-nav">
             <ul class="nav flex-column">
-                <li class="nav-item"><a class="nav-link active" href="#" data-page="dashboard"><i class="bi bi-speedometer2"></i><span>لوحة التحكم</span></a></li>
+                <li class="nav-item"><a class="nav-link active" href="#dashboard"><i class="bi bi-speedometer2"></i><span>لوحة التحكم</span></a></li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#" data-page="invoices"><i class="bi bi-receipt"></i><span>الفواتير</span></a>
+                    <a class="nav-link" href="#invoices"><i class="bi bi-receipt"></i><span>الفواتير</span></a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#" data-page="products"><i class="bi bi-box-seam"></i><span>المنتجات</span></a>
+                    <a class="nav-link" href="#products"><i class="bi bi-box-seam"></i><span>المنتجات</span></a>
                 </li>
-                <li class="nav-item"><a class="nav-link" href="#" data-page="customers"><i class="bi bi-people"></i><span>العملاء</span></a></li>
-                <li class="nav-item"><a class="nav-link" href="#" data-page="reports"><i class="bi bi-bar-chart"></i><span>التقارير</span></a></li>
-                <li class="nav-item"><a class="nav-link" href="#" data-page="settings"><i class="bi bi-gear"></i><span>الإعدادات</span></a></li>
+                <li class="nav-item"><a class="nav-link" href="#customers"><i class="bi bi-people"></i><span>العملاء</span></a></li>
+                <li class="nav-item"><a class="nav-link" href="#reports"><i class="bi bi-bar-chart"></i><span>التقارير</span></a></li>
+                <li class="nav-item"><a class="nav-link" href="#settings"><i class="bi bi-gear"></i><span>الإعدادات</span></a></li>
             </ul>
         </nav>
     </div>
@@ -363,9 +363,9 @@
         <div id="invoices" class="page">
             <div class="content-header"><h2 class="content-title"><i class="bi bi-receipt"></i> الفواتير</h2></div>
             <ul class="nav nav-tabs-modern">
-                <li class="nav-item"><a class="nav-link active" href="#" data-tab="new-invoice">فاتورة جديدة</a></li>
-                <li class="nav-item"><a class="nav-link" href="#" data-tab="manage-invoices">إدارة الفواتير</a></li>
-                <li class="nav-item"><a class="nav-link" href="#" data-tab="track-invoices">تتبع الفواتير</a></li>
+                <li class="nav-item"><a class="nav-link active" href="#new-invoice">فاتورة جديدة</a></li>
+                <li class="nav-item"><a class="nav-link" href="#manage-invoices">إدارة الفواتير</a></li>
+                <li class="nav-item"><a class="nav-link" href="#track-invoices">تتبع الفواتير</a></li>
             </ul>
             <div class="tab-content">
                 <div class="tab-pane active" id="new-invoice">
@@ -418,8 +418,8 @@
         <div id="products" class="page">
             <div class="content-header"><h2 class="content-title"><i class="bi bi-box-seam"></i> المنتجات</h2></div>
             <ul class="nav nav-tabs-modern">
-                <li class="nav-item"><a class="nav-link active" href="#" data-tab="calculate-product">حساب تكلفة المنتج</a></li>
-                <li class="nav-item"><a class="nav-link" href="#" data-tab="manage-products">إدارة المنتجات</a></li>
+                <li class="nav-item"><a class="nav-link active" href="#calculate-product">حساب تكلفة المنتج</a></li>
+                <li class="nav-item"><a class="nav-link" href="#manage-products">إدارة المنتجات</a></li>
             </ul>
             <div class="tab-content">
                 <div class="tab-pane active" id="calculate-product">
@@ -572,9 +572,26 @@
         function setupEventListeners() {
             document.getElementById('sidebarToggle').addEventListener('click', () => document.getElementById('sidebar').classList.toggle('show'));
 
-            // التنقل بين الصفحات/التبويبات
-            document.querySelectorAll('.sidebar .nav-link').forEach(link => link.addEventListener('click', e => { showPage(link.dataset.page); }));
-            document.querySelectorAll('.nav-tabs-modern .nav-link').forEach(link => link.addEventListener('click', e => { showTab(link.dataset.tab);  }));
+            // التنقل بين الأقسام بناءً على الـ href مباشرة
+            document.querySelectorAll('.sidebar .nav-link').forEach(link => {
+                link.addEventListener('click', e => {
+                    e.preventDefault();
+                    const targetId = link.getAttribute('href').replace('#', '');
+                    if (targetId && document.getElementById(targetId)) {
+                        showPage(targetId);
+                    }
+                });
+            });
+
+            document.querySelectorAll('.nav-tabs-modern .nav-link').forEach(link => {
+                link.addEventListener('click', e => {
+                    e.preventDefault();
+                    const targetId = link.getAttribute('href').replace('#', '');
+                    if (targetId && document.getElementById(targetId)) {
+                        showTab(targetId);
+                    }
+                });
+            });
 
             // باقي الأحداث
             document.getElementById('invoice-form').addEventListener('submit', saveInvoice);
@@ -600,13 +617,13 @@
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
             document.querySelectorAll('.sidebar .nav-link').forEach(l => l.classList.remove('active'));
             document.getElementById(pageId).classList.add('active');
-            document.querySelector(`[data-page="${pageId}"]`).classList.add('active');
+            document.querySelector(`[href="#${pageId}"]`).classList.add('active');
         }
         function showTab(tabId) {
             document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
             document.querySelectorAll('.nav-tabs-modern .nav-link').forEach(l => l.classList.remove('active'));
             document.getElementById(tabId).classList.add('active');
-            document.querySelector(`[data-tab="${tabId}"]`).classList.add('active');
+            document.querySelector(`[href="#${tabId}"]`).classList.add('active');
         }
 
         function generateInvoiceNumber() {
