@@ -418,11 +418,11 @@
         <div id="products" class="page">
             <div class="content-header"><h2 class="content-title"><i class="bi bi-box-seam"></i> المنتجات</h2></div>
             <ul class="nav nav-tabs-modern">
-                <li class="nav-item"><a class="nav-link active" href="#calculate-product">حساب تكلفة المنتج</a></li>
-                <li class="nav-item"><a class="nav-link" href="#manage-products">إدارة المنتجات</a></li>
+                <li class="nav-item"><a class="nav-link active" href="#new-invoice">حساب تكلفة المنتج</a></li>
+                <li class="nav-item"><a class="nav-link" href="#manage-invoices">إدارة المنتجات</a></li>
             </ul>
             <div class="tab-content">
-                <div class="tab-pane active" id="calculate-product">
+                <div class="tab-pane active" id="new-invoice">
                     <div class="card-modern"><div class="card-header-modern">تكاليف المواد</div><div class="card-body-modern">
                         <div class="table-responsive"><table class="table-modern"><thead><tr><th>اسم المادة</th><th>الكمية المستخدمة</th><th>سعر الوحدة (د.ب)</th><th>التكلفة (د.ب)</th><th></th></tr></thead><tbody id="materials-list"></tbody></table></div>
                         <button class="btn-modern btn-primary-modern" id="add-material"><i class="bi bi-plus"></i> إضافة مادة</button>
@@ -463,7 +463,7 @@
                         <button class="btn-modern btn-success-modern w-100" id="save-product"><i class="bi bi-save"></i> حفظ المنتج</button>
                     </div></div>
                 </div>
-                <div class="tab-pane" id="manage-products">
+                <div class="tab-pane" id="manage-invoices">
                     <div class="card-modern"><div class="card-body-modern"><div class="table-responsive"><table class="table-modern"><thead><tr><th>اسم المنتج</th><th>التكلفة</th><th>السعر</th><th>الإجراءات</th></tr></thead><tbody id="products-list"></tbody></table></div></div></div>
                 </div>
             </div>
@@ -572,7 +572,7 @@
         function setupEventListeners() {
             document.getElementById('sidebarToggle').addEventListener('click', () => document.getElementById('sidebar').classList.toggle('show'));
 
-            // التنقل بين الأقسام بناءً على الـ href مباشرة
+            // التنقل بين الأقسام بناءً على href مباشرة
             document.querySelectorAll('.sidebar .nav-link').forEach(link => {
                 link.addEventListener('click', e => {
                     e.preventDefault();
@@ -948,7 +948,7 @@
             document.getElementById('final-profit').textContent = p.profit.toFixed(3) + ' د.ب';
             products.splice(index, 1);
             localStorage.setItem('products', JSON.stringify(products));
-            showTab('calculate-product');
+            showTab('new-invoice');
         }
 
         function deleteProduct(index) {
