@@ -52,33 +52,184 @@
             overflow-y: auto;
             transition: transform 0.3s ease;
         }
-        .sidebar-header { padding: 2rem 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.1); text-align: center; }
-        .sidebar-logo { font-size: 1.5rem; font-weight: 700; color: white; margin: 0; display: flex; align-items: center; justify-content: center; gap: 0.5rem; }
-        .sidebar-logo i { color: var(--accent-color); font-size: 2rem; }
-        .sidebar-nav { padding: 1rem 0; }
-        .sidebar .nav-link { color: rgba(255,255,255,0.8); padding: 1rem 1.5rem; margin: 0.25rem 1rem; border-radius: 12px; display: flex; align-items: center; gap: 0.75rem; font-weight: 500; text-decoration: none; cursor: pointer; transition: all 0.3s ease; }
-        .sidebar .nav-link.active, .sidebar .nav-link:hover { color: white; background: rgba(255,255,255,0.1); transform: translateX(-5px); box-shadow: var(--shadow-md); }
-        .main-content { margin-right: 280px; padding: 2rem; min-height: 100vh; }
-        .page { display: none; animation: fadeIn 0.3s ease; }
-        .page.active { display: block; }
-        .product-tab { display: none; }
-        .product-tab.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        .nav-tabs-modern { border: none; margin-bottom: 2rem; }
-        .nav-tabs-modern .nav-link { border: none; border-radius: 12px; padding: 1rem 1.5rem; margin-right: 0.5rem; color: var(--text-secondary); font-weight: 500; cursor: pointer; transition: all 0.3s ease; text-decoration: none; }
-        .nav-tabs-modern .nav-link.active { background: linear-gradient(135deg, var(--secondary-color), var(--accent-color)); color: white; box-shadow: var(--shadow-sm); }
-        .card-modern { background: var(--surface); border: none; border-radius: 16px; box-shadow: var(--shadow-sm); margin-bottom: 2rem; overflow: hidden; }
-        .card-header-modern { background: linear-gradient(135deg, var(--primary-color), var(--primary-light)); color: white; padding: 1.5rem; font-weight: 600; font-size: 1.1rem; }
-        .card-body-modern { padding: 2rem; }
-        .form-control-modern, .form-select-modern { border: 2px solid var(--border-color); border-radius: 12px; padding: 1.125rem 1rem; font-size: 1.1rem; transition: all 0.3s ease; background: var(--surface); width: 100%; min-height: 50px; }
-        .form-control-modern:focus, .form-select-modern:focus { border-color: var(--secondary-color); box-shadow: 0 0 0 0.2rem rgba(255,107,53,0.25); }
-        .btn-modern { border: none; border-radius: 12px; padding: 0.75rem 1.5rem; font-weight: 500; cursor: pointer; text-decoration: none; display: inline-block; transition: all 0.3s ease; }
-        .btn-primary-modern { background: linear-gradient(135deg, var(--secondary-color), var(--accent-color)); color: white; }
-        .btn-success-modern { background: linear-gradient(135deg, var(--success), #00e676); color: white; }
-        .btn-danger-modern { background: linear-gradient(135deg, var(--error), #ff5252); color: white; }
-        .table-modern { background: var(--surface); border-radius: 16px; overflow: hidden; box-shadow: var(--shadow-sm); width: 100%; }
-        .table-modern th, .table-modern td { padding: 1rem; text-align: center; border-bottom: 1px solid var(--border-color); }
-        .table-modern th { background: linear-gradient(135deg, var(--primary-color), var(--primary-light)); color: white; font-weight: 600; }
+        .sidebar-header {
+            padding: 2rem 1.5rem;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            text-align: center;
+        }
+        .sidebar-logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: white;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+        .sidebar-logo i {
+            color: var(--accent-color);
+            font-size: 2rem;
+        }
+        .sidebar-nav {
+            padding: 1rem 0;
+        }
+        .sidebar .nav-link {
+            color: rgba(255,255,255,0.8);
+            padding: 1rem 1.5rem;
+            margin: 0.25rem 1rem;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-weight: 500;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .sidebar .nav-link.active, .sidebar .nav-link:hover {
+            color: white;
+            background: rgba(255,255,255,0.1);
+            transform: translateX(-5px);
+            box-shadow: var(--shadow-md);
+        }
+        .main-content {
+            margin-right: 280px;
+            padding: 2rem;
+            min-height: 100vh;
+        }
+        .page {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+        .page.active {
+            display: block;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .nav-tabs-modern {
+            border: none;
+            margin-bottom: 2rem;
+        }
+        .nav-tabs-modern .nav-link {
+            border: none;
+            border-radius: 12px;
+            padding: 1rem 1.5rem;
+            margin-right: 0.5rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+        .nav-tabs-modern .nav-link.active {
+            background: linear-gradient(135deg, var(--secondary-color), var(--accent-color));
+            color: white;
+            box-shadow: var(--shadow-sm);
+        }
+        .card-modern {
+            background: var(--surface);
+            border: none;
+            border-radius: 16px;
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 2rem;
+            overflow: hidden;
+        }
+        .card-header-modern {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+            color: white;
+            padding: 1.5rem;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+        .card-body-modern {
+            padding: 2rem;
+        }
+        .form-control-modern, .form-select-modern {
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.125rem 1rem;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            background: var(--surface);
+            width: 100%;
+            min-height: 50px;
+        }
+        .form-control-modern:focus, .form-select-modern:focus {
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 0 0.2rem rgba(255,107,53,0.25);
+        }
+        .btn-modern {
+            border: none;
+            border-radius: 12px;
+            padding: 0.75rem 1.5rem;
+            font-weight: 500;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s ease;
+        }
+        .btn-primary-modern {
+            background: linear-gradient(135deg, var(--secondary-color), var(--accent-color));
+            color: white;
+        }
+        .btn-success-modern {
+            background: linear-gradient(135deg, var(--success), #00e676);
+            color: white;
+        }
+        .btn-danger-modern {
+            background: linear-gradient(135deg, var(--error), #ff5252);
+            color: white;
+        }
+        .table-modern {
+            background: var(--surface);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+            width: 100%;
+        }
+        .table-modern th, .table-modern td {
+            padding: 1rem;
+            text-align: center;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .table-modern th {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+            color: white;
+            font-weight: 600;
+        }
+        .product-name-col {
+            width: 40%;
+        }
+        .dashboard-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+        }
+        .stat-card {
+            background: var(--surface);
+            border-radius: 16px;
+            padding: 2rem;
+            text-align: center;
+            box-shadow: var(--shadow-sm);
+            border: 2px solid var(--border-color);
+        }
+        .stat-icon {
+            font-size: 2.5rem;
+            color: var(--secondary-color);
+            margin-bottom: 1rem;
+        }
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        .stat-label {
+            font-size: 1rem;
+            color: var(--text-secondary);
+        }
         .summary-boxes {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -239,7 +390,7 @@
                                     </thead>
                                     <tbody>
                                         <tr>
-                                            <td class="product-name-col"><select class="form-select-modern product-select" id="invoice-product-select"><option value="">اختر منتج</option></select></td>
+                                            <td class="product-name-col"><select class="form-select-modern product-select"><option value="">اختر منتج</option></select></td>
                                             <td><input type="number" class="form-control-modern unit-price" readonly></td>
                                             <td><input type="number" class="form-control-modern quantity" value="1" min="1"></td>
                                             <td class="item-tax tax-related">0.000</td>
