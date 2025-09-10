@@ -61,8 +61,8 @@
         .main-content { margin-right: 280px; padding: 2rem; min-height: 100vh; }
         .page { display: none; animation: fadeIn 0.3s ease; }
         .page.active { display: block; }
-        .invoice-tab { display: none; }
-        .invoice-tab.active { display: block; }
+        .product-tab { display: none; }
+        .product-tab.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
         .nav-tabs-modern { border: none; margin-bottom: 2rem; }
         .nav-tabs-modern .nav-link { border: none; border-radius: 12px; padding: 1rem 1.5rem; margin-right: 0.5rem; color: var(--text-secondary); font-weight: 500; cursor: pointer; transition: all 0.3s ease; text-decoration: none; }
@@ -127,16 +127,15 @@
             margin-top: 0.5rem;
             text-align: center;
             font-weight: 600;
-            color: var(--orange-suggested);
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+            font-size: 0.9rem;
         }
         .note-red {
             border: 2px solid var(--error);
             border-radius: 12px;
             padding: 0.75rem 1rem;
-            margin-top: 0.5rem;
             text-align: center;
             font-weight: 600;
             font-size: 1.1rem;
@@ -144,6 +143,7 @@
             background: rgba(244, 67, 54, 0.1);
             display: inline-block;
             vertical-align: middle;
+            width: 100%;
         }
         .row.align-items-center .col-md-6 {
             display: flex;
@@ -169,7 +169,6 @@
                 <li class="nav-item"><a class="nav-link active" href="#" data-page="dashboard"><i class="bi bi-speedometer2"></i><span>لوحة التحكم</span></a></li>
                 <li class="nav-item"><a class="nav-link" href="#" data-page="invoice"><i class="bi bi-receipt"></i><span>الفواتير</span></a></li>
                 <li class="nav-item"><a class="nav-link" href="#" data-page="products"><i class="bi bi-box-seam"></i><span>المنتجات</span></a></li>
-                <li class="nav-item"><a class="nav-link" href="#" data-page="product-cost"><i class="bi bi-calculator"></i><span>تكلفة المنتج</span></a></li>
                 <li class="nav-item"><a class="nav-link" href="#" data-page="settings"><i class="bi bi-gear"></i><span>الإعدادات</span></a></li>
             </ul>
         </nav>
@@ -339,240 +338,239 @@
 
         <div id="products" class="page">
             <div class="content-header"><h2 class="content-title"><i class="bi bi-box-seam"></i> إدارة المنتجات</h2></div>
-            <div class="card-modern">
-                <div class="card-header-modern"><i class="bi bi-table"></i> قائمة المنتجات</div>
-                <div class="card-body-modern">
-                    <div class="table-responsive">
-                        <table class="table-modern">
-                            <thead>
-                                <tr>
-                                    <th>رمز المنتج</th>
-                                    <th>اسم المنتج</th>
-                                    <th>عدد القطع</th>
-                                    <th>التكلفة الكلية</th>
-                                    <th>السعر</th>
-                                    <th>الإجراءات</th>
-                                </tr>
-                            </thead>
-                            <tbody id="products-list">
-                                <tr><td colspan="6" class="text-center">لا توجد منتجات مسجلة بعد</td></tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
+            <ul class="nav nav-tabs-modern mb-4">
+                <li class="nav-item"><a class="nav-link active" href="#" data-tab="calculate-product">حساب تكلفة المنتج</a></li>
+                <li class="nav-item"><a class="nav-link" href="#" data-tab="manage-products">إدارة المنتجات</a></li>
+            </ul>
 
-        <div id="product-cost" class="page">
-            <div class="content-header"><h2 class="content-title"><i class="bi bi-calculator"></i> حساب تكلفة المنتج</h2></div>
-
-            <div class="card-modern">
-                <div class="card-header-modern"><i class="bi bi-info-circle"></i> معلومات المنتج</div>
-                <div class="card-body-modern">
-                    <div class="row">
-                        <div class="col-md-4"><label class="form-label">اسم المنتج</label><input type="text" class="form-control-modern" id="product-name" required></div>
-                        <div class="col-md-3"><label class="form-label">عدد القطع في العلبة</label><input type="number" class="form-control-modern" id="sale-quantity" required></div>
-                        <div class="col-md-2"><label class="form-label">نسبة الربح (%)</label><input type="number" class="form-control-modern" id="profit-rate" required></div>
-                        <div class="col-md-3"><label class="form-label">رمز المنتج</label><input type="text" class="form-control-modern auto-generate" id="product-code" readonly style="text-align:right"></div>
-                    </div>
-                    <div class="summary-boxes">
-                        <div class="summary-box">
-                            <div class="summary-box-label">تكلفة المواد للعلبة</div>
-                            <div class="summary-box-value" id="material-summary" style="color: var(--blue-cost);">0.000 د.ب</div>
+            <div id="calculate-product" class="product-tab active">
+                <div class="card-modern">
+                    <div class="card-header-modern"><i class="bi bi-calculator"></i> حساب تكلفة المنتج</div>
+                    <div class="card-body-modern">
+                        <div class="row">
+                            <div class="col-md-4"><label class="form-label">اسم المنتج</label><input type="text" class="form-control-modern" id="product-name" required></div>
+                            <div class="col-md-3"><label class="form-label">عدد القطع في العلبة</label><input type="number" class="form-control-modern" id="sale-quantity" required></div>
+                            <div class="col-md-2"><label class="form-label">نسبة الربح (%)</label><input type="number" class="form-control-modern" id="profit-rate" required></div>
+                            <div class="col-md-3"><label class="form-label">رمز المنتج</label><input type="text" class="form-control-modern auto-generate" id="product-code" readonly style="text-align:right"></div>
                         </div>
-                        <div class="summary-box">
-                            <div class="summary-box-label">تكلفة التغليف للعلبة</div>
-                            <div class="summary-box-value" id="packaging-summary" style="color: var(--blue-cost);">0.000 د.ب</div>
-                        </div>
-                        <div class="summary-box">
-                            <div class="summary-box-label">إهلاك المعدات للعلبة</div>
-                            <div class="summary-box-value" id="depreciation-summary" style="color: var(--blue-cost);">0.000 د.ب</div>
-                        </div>
-                        <div class="summary-box">
-                            <div class="summary-box-label">اليد العاملة للعلبة</div>
-                            <div class="summary-box-value" id="labor-summary" style="color: var(--blue-cost);">0.000 د.ب</div>
-                        </div>
-                        <div class="summary-box">
-                            <div class="summary-box-label">سعر البيع</div>
-                            <div class="summary-box-value" id="final-price-summary" style="color: var(--green-final);">0.000 د.ب</div>
-                        </div>
-                        <div class="summary-box">
-                            <div class="summary-box-label">هامش الربح</div>
-                            <div class="summary-box-value" id="profit-summary" style="color: var(--orange-suggested);">0.000 د.ب (0%)</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card-modern">
-                <div class="card-header-modern"><i class="bi bi-boxes"></i> تكاليف المواد</div>
-                <div class="card-body-modern">
-                    <div class="table-responsive">
-                        <table class="table-modern" id="materials-table">
-                            <thead>
-                                <tr>
-                                    <th class="product-name-col">المنتج</th>
-                                    <th>العدد / الوزن</th>
-                                    <th>السعر (د.ب)</th>
-                                    <th>العدد المستخدم</th>
-                                    <th>سعر التكلفة</th>
-                                    <th></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td class="product-name-col"><input type="text" class="form-control-modern" required></td>
-                                    <td><input type="number" class="form-control-modern" required></td>
-                                    <td class="price-input-container"><input type="number" class="form-control-modern" step="0.001" required></td>
-                                    <td><input type="number" class="form-control-modern" required></td>
-                                    <td class="material-cost">0.000</td>
-                                    <td><button class="btn btn-danger-modern btn-action remove-row"><i class="bi bi-trash"></i></button></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <button type="button" class="btn btn-success-modern" id="add-material"><i class="bi bi-plus"></i> إضافة منتج</button>
-                    <div class="cost-total-box">
-                        <div class="cost-total-label">إجمالي تكاليف المواد للعلبة</div>
-                        <div class="cost-total-value" id="materials-per-box" style="color: var(--blue-cost);">0.000 د.ب</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card-modern">
-                <div class="card-header-modern"><i class="bi bi-gift"></i> تكاليف التغليف</div>
-                <div class="card-body-modern">
-                    <div class="table-responsive">
-                        <table class="table-modern" id="packaging-table">
-                            <thead>
-                                <tr>
-                                    <th class="product-name-col">المنتج</th>
-                                    <th>العدد / الوزن</th>
-                                    <th>السعر (د.ب)</th>
-                                    <th>العدد المستخدم</th>
-                                    <th>سعر التكلفة</th>
-                                    <th></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td class="product-name-col"><input type="text" class="form-control-modern" required></td>
-                                    <td><input type="number" class="form-control-modern" required></td>
-                                    <td class="price-input-container"><input type="number" class="form-control-modern" step="0.001" required></td>
-                                    <td><input type="number" class="form-control-modern" required></td>
-                                    <td class="packaging-cost">0.000</td>
-                                    <td><button class="btn btn-danger-modern btn-action remove-row"><i class="bi bi-trash"></i></button></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <button type="button" class="btn btn-success-modern" id="add-packaging"><i class="bi bi-plus"></i> إضافة منتج</button>
-                    <div class="cost-total-box">
-                        <div class="cost-total-label">إجمالي تكاليف التغليف للعلبة</div>
-                        <div class="cost-total-value" id="packaging-per-box" style="color: var(--blue-cost);">0.000 د.ب</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card-modern">
-                <div class="card-header-modern"><i class="bi bi-people"></i> تكاليف اليد العاملة</div>
-                <div class="card-body-modern">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <h5>معلومات العامل</h5>
-                            <div class="table-responsive">
-                                <table class="table-modern" id="workers-table-1">
-                                    <thead>
-                                        <tr>
-                                            <th style="width: 25%">اسم العامل</th>
-                                            <th style="width: 25%">الراتب الشهري (د.ب)</th>
-                                            <th style="width: 25%">عدد ساعات العمل</th>
-                                            <th style="width: 25%">تكلفة ساعات العمل</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td><input type="text" class="form-control-modern" required></td>
-                                            <td class="price-input-container"><input type="number" class="form-control-modern salary" step="0.001" required></td>
-                                            <td><input type="number" class="form-control-modern hours" required></td>
-                                            <td class="hourly-cost">0.000</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                        <div class="summary-boxes">
+                            <div class="summary-box">
+                                <div class="summary-box-label">تكلفة المواد للعلبة</div>
+                                <div class="summary-box-value" id="material-summary" style="color: var(--blue-cost);">0.000 د.ب</div>
                             </div>
-                        </div>
-                        <div class="col-md-6">
-                            <h5>حسابات الإنتاج</h5>
-                            <div class="table-responsive">
-                                <table class="table-modern" id="workers-table-2">
-                                    <thead>
-                                        <tr>
-                                            <th style="width: 25%">عدد القطع المنتجة</th>
-                                            <th style="width: 25%">عدد القطع لكل ساعة</th>
-                                            <th style="width: 25%">تكلفة القطعة</th>
-                                            <th style="width: 25%">تكلفة العلبة</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td><input type="number" class="form-control-modern pieces" required></td>
-                                            <td class="pieces-per-hour">0</td>
-                                            <td class="piece-cost">0.000</td>
-                                            <td class="box-cost">0.000</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                            <div class="summary-box">
+                                <div class="summary-box-label">تكلفة التغليف للعلبة</div>
+                                <div class="summary-box-value" id="packaging-summary" style="color: var(--blue-cost);">0.000 د.ب</div>
+                            </div>
+                            <div class="summary-box">
+                                <div class="summary-box-label">إهلاك المعدات للعلبة</div>
+                                <div class="summary-box-value" id="depreciation-summary" style="color: var(--blue-cost);">0.000 د.ب</div>
+                            </div>
+                            <div class="summary-box">
+                                <div class="summary-box-label">اليد العاملة للعلبة</div>
+                                <div class="summary-box-value" id="labor-summary" style="color: var(--blue-cost);">0.000 د.ب</div>
+                            </div>
+                            <div class="summary-box">
+                                <div class="summary-box-label">سعر البيع</div>
+                                <div class="summary-box-value" id="final-price-summary" style="color: var(--green-final);">0.000 د.ب</div>
+                            </div>
+                            <div class="summary-box">
+                                <div class="summary-box-label">هامش الربح</div>
+                                <div class="summary-box-value" id="profit-summary" style="color: var(--orange-suggested);">0.000 د.ب (0%)</div>
                             </div>
                         </div>
                     </div>
-                    <div class="cost-total-box">
-                        <div class="cost-total-label">إجمالي تكلفة اليد العاملة للعلبة</div>
-                        <div class="cost-total-value" id="labor-per-box" style="color: var(--blue-cost);">0.000 د.ب</div>
+                </div>
+
+                <div class="card-modern">
+                    <div class="card-header-modern"><i class="bi bi-boxes"></i> تكاليف المواد</div>
+                    <div class="card-body-modern">
+                        <div class="table-responsive">
+                            <table class="table-modern" id="materials-table">
+                                <thead>
+                                    <tr>
+                                        <th class="product-name-col">المنتج</th>
+                                        <th>العدد / الوزن</th>
+                                        <th>السعر (د.ب)</th>
+                                        <th>العدد المستخدم</th>
+                                        <th>سعر التكلفة</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="product-name-col"><input type="text" class="form-control-modern" required></td>
+                                        <td><input type="number" class="form-control-modern" required></td>
+                                        <td class="price-input-container"><input type="number" class="form-control-modern" step="0.001" required></td>
+                                        <td><input type="number" class="form-control-modern" required></td>
+                                        <td class="material-cost">0.000</td>
+                                        <td><button class="btn btn-danger-modern btn-action remove-row"><i class="bi bi-trash"></i></button></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <button type="button" class="btn btn-success-modern" id="add-material"><i class="bi bi-plus"></i> إضافة منتج</button>
+                        <div class="cost-total-box">
+                            <div class="cost-total-label">إجمالي تكاليف المواد للعلبة</div>
+                            <div class="cost-total-value" id="materials-per-box" style="color: var(--blue-cost);">0.000 د.ب</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-modern">
+                    <div class="card-header-modern"><i class="bi bi-gift"></i> تكاليف التغليف</div>
+                    <div class="card-body-modern">
+                        <div class="table-responsive">
+                            <table class="table-modern" id="packaging-table">
+                                <thead>
+                                    <tr>
+                                        <th class="product-name-col">المنتج</th>
+                                        <th>العدد / الوزن</th>
+                                        <th>السعر (د.ب)</th>
+                                        <th>العدد المستخدم</th>
+                                        <th>سعر التكلفة</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="product-name-col"><input type="text" class="form-control-modern" required></td>
+                                        <td><input type="number" class="form-control-modern" required></td>
+                                        <td class="price-input-container"><input type="number" class="form-control-modern" step="0.001" required></td>
+                                        <td><input type="number" class="form-control-modern" required></td>
+                                        <td class="packaging-cost">0.000</td>
+                                        <td><button class="btn btn-danger-modern btn-action remove-row"><i class="bi bi-trash"></i></button></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <button type="button" class="btn btn-success-modern" id="add-packaging"><i class="bi bi-plus"></i> إضافة منتج</button>
+                        <div class="cost-total-box">
+                            <div class="cost-total-label">إجمالي تكاليف التغليف للعلبة</div>
+                            <div class="cost-total-value" id="packaging-per-box" style="color: var(--blue-cost);">0.000 د.ب</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-modern">
+                    <div class="card-header-modern"><i class="bi bi-people"></i> تكاليف اليد العاملة</div>
+                    <div class="card-body-modern">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h5>معلومات العامل</h5>
+                                <div class="table-responsive">
+                                    <table class="table-modern" id="workers-table-1">
+                                        <thead>
+                                            <tr>
+                                                <th style="width: 25%">الراتب الشهري (د.ب)</th>
+                                                <th style="width: 25%">عدد ساعات العمل</th>
+                                                <th style="width: 25%">تكلفة ساعات العمل</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td class="price-input-container"><input type="number" class="form-control-modern salary" step="0.001" required></td>
+                                                <td><input type="number" class="form-control-modern hours" required></td>
+                                                <td class="hourly-cost">0.000</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <h5>حسابات الإنتاج</h5>
+                                <div class="table-responsive">
+                                    <table class="table-modern" id="workers-table-2">
+                                        <thead>
+                                            <tr>
+                                                <th style="width: 25%">عدد القطع المنتجة</th>
+                                                <th style="width: 25%">عدد القطع لكل ساعة</th>
+                                                <th style="width: 25%">تكلفة القطعة</th>
+                                                <th style="width: 25%">تكلفة العلبة</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td><input type="number" class="form-control-modern pieces" required></td>
+                                                <td class="pieces-per-hour">0</td>
+                                                <td class="piece-cost">0.000</td>
+                                                <td class="box-cost">0.000</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="cost-total-box">
+                            <div class="cost-total-label">إجمالي تكلفة اليد العاملة للعلبة</div>
+                            <div class="cost-total-value" id="labor-per-box" style="color: var(--blue-cost);">0.000 د.ب</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-modern">
+                    <div class="card-header-modern"><i class="bi bi-tools"></i> إهلاك المعدات</div>
+                    <div class="card-body-modern">
+                        <div class="row">
+                            <div class="col-md-4"><label class="form-label">النسبة المئوية (%)</label><input type="number" class="form-control-modern" id="depreciation-rate" placeholder="أدخل النسبة" required></div>
+                            <div class="col-md-4"><label class="form-label">إهلاك المعدات (د.ب)</label><input type="number" class="form-control-modern" id="equipment-depreciation" step="0.001" readonly></div>
+                            <div class="col-md-4"><label class="form-label">إهلاك المعدات للعلبة (د.ب)</label><input type="number" class="form-control-modern" id="equipment-depreciation-box" step="0.001" readonly></div>
+                        </div>
+                        <div class="note-red mt-3">* نسبة الإهلاك هي تقدير لتكلفة استهلاك المعدات والأجهزة المستخدمة في إنتاج المنتج ونقترح أن تكون 10%</div>
+                    </div>
+                </div>
+
+                <div class="card-modern">
+                    <div class="card-header-modern"><i class="bi bi-currency-dollar"></i> ملخص التكاليف والأسعار</div>
+                    <div class="card-body-modern">
+                        <div class="row">
+                            <div class="col-md-4 text-center">
+                                <h6 class="text-muted">التكلفة الإجمالية للعلبة</h6>
+                                <h3 class="text-cost" id="grand-total-cost" style="color: var(--blue-cost); font-size: 1.5rem;">0.000 د.ب</h3>
+                            </div>
+                            <div class="col-md-4 text-center">
+                                <h6 class="text-muted">سعر البيع المقترح</h6>
+                                <h3 class="text-suggested" id="suggested-price" style="color: var(--orange-suggested); font-size: 1.5rem;">0.000 د.ب</h3>
+                                <div class="profit-box" style="color: var(--orange-suggested); border-color: var(--orange-suggested);">
+                                    هامش الربح: <span id="suggested-profit">0.000 د.ب (0%)</span>
+                                </div>
+                            </div>
+                            <div class="col-md-4 text-center">
+                                <h6 class="text-muted">سعر البيع النهائي</h6>
+                                <input type="number" class="form-control-modern" id="final-price" placeholder="أدخل السعر" step="0.001" style="font-size: 1.2rem; text-align: center; margin: 0 auto; max-width: 160px; height: 45px; color: var(--green-final);">
+                                <div class="profit-box" style="color: var(--green-final); border-color: var(--green-final);">
+                                    هامش الربح: <span id="final-profit">0.000 د.ب (0%)</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-center mt-4">
+                            <button type="button" class="btn btn-success-modern btn-lg" id="save-product"><i class="bi bi-save"></i> حفظ المنتج</button>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <div class="card-modern">
-                <div class="card-header-modern"><i class="bi bi-tools"></i> إهلاك المعدات</div>
-                <div class="card-body-modern">
-                    <div class="row align-items-center">
-                        <div class="col-md-6">
-                            <div class="mb-3"><label class="form-label">النسبة المئوية (%)</label><input type="number" class="form-control-modern" id="depreciation-rate" placeholder="أدخل النسبة" required></div>
+            <div id="manage-products" class="product-tab">
+                <div class="card-modern">
+                    <div class="card-header-modern"><i class="bi bi-table"></i> إدارة المنتجات</div>
+                    <div class="card-body-modern">
+                        <div class="table-responsive">
+                            <table class="table-modern">
+                                <thead>
+                                    <tr>
+                                        <th>رمز المنتج</th>
+                                        <th>اسم المنتج</th>
+                                        <th>عدد القطع</th>
+                                        <th>التكلفة الكلية</th>
+                                        <th>السعر</th>
+                                        <th>الإجراءات</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="products-list">
+                                    <tr><td colspan="6" class="text-center">لا توجد منتجات مسجلة بعد</td></tr>
+                                </tbody>
+                            </table>
                         </div>
-                        <div class="col-md-6">
-                            <div class="mb-3"><label class="form-label">إهلاك المعدات (د.ب)</label><input type="number" class="form-control-modern" id="equipment-depreciation" step="0.001" readonly></div>
-                            <div class="mb-3"><label class="form-label">إهلاك المعدات للعلبة (د.ب)</label><input type="number" class="form-control-modern" id="equipment-depreciation-box" step="0.001" readonly></div>
-                            <div class="note-red">* نسبة الإهلاك هي تقدير لتكلفة استهلاك المعدات والأجهزة المستخدمة في إنتاج المنتج ونقترح أن تكون 10%</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card-modern">
-                <div class="card-header-modern"><i class="bi bi-currency-dollar"></i> ملخص التكاليف والأسعار</div>
-                <div class="card-body-modern">
-                    <div class="row">
-                        <div class="col-md-4 text-center">
-                            <h6 class="text-muted">التكلفة الإجمالية للعلبة</h6>
-                            <h3 class="text-cost" id="grand-total-cost" style="color: var(--blue-cost); font-size: 1.5rem;">0.000 د.ب</h3>
-                        </div>
-                        <div class="col-md-4 text-center">
-                            <h6 class="text-muted">سعر البيع المقترح</h6>
-                            <h3 class="text-suggested" id="suggested-price" style="color: var(--orange-suggested); font-size: 1.5rem;">0.000 د.ب</h3>
-                            <div class="profit-box">
-                                هامش الربح: <span id="suggested-profit">0.000 د.ب (0%)</span>
-                            </div>
-                        </div>
-                        <div class="col-md-4 text-center">
-                            <h6 class="text-muted">سعر البيع النهائي</h6>
-                            <input type="number" class="form-control-modern" id="final-price" placeholder="أدخل السعر النهائي" step="0.001" style="font-size: 1.2rem; text-align: center; margin: 0 auto; max-width: 160px; height: 45px; color: var(--green-final);">
-                            <div class="profit-box">
-                                هامش الربح: <span id="final-profit">0.000 د.ب (0%)</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="text-center mt-4">
-                        <button type="button" class="btn btn-success-modern btn-lg" id="save-product"><i class="bi bi-save"></i> حفظ المنتج</button>
                     </div>
                 </div>
             </div>
@@ -714,7 +712,7 @@
         }
         
         function showTab(tabId){
-            document.querySelectorAll('.invoice-tab').forEach(t=>t.classList.remove('active'));
+            document.querySelectorAll('.invoice-tab, .product-tab').forEach(t=>t.classList.remove('active'));
             document.getElementById(tabId)?.classList.add('active');
             document.querySelectorAll('.nav-tabs-modern .nav-link').forEach(l=>l.classList.remove('active'));
             document.querySelectorAll('.nav-tabs-modern .nav-link').forEach(l=>{
@@ -736,7 +734,7 @@
         });
 
         showPage('dashboard');
-        showTab('new-invoice');
+        showTab('calculate-product');
 
         document.getElementById('invoice-number').value = "INV-" + new Date().getFullYear() + "-0001";
         document.getElementById('product-code').value = "PRD-" + String(productCounter).padStart(4, '0');
@@ -890,6 +888,15 @@
             document.getElementById('sale-quantity').value='';
             document.getElementById('profit-rate').value='';
             document.getElementById('final-price').value='';
+            document.querySelectorAll('#materials-table tbody tr, #packaging-table tbody tr').forEach(row => {
+                if(row.parentElement.children.length > 1) row.remove();
+            });
+            document.querySelectorAll('#materials-table tbody tr input, #packaging-table tbody tr input').forEach(input => {
+                input.value = '';
+            });
+            document.querySelectorAll('#workers-table-1 tbody tr input, #workers-table-2 tbody tr input').forEach(input => {
+                input.value = '';
+            });
             productCounter++;
             document.getElementById('product-code').value = "PRD-" + String(productCounter).padStart(4, '0');
             updateCosts();
@@ -944,7 +951,8 @@
         function editProduct(index) {
             const product = products[index];
             editingIndex = index;
-            showPage('product-cost');
+            showTab('calculate-product');
+            showPage('products');
             
             document.getElementById('product-name').value = product.name;
             document.getElementById('product-code').value = product.code;
@@ -1018,6 +1026,7 @@
             updateInvoiceProducts();
             clearForm();
             alert('تم حفظ المنتج بنجاح!');
+            showTab('manage-products');
         }
 
         document.getElementById('add-material').addEventListener('click',()=>addTableRow('materials-table'));
