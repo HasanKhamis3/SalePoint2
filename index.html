@@ -1001,15 +1001,15 @@
             const piecesProduced = parseFloat(document.querySelector('#workers-table-2 tbody tr .pieces')?.value) || 1;
             const piecesPerBox = parseFloat(document.getElementById('sale-quantity').value) || 1;
 
-            // حساب التكاليف للعلبة الواحدة
-            const materialBoxCost = materialsCost;
-            const packagingBoxCost = packagingCost;
+            // حساب التكاليف للعلبة الواحدة (المعادلات الأصلية)
+            const materialBoxCost = (materialsCost / piecesProduced) * piecesPerBox;
+            const packagingBoxCost = (packagingCost / piecesProduced) * piecesPerBox;
             const laborBoxCost = totalLaborCost;
 
             // حساب إهلاك المعدات
             const depreciationRate = parseFloat(document.getElementById('depreciation-rate').value) || 0;
             const depreciationCost = materialsCost * (depreciationRate / 100);
-            const depreciationBoxCost = depreciationCost;
+            const depreciationBoxCost = (depreciationCost / piecesProduced) * piecesPerBox;
 
             // تحديث القيم في الواجهة
             document.getElementById('material-summary').textContent = formatCurrency(materialBoxCost);
@@ -1024,11 +1024,11 @@
             document.getElementById('equipment-depreciation').value = depreciationCost.toFixed(currencyDecimals);
             document.getElementById('equipment-depreciation-box').value = depreciationBoxCost.toFixed(currencyDecimals);
 
-            // حساب التكلفة الإجمالية للعلبة
+            // حساب التكلفة الإجمالية للعلبة (المعادلة الأصلية)
             const totalCostPerBox = materialBoxCost + packagingBoxCost + laborBoxCost + depreciationBoxCost;
             document.getElementById('grand-total-cost').textContent = formatCurrency(totalCostPerBox);
 
-            // حساب سعر البيع المقترح
+            // حساب سعر البيع المقترح (المعادلة الأصلية)
             const profitRate = parseFloat(document.getElementById('profit-rate').value) || 0;
             const profitAmount = totalCostPerBox * (profitRate / 100);
             const suggestedPrice = totalCostPerBox + profitAmount;
@@ -1036,7 +1036,7 @@
             const suggestedProfit = formatCurrency(profitAmount) + ' (' + profitRate + '%)';
             document.getElementById('suggested-profit').textContent = suggestedProfit;
             
-            // حساب سعر البيع النهائي
+            // حساب سعر البيع النهائي (المعادلة الأصلية)
             const finalPrice = suggestedPrice;
             const finalProfit = finalPrice - totalCostPerBox;
             const finalProfitRate = totalCostPerBox > 0 ? (finalProfit / totalCostPerBox) * 100 : 0;
