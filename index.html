@@ -301,6 +301,17 @@
             align-items: center;
             gap: 1rem;
         }
+        .readonly-input {
+            background-color: #f8f9fa;
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.125rem 1rem;
+            font-size: 1.1rem;
+            width: 100%;
+            text-align: center;
+            color: var(--text-primary);
+            font-weight: 700;
+        }
         @media (max-width: 768px) {
             .sidebar { transform: translateX(100%); }
             .sidebar.show { transform: translateX(0); }
@@ -532,7 +543,7 @@
                             <thead>
                                 <tr>
                                     <th class="product-name-col">المنتج</th>
-                                    <th>العدد / الوزن</th>
+                                    <th>العدد</th>
                                     <th>السعر (د.ب)</th>
                                     <th>العدد المستخدم</th>
                                     <th>سعر التكلفة</th>
@@ -567,7 +578,7 @@
                             <thead>
                                 <tr>
                                     <th class="product-name-col">المنتج</th>
-                                    <th>العدد / الوزن</th>
+                                    <th>العدد</th>
                                     <th>السعر (د.ب)</th>
                                     <th>العدد المستخدم</th>
                                     <th>سعر التكلفة</th>
@@ -668,11 +679,11 @@
                     <div class="row">
                         <div class="col-md-4 text-center">
                             <h6 class="text-muted">التكلفة الإجمالية للعلبة</h6>
-                            <h3 class="text-cost" id="grand-total-cost" style="color: var(--blue-cost); font-size: 1.5rem;">0.000 د.ب</h3>
+                            <div class="readonly-input" id="grand-total-cost">0.000 د.ب</div>
                         </div>
                         <div class="col-md-4 text-center">
                             <h6 class="text-muted">سعر البيع المقترح</h6>
-                            <h3 class="text-suggested" id="suggested-price" style="color: var(--orange-suggested); font-size: 1.5rem;">0.000 د.ب</h3>
+                            <div class="readonly-input" id="suggested-price">0.000 د.ب</div>
                             <div class="profit-box" style="color: var(--orange-suggested); border-color: var(--orange-suggested);">
                                 هامش الربح: <span id="suggested-profit">0.000 د.ب (0%)</span>
                             </div>
@@ -835,8 +846,37 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        let productCounter = 1;
-        let products = [];
+        // قاعدة بيانات محلية لتخزين البيانات
+        let appData = {
+            products: [],
+            invoices: [],
+            settings: {
+                project: {},
+                system: { currency: 'BHD', color: 'default', language: 'ar' },
+                tax: { enabled: false, rate: 0, number: '' },
+                paymentMethods: [],
+                delivery: { areas: [], cities: [] }
+            }
+        };
+
+        // محاولة تحميل البيانات من localStorage
+        function loadData() {
+            const savedData = localStorage.getItem('accountingAppData');
+            if (savedData) {
+                appData = JSON.parse(savedData);
+            }
+        }
+
+        // حفظ البيانات إلى localStorage
+        function saveData() {
+            localStorage.setItem('accountingAppData', JSON.stringify(appData));
+        }
+
+        // تحميل البيانات عند بدء التشغيل
+        loadData();
+
+        let productCounter = appData.products.length + 1;
+        let products = appData.products;
         let editingIndex = -1;
         let currentCurrency = 'د.ب';
         let currencyDecimals = 3;
@@ -851,6 +891,15 @@
                 }
             });
             document.getElementById('sidebar').classList.remove('show');
+            
+            // تحديث الجداول عند عرض الصفحات
+            if (pageId === 'manage-products') {
+                updateProductsTable();
+            } else if (pageId === 'manage-invoices') {
+                updateInvoicesTable();
+            } else if (pageId === 'track-invoices') {
+                updateTrackingTable();
+            }
         }
 
         document.addEventListener('click', function(e){
@@ -862,7 +911,7 @@
 
         showPage('dashboard');
 
-        document.getElementById('invoice-number').value = "INV-" + new Date().getFullYear() + "-0001";
+        document.getElementById('invoice-number').value = "INV-" + new Date().getFullYear() + "-" + String(appData.invoices.length + 1).padStart(4, '0');
         document.getElementById('product-code').value = "PRD-" + String(productCounter).padStart(4, '0');
         document.getElementById('invoice-date').value = new Date().toISOString().split('T')[0];
 
@@ -1029,19 +1078,38 @@
         }
 
         function saveProjectSettings() {
+            appData.settings.project = {
+                name: document.getElementById('project-name').value,
+                phone: document.getElementById('country-code').value + document.getElementById('phone-number').value,
+                address: document.getElementById('project-address').value
+            };
+            saveData();
             alert('تم حفظ إعدادات المشروع بنجاح!');
         }
 
         function saveSystemSettings() {
+            appData.settings.system = {
+                color: document.getElementById('system-color').value,
+                language: document.getElementById('system-language').value,
+                currency: document.getElementById('system-currency').value
+            };
+            saveData();
             alert('تم حفظ إعدادات النظام بنجاح!');
             updateCurrencyFormat();
         }
 
         function saveTaxSettings() {
+            appData.settings.tax = {
+                enabled: document.getElementById('tax-enabled').checked,
+                rate: parseFloat(document.getElementById('tax-rate').value) || 0,
+                number: document.getElementById('tax-number').value
+            };
+            saveData();
             alert('تم حفظ إعدادات الضريبة بنجاح!');
         }
 
         function saveDeliverySettings() {
+            // حفظ إعدادات التوصيل
             alert('تم حفظ إعدادات التوصيل بنجاح!');
         }
 
@@ -1074,6 +1142,56 @@
             document.getElementById('dashboard-products').textContent = products.length;
         }
 
+        function updateInvoicesTable() {
+            const tbody = document.getElementById('invoices-list');
+            if(appData.invoices.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="8" class="text-center">لا توجد فواتير مسجلة بعد</td></tr>';
+                return;
+            }
+            tbody.innerHTML = '';
+            appData.invoices.forEach((invoice, index) => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${invoice.number}</td>
+                    <td>${invoice.date}</td>
+                    <td>${invoice.customerName}</td>
+                    <td>${invoice.customerPhone}</td>
+                    <td>${invoice.total}</td>
+                    <td>${invoice.paymentMethod}</td>
+                    <td>${invoice.paymentStatus === 'paid' ? 'مدفوع' : 'غير مدفوع'}</td>
+                    <td>
+                        <button class="btn btn-primary-modern btn-action"><i class="bi bi-eye"></i></button>
+                        <button class="btn btn-danger-modern btn-action" onclick="deleteInvoice(${index})"><i class="bi bi-trash"></i></button>
+                    </td>`;
+                tbody.appendChild(tr);
+            });
+            document.getElementById('dashboard-invoices').textContent = appData.invoices.length;
+        }
+
+        function updateTrackingTable() {
+            const tbody = document.getElementById('tracking-list');
+            if(appData.invoices.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="8" class="text-center">لا توجد فواتير مسجلة بعد</td></tr>';
+                return;
+            }
+            tbody.innerHTML = '';
+            appData.invoices.forEach((invoice, index) => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${invoice.number}</td>
+                    <td>${invoice.customerName}</td>
+                    <td>${invoice.date}</td>
+                    <td>قيد المعالجة</td>
+                    <td>${invoice.paymentMethod}</td>
+                    <td>${invoice.paymentStatus === 'paid' ? 'مدفوع' : 'غير مدفوع'}</td>
+                    <td>${invoice.total}</td>
+                    <td>
+                        <button class="btn btn-primary-modern btn-action"><i class="bi bi-eye"></i></button>
+                    </td>`;
+                tbody.appendChild(tr);
+            });
+        }
+
         function editProduct(index) {
             const product = products[index];
             editingIndex = index;
@@ -1092,9 +1210,21 @@
         function deleteProduct(index) {
             if(confirm('هل أنت متأكد من حذف هذا المنتج؟')) {
                 products.splice(index, 1);
+                appData.products = products;
+                saveData();
                 updateProductsTable();
                 updateInvoiceProducts();
                 document.getElementById('dashboard-products').textContent = products.length;
+            }
+        }
+
+        function deleteInvoice(index) {
+            if(confirm('هل أنت متأكد من حذف هذه الفاتورة؟')) {
+                appData.invoices.splice(index, 1);
+                saveData();
+                updateInvoicesTable();
+                updateTrackingTable();
+                document.getElementById('dashboard-invoices').textContent = appData.invoices.length;
             }
         }
 
@@ -1147,6 +1277,8 @@
                 products.push(product);
             }
             
+            appData.products = products;
+            saveData();
             updateProductsTable();
             updateInvoiceProducts();
             clearForm();
@@ -1190,6 +1322,14 @@
             document.getElementById('invoice-total').textContent = subtotal.toFixed(currencyDecimals) + ' ' + currentCurrency;
         }
 
+        // إضافة حدث input لجميع الحقول في جداول المواد والتغليف لتحديث النتائج مباشرة
+        document.addEventListener('input', function(e) {
+            if (e.target.closest('#materials-table') || e.target.closest('#packaging-table') || 
+                e.target.closest('#workers-table-1') || e.target.closest('#workers-table-2')) {
+                updateCosts();
+            }
+        });
+
         document.getElementById('add-material').addEventListener('click',()=>addTableRow('materials-table'));
         document.getElementById('add-packaging').addEventListener('click',()=>addTableRow('packaging-table'));
         document.getElementById('sidebarToggle').addEventListener('click',()=>document.getElementById('sidebar').classList.toggle('show'));
@@ -1202,6 +1342,11 @@
             document.getElementById(id).addEventListener('keyup',updateCosts);
         });
 
+        // تحديث الجداول عند تحميل الصفحة
+        updateProductsTable();
+        updateInvoicesTable();
+        updateTrackingTable();
+        updateInvoiceProducts();
         updateCosts();
     </script>
 </body>
