@@ -331,6 +331,21 @@
         .price-input-container input {
             padding-left: 40px;
         }
+        .error-message {
+            color: var(--error);
+            font-size: 0.9rem;
+            margin-top: 0.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .error-input {
+            border-color: var(--error) !important;
+        }
+        .error-icon {
+            color: var(--error);
+            font-size: 1.2rem;
+        }
         @media (max-width: 768px) {
             .sidebar { transform: translateX(100%); }
             .sidebar.show { transform: translateX(0); }
@@ -516,14 +531,39 @@
 
         <div id="calculate-product" class="page">
             <div class="content-header"><h2 class="content-title"><i class="bi bi-calculator"></i> حساب تكلفة المنتج</h2></div>
+            
             <div class="card-modern">
                 <div class="card-header-modern"><i class="bi bi-calculator"></i> حساب تكلفة المنتج</div>
                 <div class="card-body-modern">
                     <div class="row">
-                        <div class="col-md-4"><label class="form-label">اسم المنتج</label><input type="text" class="form-control-modern" id="product-name" required></div>
-                        <div class="col-md-3"><label class="form-label">عدد القطع في العلبة</label><input type="number" class="form-control-modern" id="sale-quantity" required></div>
-                        <div class="col-md-2"><label class="form-label">نسبة الربح (%)</label><input type="number" class="form-control-modern" id="profit-rate" required></div>
-                        <div class="col-md-3"><label class="form-label">رمز المنتج</label><input type="text" class="form-control-modern auto-generate" id="product-code" readonly style="text-align:right"></div>
+                        <div class="col-md-4">
+                            <label class="form-label">اسم المنتج</label>
+                            <input type="text" class="form-control-modern" id="product-name" required>
+                            <div class="error-message" id="product-name-error" style="display: none;">
+                                <i class="bi bi-exclamation-circle error-icon"></i>
+                                <span>يرجى إدخال اسم المنتج</span>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">عدد القطع في العلبة</label>
+                            <input type="number" class="form-control-modern" id="sale-quantity" required>
+                            <div class="error-message" id="sale-quantity-error" style="display: none;">
+                                <i class="bi bi-exclamation-circle error-icon"></i>
+                                <span>يرجى إدخال عدد القطع في العلبة</span>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label">نسبة الربح (%)</label>
+                            <input type="number" class="form-control-modern" id="profit-rate" required>
+                            <div class="error-message" id="profit-rate-error" style="display: none;">
+                                <i class="bi bi-exclamation-circle error-icon"></i>
+                                <span>يرجى إدخال نسبة الربح</span>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">رمز المنتج</label>
+                            <input type="text" class="form-control-modern auto-generate" id="product-code" readonly style="text-align:right">
+                        </div>
                     </div>
                     <div class="summary-boxes">
                         <div class="summary-box">
@@ -550,6 +590,132 @@
                             <div class="summary-box-label">هامش الربح</div>
                             <div class="summary-box-value" id="profit-summary" style="color: var(--orange-suggested);">0.000 د.ب (0%)</div>
                         </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-modern">
+                <div class="card-header-modern"><i class="bi bi-people"></i> تكاليف اليد العاملة</div>
+                <div class="card-body-modern">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h5>معلومات العامل</h5>
+                            <div class="table-responsive">
+                                <table class="table-modern" id="workers-table-1">
+                                    <thead>
+                                        <tr>
+                                            <th style="width: 25%">الراتب الشهري (د.ب)</th>
+                                            <th style="width: 25%">عدد ساعات العمل</th>
+                                            <th style="width: 25%">تكلفة ساعات العمل</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td class="price-input-container">
+                                                <input type="number" class="form-control-modern salary" step="0.001" required>
+                                                <div class="error-message" id="salary-error" style="display: none;">
+                                                    <i class="bi bi-exclamation-circle error-icon"></i>
+                                                    <span>يرجى إدخال الراتب الشهري</span>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <input type="number" class="form-control-modern hours" required>
+                                                <div class="error-message" id="hours-error" style="display: none;">
+                                                    <i class="bi bi-exclamation-circle error-icon"></i>
+                                                    <span>يرجى إدخال عدد ساعات العمل</span>
+                                                </div>
+                                            </td>
+                                            <td class="hourly-cost">0.000</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <h5>حسابات الإنتاج</h5>
+                            <div class="table-responsive">
+                                <table class="table-modern" id="workers-table-2">
+                                    <thead>
+                                        <tr>
+                                            <th style="width: 25%">عدد القطع المنتجة</th>
+                                            <th style="width: 25%">عدد القطع لكل ساعة</th>
+                                            <th style="width: 25%">تكلفة القطعة</th>
+                                            <th style="width: 25%">تكلفة العلبة</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                <input type="number" class="form-control-modern pieces" required>
+                                                <div class="error-message" id="pieces-error" style="display: none;">
+                                                    <i class="bi bi-exclamation-circle error-icon"></i>
+                                                    <span>يرجى إدخال عدد القطع المنتجة</span>
+                                                </div>
+                                            </td>
+                                            <td class="pieces-per-hour">0</td>
+                                            <td class="piece-cost">0.000</td>
+                                            <td class="box-cost">0.000</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="cost-total-box">
+                        <div class="cost-total-label">إجمالي تكلفة اليد العاملة للعلبة</div>
+                        <div class="cost-total-value" id="labor-per-box" style="color: var(--blue-cost);">0.000 د.ب</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-modern">
+                <div class="card-header-modern"><i class="bi bi-tools"></i> إهلاك المعدات</div>
+                <div class="card-body-modern">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label class="form-label">النسبة المئوية (%)</label>
+                            <input type="number" class="form-control-modern" id="depreciation-rate" placeholder="أدخل النسبة" required>
+                            <div class="error-message" id="depreciation-rate-error" style="display: none;">
+                                <i class="bi bi-exclamation-circle error-icon"></i>
+                                <span>يرجى إدخال نسبة الإهلاك</span>
+                            </div>
+                        </div>
+                        <div class="col-md-4"><label class="form-label">إهلاك المعدات (د.ب)</label><input type="number" class="form-control-modern" id="equipment-depreciation" step="0.001" readonly></div>
+                        <div class="col-md-4"><label class="form-label">إهلاك المعدات للعلبة (د.ب)</label><input type="number" class="form-control-modern" id="equipment-depreciation-box" step="0.001" readonly></div>
+                    </div>
+                    <div class="note-red mt-3">* نسبة الإهلاك هي تقدير لتكلفة استهلاك المعدات والأجهزة المستخدمة في إنتاج المنتج ونقترح أن تكون 10%</div>
+                </div>
+            </div>
+
+            <div class="card-modern">
+                <div class="card-header-modern"><i class="bi bi-currency-dollar"></i> ملخص التكاليف والأسعار</div>
+                <div class="card-body-modern">
+                    <div class="row">
+                        <div class="col-md-4 text-center">
+                            <h6 class="text-muted">التكلفة الإجمالية للعلبة</h6>
+                            <div class="readonly-input" id="grand-total-cost">0.000 د.ب</div>
+                        </div>
+                        <div class="col-md-4 text-center">
+                            <h6 class="text-muted">سعر البيع المقترح</h6>
+                            <div class="readonly-input" id="suggested-price">0.000 د.ب</div>
+                            <div class="profit-box" style="color: var(--orange-suggested); border-color: var(--orange-suggested);">
+                                هامش الربح: <span id="suggested-profit">0.000 د.ب (0%)</span>
+                            </div>
+                        </div>
+                        <div class="col-md-4 text-center">
+                            <h6 class="text-muted">سعر البيع النهائي</h6>
+                            <input type="number" class="form-control-modern" id="final-price-input" step="0.001" required>
+                            <div class="error-message" id="final-price-error" style="display: none;">
+                                <i class="bi bi-exclamation-circle error-icon"></i>
+                                <span>يرجى إدخال سعر البيع النهائي</span>
+                            </div>
+                            <div class="profit-box" style="color: var(--green-final); border-color: var(--green-final);">
+                                هامش الربح: <span id="final-profit">0.000 د.ب (0%)</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="text-center mt-4">
+                        <button type="button" class="btn btn-success-modern btn-lg" id="save-product"><i class="bi bi-save"></i> حفظ المنتج</button>
                     </div>
                 </div>
             </div>
@@ -586,6 +752,7 @@
                         <div class="cost-total-label">إجمالي تكاليف المواد للعلبة</div>
                         <div class="cost-total-value" id="materials-per-box" style="color: var(--blue-cost);">0.000 د.ب</div>
                     </div>
+                    <div class="note-red mt-3">* يرجى إدخال الأرقام في خانة تكاليف اليد العاملة لضمان ظهور النتيجة بشكل صحيح.</div>
                 </div>
             </div>
 
@@ -620,103 +787,6 @@
                     <div class="cost-total-box">
                         <div class="cost-total-label">إجمالي تكاليف التغليف للعلبة</div>
                         <div class="cost-total-value" id="packaging-per-box" style="color: var(--blue-cost);">0.000 د.ب</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card-modern">
-                <div class="card-header-modern"><i class="bi bi-people"></i> تكاليف اليد العاملة</div>
-                <div class="card-body-modern">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <h5>معلومات العامل</h5>
-                            <div class="table-responsive">
-                                <table class="table-modern" id="workers-table-1">
-                                    <thead>
-                                        <tr>
-                                            <th style="width: 25%">الراتب الشهري (د.ب)</th>
-                                            <th style="width: 25%">عدد ساعات العمل</th>
-                                            <th style="width: 25%">تكلفة ساعات العمل</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td class="price-input-container"><input type="number" class="form-control-modern salary" step="0.001" required></td>
-                                            <td><input type="number" class="form-control-modern hours" required></td>
-                                            <td class="hourly-cost">0.000</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <h5>حسابات الإنتاج</h5>
-                            <div class="table-responsive">
-                                <table class="table-modern" id="workers-table-2">
-                                    <thead>
-                                        <tr>
-                                            <th style="width: 25%">عدد القطع المنتجة</th>
-                                            <th style="width: 25%">عدد القطع لكل ساعة</th>
-                                            <th style="width: 25%">تكلفة القطعة</th>
-                                            <th style="width: 25%">تكلفة العلبة</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td><input type="number" class="form-control-modern pieces" required></td>
-                                            <td class="pieces-per-hour">0</td>
-                                            <td class="piece-cost">0.000</td>
-                                            <td class="box-cost">0.000</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="cost-total-box">
-                        <div class="cost-total-label">إجمالي تكلفة اليد العاملة للعلبة</div>
-                        <div class="cost-total-value" id="labor-per-box" style="color: var(--blue-cost);">0.000 د.ب</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card-modern">
-                <div class="card-header-modern"><i class="bi bi-tools"></i> إهلاك المعدات</div>
-                <div class="card-body-modern">
-                    <div class="row">
-                        <div class="col-md-4"><label class="form-label">النسبة المئوية (%)</label><input type="number" class="form-control-modern" id="depreciation-rate" placeholder="أدخل النسبة" required></div>
-                        <div class="col-md-4"><label class="form-label">إهلاك المعدات (د.ب)</label><input type="number" class="form-control-modern" id="equipment-depreciation" step="0.001" readonly></div>
-                        <div class="col-md-4"><label class="form-label">إهلاك المعدات للعلبة (د.ب)</label><input type="number" class="form-control-modern" id="equipment-depreciation-box" step="0.001" readonly></div>
-                    </div>
-                    <div class="note-red mt-3">* نسبة الإهلاك هي تقدير لتكلفة استهلاك المعدات والأجهزة المستخدمة في إنتاج المنتج ونقترح أن تكون 10%</div>
-                </div>
-            </div>
-
-            <div class="card-modern">
-                <div class="card-header-modern"><i class="bi bi-currency-dollar"></i> ملخص التكاليف والأسعار</div>
-                <div class="card-body-modern">
-                    <div class="row">
-                        <div class="col-md-4 text-center">
-                            <h6 class="text-muted">التكلفة الإجمالية للعلبة</h6>
-                            <div class="readonly-input" id="grand-total-cost">0.000 د.ب</div>
-                        </div>
-                        <div class="col-md-4 text-center">
-                            <h6 class="text-muted">سعر البيع المقترح</h6>
-                            <div class="readonly-input" id="suggested-price">0.000 د.ب</div>
-                            <div class="profit-box" style="color: var(--orange-suggested); border-color: var(--orange-suggested);">
-                                هامش الربح: <span id="suggested-profit">0.000 د.ب (0%)</span>
-                            </div>
-                        </div>
-                        <div class="col-md-4 text-center">
-                            <h6 class="text-muted">سعر البيع النهائي</h6>
-                            <div class="readonly-input" id="final-price-display">0.000 د.ب</div>
-                            <div class="profit-box" style="color: var(--green-final); border-color: var(--green-final);">
-                                هامش الربح: <span id="final-profit">0.000 د.ب (0%)</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="text-center mt-4">
-                        <button type="button" class="btn btn-success-modern btn-lg" id="save-product"><i class="bi bi-save"></i> حفظ المنتج</button>
                     </div>
                 </div>
             </div>
@@ -1002,14 +1072,15 @@
             const piecesPerBox = parseFloat(document.getElementById('sale-quantity').value) || 1;
 
             // حساب التكاليف للعلبة الواحدة
-            const materialBoxCost = materialsCost;
+            // التعديل: تقسيم تكلفة المواد على عدد القطع المنتجة وضربها في عدد القطع في العلبة
+            const materialBoxCost = (materialsCost / piecesProduced) * piecesPerBox;
             const packagingBoxCost = packagingCost;
             const laborBoxCost = totalLaborCost;
 
             // حساب إهلاك المعدات
             const depreciationRate = parseFloat(document.getElementById('depreciation-rate').value) || 0;
             const depreciationCost = materialsCost * (depreciationRate / 100);
-            const depreciationBoxCost = depreciationCost;
+            const depreciationBoxCost = (depreciationCost / piecesProduced) * piecesPerBox;
 
             // تحديث القيم في الواجهة
             document.getElementById('material-summary').textContent = formatCurrency(materialBoxCost);
@@ -1037,18 +1108,17 @@
             document.getElementById('suggested-profit').textContent = suggestedProfit;
             
             // حساب سعر البيع النهائي
-            const finalPrice = suggestedPrice;
+            const finalPriceInput = document.getElementById('final-price-input');
+            const finalPrice = parseFloat(finalPriceInput.value) || suggestedPrice;
             const finalProfit = finalPrice - totalCostPerBox;
             const finalProfitRate = totalCostPerBox > 0 ? (finalProfit / totalCostPerBox) * 100 : 0;
             const finalProfitText = formatCurrency(finalProfit) + ' (' + finalProfitRate.toFixed(1) + '%)';
             document.getElementById('final-profit').textContent = finalProfitText;
-            document.getElementById('final-price-display').textContent = formatCurrency(finalPrice);
             document.getElementById('final-price-summary').textContent = formatCurrency(finalPrice);
             document.getElementById('profit-summary').textContent = formatCurrency(finalProfit) + ' (' + finalProfitRate.toFixed(1) + '%)';
             
             document.getElementById('grand-total-cost').style.color = 'var(--blue-cost)';
             document.getElementById('suggested-price').style.color = 'var(--orange-suggested)';
-            document.getElementById('final-price-display').style.color = 'var(--green-final)';
         }
 
         function addTableRow(tableId){
@@ -1092,6 +1162,7 @@
             document.getElementById('product-name').value='';
             document.getElementById('sale-quantity').value='';
             document.getElementById('profit-rate').value='';
+            document.getElementById('final-price-input').value='';
             document.querySelectorAll('#materials-table tbody tr, #packaging-table tbody tr').forEach(row => {
                 if(row.parentElement.children.length > 1) row.remove();
             });
@@ -1231,6 +1302,7 @@
             document.getElementById('sale-quantity').value = product.quantity;
             const profitRateText = product.profitRate.replace('%', '');
             document.getElementById('profit-rate').value = profitRateText;
+            document.getElementById('final-price-input').value = parseFloat(product.finalPrice.replace(/[^0-9.]/g, ''));
             updateCosts();
         }
 
@@ -1273,24 +1345,92 @@
             });
         }
 
+        function validateForm() {
+            let isValid = true;
+            
+            // إخفاء جميع رسائل الخطأ
+            document.querySelectorAll('.error-message').forEach(el => {
+                el.style.display = 'none';
+            });
+            
+            // إزالة فئة الخطأ من جميع الحقول
+            document.querySelectorAll('.error-input').forEach(el => {
+                el.classList.remove('error-input');
+            });
+            
+            // التحقق من الحقول المطلوبة
+            const requiredFields = [
+                { id: 'product-name', errorId: 'product-name-error' },
+                { id: 'sale-quantity', errorId: 'sale-quantity-error' },
+                { id: 'profit-rate', errorId: 'profit-rate-error' },
+                { id: 'final-price-input', errorId: 'final-price-error' },
+                { id: 'depreciation-rate', errorId: 'depreciation-rate-error' }
+            ];
+            
+            requiredFields.forEach(field => {
+                const input = document.getElementById(field.id);
+                if (!input.value.trim()) {
+                    isValid = false;
+                    document.getElementById(field.errorId).style.display = 'flex';
+                    input.classList.add('error-input');
+                    if (isValid === false) {
+                        input.focus();
+                    }
+                }
+            });
+            
+            // التحقق من تكاليف اليد العاملة
+            const salary = document.querySelector('.salary');
+            const hours = document.querySelector('.hours');
+            const pieces = document.querySelector('.pieces');
+            
+            if (!salary.value.trim()) {
+                isValid = false;
+                document.getElementById('salary-error').style.display = 'flex';
+                salary.classList.add('error-input');
+                if (isValid === false) {
+                    salary.focus();
+                }
+            }
+            
+            if (!hours.value.trim()) {
+                isValid = false;
+                document.getElementById('hours-error').style.display = 'flex';
+                hours.classList.add('error-input');
+                if (isValid === false) {
+                    hours.focus();
+                }
+            }
+            
+            if (!pieces.value.trim()) {
+                isValid = false;
+                document.getElementById('pieces-error').style.display = 'flex';
+                pieces.classList.add('error-input');
+                if (isValid === false) {
+                    pieces.focus();
+                }
+            }
+            
+            return isValid;
+        }
+
         function saveProduct(){
+            if (!validateForm()) {
+                return;
+            }
+            
             const name=document.getElementById('product-name').value;
             const code=document.getElementById('product-code').value;
             const qty=document.getElementById('sale-quantity').value;
             const profitRate=document.getElementById('profit-rate').value;
-            const finalPrice=document.getElementById('final-price-display').textContent.replace(/[^0-9.]/g, '');
+            const finalPrice=document.getElementById('final-price-input').value;
             
-            if(!name || !qty || !profitRate){
-                alert('يرجى تعبئة جميع الحقول المطلوبة');
-                return;
-            }
-
             const product = {
                 code: code,
                 name: name,
                 quantity: qty,
                 totalCost: document.getElementById('grand-total-cost').textContent,
-                finalPrice: document.getElementById('final-price-display').textContent,
+                finalPrice: formatCurrency(parseFloat(finalPrice)),
                 profitRate: profitRate + '%',
                 profitMargin: document.getElementById('final-profit').textContent,
                 laborCost: document.getElementById('labor-summary').textContent,
@@ -1355,6 +1495,11 @@
                 e.target.closest('#workers-table-1') || e.target.closest('#workers-table-2')) {
                 updateCosts();
             }
+            
+            // تحديث عند تغيير سعر البيع النهائي
+            if (e.target.id === 'final-price-input') {
+                updateCosts();
+            }
         });
 
         document.getElementById('add-material').addEventListener('click',()=>addTableRow('materials-table'));
@@ -1362,7 +1507,7 @@
         document.getElementById('sidebarToggle').addEventListener('click',()=>document.getElementById('sidebar').classList.toggle('show'));
         document.getElementById('save-product').addEventListener('click',saveProduct);
 
-        ['depreciation-rate','profit-rate','sale-quantity'].forEach(id=>{
+        ['depreciation-rate','profit-rate','sale-quantity','final-price-input'].forEach(id=>{
             document.getElementById(id).addEventListener('input',updateCosts);
             document.getElementById(id).addEventListener('change',updateCosts);
             document.getElementById(id).addEventListener('keyup',updateCosts);
