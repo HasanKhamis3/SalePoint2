@@ -306,11 +306,30 @@
             border: 2px solid var(--border-color);
             border-radius: 12px;
             padding: 1.125rem 1rem;
-            font-size: 1.1rem;
+            font-size: 1.5rem;
             width: 100%;
             text-align: center;
             color: var(--text-primary);
             font-weight: 700;
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .price-input-container {
+            position: relative;
+        }
+        .price-input-container::after {
+            content: "د.ب";
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+        .price-input-container input {
+            padding-left: 40px;
         }
         @media (max-width: 768px) {
             .sidebar { transform: translateX(100%); }
@@ -690,7 +709,7 @@
                         </div>
                         <div class="col-md-4 text-center">
                             <h6 class="text-muted">سعر البيع النهائي</h6>
-                            <input type="number" class="form-control-modern" id="final-price" placeholder="أدخل السعر" step="0.001" style="font-size: 1.2rem; text-align: center; margin: 0 auto; max-width: 160px; height: 45px; color: var(--green-final);">
+                            <div class="readonly-input" id="final-price-display">0.000 د.ب</div>
                             <div class="profit-box" style="color: var(--green-final); border-color: var(--green-final);">
                                 هامش الربح: <span id="final-profit">0.000 د.ب (0%)</span>
                             </div>
@@ -931,6 +950,7 @@
         }
 
         function updateCosts(){
+            // حساب تكاليف المواد
             let materialsCost = 0;
             document.querySelectorAll('#materials-table tbody tr').forEach(row=>{
                 const inputs = row.querySelectorAll('input');
@@ -942,6 +962,7 @@
                 materialsCost += cost;
             });
 
+            // حساب تكاليف التغليف
             let packagingCost = 0;
             document.querySelectorAll('#packaging-table tbody tr').forEach(row=>{
                 const inputs = row.querySelectorAll('input');
@@ -953,6 +974,7 @@
                 packagingCost += cost;
             });
 
+            // حساب تكاليف اليد العاملة
             let totalLaborCost = 0;
             const workers = document.querySelectorAll('#workers-table-1 tbody tr');
             const productions = document.querySelectorAll('#workers-table-2 tbody tr');
@@ -979,14 +1001,17 @@
             const piecesProduced = parseFloat(document.querySelector('#workers-table-2 tbody tr .pieces')?.value) || 1;
             const piecesPerBox = parseFloat(document.getElementById('sale-quantity').value) || 1;
 
-            const materialBoxCost = (materialsCost / piecesProduced) * piecesPerBox;
-            const packagingBoxCost = (packagingCost / piecesProduced) * piecesPerBox;
+            // حساب التكاليف للعلبة الواحدة
+            const materialBoxCost = materialsCost;
+            const packagingBoxCost = packagingCost;
             const laborBoxCost = totalLaborCost;
 
+            // حساب إهلاك المعدات
             const depreciationRate = parseFloat(document.getElementById('depreciation-rate').value) || 0;
             const depreciationCost = materialsCost * (depreciationRate / 100);
-            const depreciationBoxCost = (depreciationCost / piecesProduced) * piecesPerBox;
+            const depreciationBoxCost = depreciationCost;
 
+            // تحديث القيم في الواجهة
             document.getElementById('material-summary').textContent = formatCurrency(materialBoxCost);
             document.getElementById('packaging-summary').textContent = formatCurrency(packagingBoxCost);
             document.getElementById('depreciation-summary').textContent = formatCurrency(depreciationBoxCost);
@@ -999,9 +1024,11 @@
             document.getElementById('equipment-depreciation').value = depreciationCost.toFixed(currencyDecimals);
             document.getElementById('equipment-depreciation-box').value = depreciationBoxCost.toFixed(currencyDecimals);
 
+            // حساب التكلفة الإجمالية للعلبة
             const totalCostPerBox = materialBoxCost + packagingBoxCost + laborBoxCost + depreciationBoxCost;
             document.getElementById('grand-total-cost').textContent = formatCurrency(totalCostPerBox);
 
+            // حساب سعر البيع المقترح
             const profitRate = parseFloat(document.getElementById('profit-rate').value) || 0;
             const profitAmount = totalCostPerBox * (profitRate / 100);
             const suggestedPrice = totalCostPerBox + profitAmount;
@@ -1009,16 +1036,19 @@
             const suggestedProfit = formatCurrency(profitAmount) + ' (' + profitRate + '%)';
             document.getElementById('suggested-profit').textContent = suggestedProfit;
             
-            const finalPrice = parseFloat(document.getElementById('final-price').value) || suggestedPrice;
+            // حساب سعر البيع النهائي
+            const finalPrice = suggestedPrice;
             const finalProfit = finalPrice - totalCostPerBox;
             const finalProfitRate = totalCostPerBox > 0 ? (finalProfit / totalCostPerBox) * 100 : 0;
             const finalProfitText = formatCurrency(finalProfit) + ' (' + finalProfitRate.toFixed(1) + '%)';
             document.getElementById('final-profit').textContent = finalProfitText;
+            document.getElementById('final-price-display').textContent = formatCurrency(finalPrice);
             document.getElementById('final-price-summary').textContent = formatCurrency(finalPrice);
             document.getElementById('profit-summary').textContent = formatCurrency(finalProfit) + ' (' + finalProfitRate.toFixed(1) + '%)';
             
             document.getElementById('grand-total-cost').style.color = 'var(--blue-cost)';
             document.getElementById('suggested-price').style.color = 'var(--orange-suggested)';
+            document.getElementById('final-price-display').style.color = 'var(--green-final)';
         }
 
         function addTableRow(tableId){
@@ -1062,7 +1092,6 @@
             document.getElementById('product-name').value='';
             document.getElementById('sale-quantity').value='';
             document.getElementById('profit-rate').value='';
-            document.getElementById('final-price').value='';
             document.querySelectorAll('#materials-table tbody tr, #packaging-table tbody tr').forEach(row => {
                 if(row.parentElement.children.length > 1) row.remove();
             });
@@ -1200,8 +1229,6 @@
             document.getElementById('product-name').value = product.name;
             document.getElementById('product-code').value = product.code;
             document.getElementById('sale-quantity').value = product.quantity;
-            const finalPriceText = product.finalPrice.replace(/[^0-9.]/g, '');
-            document.getElementById('final-price').value = finalPriceText;
             const profitRateText = product.profitRate.replace('%', '');
             document.getElementById('profit-rate').value = profitRateText;
             updateCosts();
@@ -1251,9 +1278,9 @@
             const code=document.getElementById('product-code').value;
             const qty=document.getElementById('sale-quantity').value;
             const profitRate=document.getElementById('profit-rate').value;
-            const finalPrice=document.getElementById('final-price').value;
+            const finalPrice=document.getElementById('final-price-display').textContent.replace(/[^0-9.]/g, '');
             
-            if(!name || !qty || !profitRate || !finalPrice){
+            if(!name || !qty || !profitRate){
                 alert('يرجى تعبئة جميع الحقول المطلوبة');
                 return;
             }
@@ -1263,9 +1290,9 @@
                 name: name,
                 quantity: qty,
                 totalCost: document.getElementById('grand-total-cost').textContent,
-                finalPrice: formatCurrency(parseFloat(finalPrice)),
+                finalPrice: document.getElementById('final-price-display').textContent,
                 profitRate: profitRate + '%',
-                profitMargin: formatCurrency(parseFloat(finalPrice) - parseFloat(document.getElementById('grand-total-cost').textContent.replace(/[^0-9.]/g, ''))),
+                profitMargin: document.getElementById('final-profit').textContent,
                 laborCost: document.getElementById('labor-summary').textContent,
                 depreciation: document.getElementById('depreciation-summary').textContent
             };
@@ -1334,7 +1361,6 @@
         document.getElementById('add-packaging').addEventListener('click',()=>addTableRow('packaging-table'));
         document.getElementById('sidebarToggle').addEventListener('click',()=>document.getElementById('sidebar').classList.toggle('show'));
         document.getElementById('save-product').addEventListener('click',saveProduct);
-        document.getElementById('final-price').addEventListener('input', updateCosts);
 
         ['depreciation-rate','profit-rate','sale-quantity'].forEach(id=>{
             document.getElementById(id).addEventListener('input',updateCosts);
