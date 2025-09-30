@@ -382,10 +382,261 @@
             color: var(--text-primary);
         }
         
+        /* إضافة أنماط جديدة لقسم الإعدادات */
+        .settings-section-modern {
+            margin-bottom: 2rem;
+        }
+        
+        .settings-section-modern h4 {
+            padding-bottom: 0.5rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid var(--border-color);
+            color: var(--primary-color);
+        }
+        
+        .settings-table {
+            width: 100%;
+            margin-bottom: 1.5rem;
+            border-collapse: collapse;
+        }
+        
+        .settings-table th {
+            background: var(--primary-light);
+            color: white;
+            padding: 1rem;
+            text-align: right;
+        }
+        
+        .settings-table td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border-color);
+            vertical-align: middle;
+        }
+        
+        .settings-table tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .settings-table .action-cell {
+            width: 150px;
+            text-align: center;
+        }
+        
+        .settings-table .edit-btn {
+            background: var(--secondary-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+        
+        .settings-table .edit-btn:hover {
+            background: var(--accent-color);
+        }
+        
+        .settings-table .save-btn {
+            background: var(--success);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+            display: none;
+        }
+        
+        .settings-table .save-btn:hover {
+            background: #00e676;
+        }
+        
+        .settings-table .add-btn {
+            background: var(--success);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 0.75rem 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+            font-size: 1rem;
+        }
+        
+        .settings-table .add-btn:hover {
+            background: #00e676;
+        }
+        
+        .settings-table .delete-btn {
+            background: var(--error);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 0.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-right: 0.5rem;
+        }
+        
+        .settings-table .delete-btn:hover {
+            background: #ff5252;
+        }
+        
+        .settings-table .activate-btn {
+            background: var(--success);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 0.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-right: 0.5rem;
+        }
+        
+        .settings-table .activate-btn:hover {
+            background: #00e676;
+        }
+        
+        .settings-table .deactivate-btn {
+            background: var(--warning);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 0.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-right: 0.5rem;
+        }
+        
+        .settings-table .deactivate-btn:hover {
+            background: #ffb74d;
+        }
+        
+        .settings-subnav {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 1rem;
+        }
+        
+        .settings-subnav a {
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-weight: 500;
+            padding: 0.75rem 1.5rem;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+        
+        .settings-subnav a.active {
+            background: linear-gradient(135deg, var(--secondary-color), var(--accent-color));
+            color: white;
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .settings-subnav a:hover:not(.active) {
+            background: var(--surface-hover);
+        }
+        
+        .settings-subpage {
+            display: none;
+        }
+        
+        .settings-subpage.active {
+            display: block;
+        }
+        
+        .logo-preview {
+            width: 150px;
+            height: 150px;
+            border: 2px dashed var(--border-color);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+            overflow: hidden;
+        }
+        
+        .logo-preview img {
+            max-width: 100%;
+            max-height: 100%;
+        }
+        
+        .logo-upload-btn {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 0.75rem 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .logo-upload-btn:hover {
+            background: var(--primary-light);
+        }
+        
+        .tax-toggle {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .tax-toggle .form-check {
+            margin-bottom: 0;
+        }
+        
+        .tax-fields {
+            margin-top: 1rem;
+            padding: 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            background: var(--surface-hover);
+        }
+        
+        .tax-fields.disabled {
+            opacity: 0.5;
+            pointer-events: none;
+        }
+        
+        .settings-input {
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            padding: 0.75rem;
+            width: 100%;
+            background: white;
+            transition: all 0.3s ease;
+        }
+        
+        .settings-input:focus {
+            border-color: var(--secondary-color);
+            outline: none;
+        }
+        
+        .settings-input:disabled {
+            background-color: #f8f9fa;
+            cursor: not-allowed;
+        }
+        
+        .editing .settings-input {
+            border-color: var(--secondary-color);
+            background: #fffaf0;
+        }
+        
         @media (max-width: 768px) {
             .sidebar { transform: translateX(100%); }
             .sidebar.show { transform: translateX(0); }
             .main-content { margin-right: 0; padding: 1rem; }
+            .settings-subnav {
+                flex-direction: column;
+            }
+            .settings-table .action-cell {
+                width: 120px;
+            }
         }
     </style>
 </head>
@@ -404,6 +655,7 @@
                 <li class="nav-item"><a class="nav-link" href="#" data-page="track-invoices"><i class="bi bi-geo-alt"></i><span>تتبع الفواتير</span></a></li>
                 <li class="nav-item"><a class="nav-link" href="#" data-page="calculate-product"><i class="bi bi-calculator"></i><span>حساب تكلفة المنتج</span></a></li>
                 <li class="nav-item"><a class="nav-link" href="#" data-page="manage-products"><i class="bi bi-box-seam"></i><span>إدارة المنتجات</span></a></li>
+                <li class="nav-item"><a class="nav-link" href="#" data-page="settings"><i class="bi bi-gear"></i><span>الإعدادات</span></a></li>
             </ul>
         </nav>
     </div>
@@ -853,885 +1105,9 @@
                 </div>
             </div>
         </div>
-    </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        // قاعدة بيانات محلية لتخزين البيانات
-        let appData = {
-            products: [],
-            invoices: [],
-            settings: {
-                project: {},
-                system: { currency: 'BHD', color: 'default', language: 'ar' },
-                tax: { enabled: false, rate: 0, number: '' },
-                paymentMethods: [],
-                delivery: { areas: [], cities: [] }
-            }
-        };
-
-        // محاولة تحميل البيانات من localStorage
-        function loadData() {
-            const savedData = localStorage.getItem('accountingAppData');
-            if (savedData) {
-                appData = JSON.parse(savedData);
-            }
-        }
-
-        // حفظ البيانات إلى localStorage
-        function saveData() {
-            localStorage.setItem('accountingAppData', JSON.stringify(appData));
-        }
-
-        // تحميل البيانات عند بدء التشغيل
-        loadData();
-
-        let productCounter = appData.products.length + 1;
-        let products = appData.products;
-        let editingIndex = -1;
-        let currentCurrency = 'د.ب';
-        let currencyDecimals = 3;
-
-        function showPage(pageId){
-            document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-            document.getElementById(pageId)?.classList.add('active');
-            document.querySelectorAll('.sidebar .nav-link').forEach(l=>l.classList.remove('active'));
-            document.querySelectorAll('.sidebar .nav-link').forEach(l=>{
-                if(l.getAttribute('data-page') === pageId){
-                    l.classList.add('active');
-                }
-            });
-            document.getElementById('sidebar').classList.remove('show');
-            
-            // تحديث الجداول عند عرض الصفحات
-            if (pageId === 'manage-products') {
-                updateProductsTable();
-            } else if (pageId === 'manage-invoices') {
-                updateInvoicesTable();
-            } else if (pageId === 'track-invoices') {
-                updateTrackingTable();
-            }
-        }
-
-        document.addEventListener('click', function(e){
-            if(e.target.closest('[data-page]')){
-                e.preventDefault();
-                showPage(e.target.closest('[data-page]').getAttribute('data-page'));
-            }
-        });
-
-        showPage('dashboard');
-
-        document.getElementById('invoice-number').value = "INV-" + new Date().getFullYear() + "-" + String(appData.invoices.length + 1).padStart(4, '0');
-        document.getElementById('product-code').value = "PRD-" + String(productCounter).padStart(4, '0');
-        document.getElementById('invoice-date').value = new Date().toISOString().split('T')[0];
-
-        function updateCurrencyFormat() {
-            const currencySelect = document.getElementById('system-currency');
-            const selectedText = currencySelect.options[currencySelect.selectedIndex].text;
-            const match = selectedText.match(/\(([^)]+)\)/);
-            if(match) {
-                currentCurrency = match[1];
-                currencyDecimals = selectedText.includes('0.000') ? 3 : 2;
-            }
-            updateCosts();
-        }
-
-        function formatCurrency(value) {
-            return value.toFixed(currencyDecimals) + ' ' + currentCurrency;
-        }
-
-        function updateCosts(){
-            // حساب تكاليف المواد
-            let materialsCost = 0;
-            document.querySelectorAll('#materials-table tbody tr').forEach(row=>{
-                const inputs = row.querySelectorAll('input');
-                const count = parseFloat(inputs[1].value) || 1;
-                const price = parseFloat(inputs[2].value) || 0;
-                const used = parseFloat(inputs[3].value) || 0;
-                const cost = (price / count) * used;
-                row.querySelector('.material-cost').textContent = formatCurrency(cost);
-                materialsCost += cost;
-            });
-
-            // حساب تكاليف التغليف
-            let packagingCost = 0;
-            document.querySelectorAll('#packaging-table tbody tr').forEach(row=>{
-                const inputs = row.querySelectorAll('input');
-                const count = parseFloat(inputs[1].value) || 1;
-                const price = parseFloat(inputs[2].value) || 0;
-                const used = parseFloat(inputs[3].value) || 0;
-                const cost = (price / count) * used;
-                row.querySelector('.packaging-cost').textContent = formatCurrency(cost);
-                packagingCost += cost;
-            });
-
-            // حساب تكاليف اليد العاملة
-            let totalLaborCost = 0;
-            const workers = document.querySelectorAll('#workers-table-1 tbody tr');
-            const productions = document.querySelectorAll('#workers-table-2 tbody tr');
-            
-            workers.forEach((worker, index) => {
-                const salary = parseFloat(worker.querySelector('.salary')?.value) || 0;
-                const hours = parseFloat(worker.querySelector('.hours')?.value) || 1;
-                const hourlyCost = ((salary / 30) / 8) * hours;
-                worker.querySelector('.hourly-cost').textContent = formatCurrency(hourlyCost);
-
-                if(productions[index]) {
-                    const pieces = parseFloat(productions[index].querySelector('.pieces')?.value) || 1;
-                    const piecesPerHour = pieces / hours;
-                    const pieceCost = pieces > 0 ? ((salary / 30) / 8) / pieces : 0;
-                    const boxCost = pieceCost * (parseFloat(document.getElementById('sale-quantity').value) || 1);
-                    
-                    productions[index].querySelector('.pieces-per-hour').textContent = piecesPerHour.toFixed(0);
-                    productions[index].querySelector('.piece-cost').textContent = formatCurrency(pieceCost);
-                    productions[index].querySelector('.box-cost').textContent = formatCurrency(boxCost);
-                    totalLaborCost += boxCost;
-                }
-            });
-
-            const piecesProduced = parseFloat(document.querySelector('#workers-table-2 tbody tr .pieces')?.value) || 1;
-            const piecesPerBox = parseFloat(document.getElementById('sale-quantity').value) || 1;
-
-            // حساب التكاليف للعلبة الواحدة
-            // التعديل: تقسيم تكلفة المواد على عدد القطع المنتجة وضربها في عدد القطع في العلبة
-            const materialBoxCost = (materialsCost / piecesProduced) * piecesPerBox;
-            const packagingBoxCost = packagingCost;
-            const laborBoxCost = totalLaborCost;
-
-            // حساب إهلاك المعدات
-            const depreciationRate = parseFloat(document.getElementById('depreciation-rate').value) || 0;
-            const depreciationCost = materialsCost * (depreciationRate / 100);
-            const depreciationBoxCost = (depreciationCost / piecesProduced) * piecesPerBox;
-
-            // تحديث القيم في الواجهة
-            document.getElementById('material-summary').textContent = formatCurrency(materialBoxCost);
-            document.getElementById('packaging-summary').textContent = formatCurrency(packagingBoxCost);
-            document.getElementById('depreciation-summary').textContent = formatCurrency(depreciationBoxCost);
-            document.getElementById('labor-summary').textContent = formatCurrency(laborBoxCost);
-
-            document.getElementById('materials-per-box').textContent = formatCurrency(materialBoxCost);
-            document.getElementById('packaging-per-box').textContent = formatCurrency(packagingBoxCost);
-            document.getElementById('labor-per-box').textContent = formatCurrency(laborBoxCost);
-
-            document.getElementById('equipment-depreciation').value = depreciationCost.toFixed(currencyDecimals);
-            document.getElementById('equipment-depreciation-box').value = depreciationBoxCost.toFixed(currencyDecimals);
-
-            // حساب التكلفة الإجمالية للعلبة
-            const totalCostPerBox = materialBoxCost + packagingBoxCost + laborBoxCost + depreciationBoxCost;
-            document.getElementById('grand-total-cost').textContent = formatCurrency(totalCostPerBox);
-
-            // حساب سعر البيع المقترح
-            const profitRate = parseFloat(document.getElementById('profit-rate').value) || 0;
-            const profitAmount = totalCostPerBox * (profitRate / 100);
-            const suggestedPrice = totalCostPerBox + profitAmount;
-            document.getElementById('suggested-price').textContent = formatCurrency(suggestedPrice);
-            const suggestedProfit = formatCurrency(profitAmount) + ' (' + profitRate + '%)';
-            document.getElementById('suggested-profit').textContent = suggestedProfit;
-            
-            // حساب سعر البيع النهائي
-            const finalPriceInput = document.getElementById('final-price-input');
-            const finalPrice = parseFloat(finalPriceInput.value) || suggestedPrice;
-            const finalProfit = finalPrice - totalCostPerBox;
-            const finalProfitRate = totalCostPerBox > 0 ? (finalProfit / totalCostPerBox) * 100 : 0;
-            const finalProfitText = formatCurrency(finalProfit) + ' (' + finalProfitRate.toFixed(1) + '%)';
-            document.getElementById('final-profit').textContent = finalProfitText;
-            document.getElementById('final-price-summary').textContent = formatCurrency(finalPrice);
-            document.getElementById('profit-summary').textContent = formatCurrency(finalProfit) + ' (' + finalProfitRate.toFixed(1) + '%)';
-            
-            document.getElementById('grand-total-cost').style.color = 'var(--blue-cost)';
-            document.getElementById('suggested-price').style.color = 'var(--orange-suggested)';
-        }
-
-        function addTableRow(tableId){
-            const tbody=document.querySelector(`#${tableId} tbody`);
-            const newRow=document.createElement('tr');
-            if(tableId==='materials-table'){
-                newRow.innerHTML=`
-                    <td class="product-name-col"><input type="text" class="form-control-modern" required></td>
-                    <td><input type="number" class="form-control-modern" required></td>
-                    <td class="price-input-container"><input type="number" class="form-control-modern" step="0.001" required></td>
-                    <td><input type="number" class="form-control-modern" required></td>
-                    <td class="material-cost">0.000 د.ب</td>
-                    <td><button class="btn btn-danger-modern btn-action remove-row"><i class="bi bi-trash"></i></button></td>`;
-            }else if(tableId==='packaging-table'){
-                newRow.innerHTML=`
-                    <td class="product-name-col"><input type="text" class="form-control-modern" required></td>
-                    <td><input type="number" class="form-control-modern" required></td>
-                    <td class="price-input-container"><input type="number" class="form-control-modern" step="0.001" required></td>
-                    <td><input type="number" class="form-control-modern" required></td>
-                    <td class="packaging-cost">0.000 د.ب</td>
-                    <td><button class="btn btn-danger-modern btn-action remove-row"><i class="bi bi-trash"></i></button></td>`;
-            }
-            tbody.appendChild(newRow);
-            setupRowEvents(newRow);
-            updateCosts();
-        }
-
-        function setupRowEvents(row){
-            row.querySelector('.remove-row')?.addEventListener('click',()=>{
-                row.remove();
-                updateCosts();
-            });
-            row.querySelectorAll('input').forEach(i=>{
-                i.addEventListener('input',updateCosts);
-                i.addEventListener('change',updateCosts);
-                i.addEventListener('keyup',updateCosts);
-            });
-        }
-
-        function clearForm() {
-            document.getElementById('product-name').value='';
-            document.getElementById('sale-quantity').value='';
-            document.getElementById('profit-rate').value='';
-            document.getElementById('final-price-input').value='';
-            document.querySelectorAll('#materials-table tbody tr, #packaging-table tbody tr').forEach(row => {
-                if(row.parentElement.children.length > 1) row.remove();
-            });
-            document.querySelectorAll('#materials-table tbody tr input, #packaging-table tbody tr input').forEach(input => {
-                input.value = '';
-            });
-            document.querySelectorAll('#workers-table-1 tbody tr input, #workers-table-2 tbody tr input').forEach(input => {
-                input.value = '';
-            });
-            productCounter++;
-            document.getElementById('product-code').value = "PRD-" + String(productCounter).padStart(4, '0');
-            updateCosts();
-        }
-
-        function updateProductsTable() {
-            const tbody = document.getElementById('products-list');
-            if(products.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="6" class="text-center">لا توجد منتجات مسجلة بعد</td></tr>';
-                return;
-            }
-            tbody.innerHTML = '';
-            products.forEach((product, index) => {
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td>${product.code}</td>
-                    <td>${product.name}</td>
-                    <td>${product.quantity}</td>
-                    <td>${product.totalCost}</td>
-                    <td>${product.finalPrice}</td>
-                    <td>
-                        <button class="btn btn-primary-modern btn-action" onclick="editProduct(${index})"><i class="bi bi-pencil"></i></button>
-                        <button class="btn btn-danger-modern btn-action" onclick="deleteProduct(${index})"><i class="bi bi-trash"></i></button>
-                        <button class="btn btn-info btn-action" onclick="previewProduct(${index})"><i class="bi bi-eye"></i></button>
-                    </td>`;
-                tbody.appendChild(tr);
-            });
-            document.getElementById('dashboard-products').textContent = products.length;
-        }
-
-        function updateInvoicesTable() {
-            const tbody = document.getElementById('invoices-list');
-            if(appData.invoices.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="8" class="text-center">لا توجد فواتير مسجلة بعد</td></tr>';
-                return;
-            }
-            tbody.innerHTML = '';
-            appData.invoices.forEach((invoice, index) => {
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td>${invoice.number}</td>
-                    <td>${invoice.date}</td>
-                    <td>${invoice.customerName}</td>
-                    <td>${invoice.customerPhone}</td>
-                    <td>${invoice.total}</td>
-                    <td>${invoice.paymentMethod}</td>
-                    <td>${invoice.paymentStatus === 'paid' ? 'مدفوع' : 'غير مدفوع'}</td>
-                    <td>
-                        <button class="btn btn-primary-modern btn-action"><i class="bi bi-eye"></i></button>
-                        <button class="btn btn-danger-modern btn-action" onclick="deleteInvoice(${index})"><i class="bi bi-trash"></i></button>
-                    </td>`;
-                tbody.appendChild(tr);
-            });
-            document.getElementById('dashboard-invoices').textContent = appData.invoices.length;
-        }
-
-        function updateTrackingTable() {
-            const tbody = document.getElementById('tracking-list');
-            if(appData.invoices.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="8" class="text-center">لا توجد فواتير مسجلة بعد</td></tr>';
-                return;
-            }
-            tbody.innerHTML = '';
-            appData.invoices.forEach((invoice, index) => {
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td>${invoice.number}</td>
-                    <td>${invoice.customerName}</td>
-                    <td>${invoice.date}</td>
-                    <td>قيد المعالجة</td>
-                    <td>${invoice.paymentMethod}</td>
-                    <td>${invoice.paymentStatus === 'paid' ? 'مدفوع' : 'غير مدفوع'}</td>
-                    <td>${invoice.total}</td>
-                    <td>
-                        <button class="btn btn-primary-modern btn-action"><i class="bi bi-eye"></i></button>
-                    </td>`;
-                tbody.appendChild(tr);
-            });
-        }
-
-        function editProduct(index) {
-            const product = products[index];
-            editingIndex = index;
-            showPage('calculate-product');
-            
-            document.getElementById('product-name').value = product.name;
-            document.getElementById('product-code').value = product.code;
-            document.getElementById('sale-quantity').value = product.quantity;
-            const profitRateText = product.profitRate.replace('%', '');
-            document.getElementById('profit-rate').value = profitRateText;
-            document.getElementById('final-price-input').value = parseFloat(product.finalPrice.replace(/[^0-9.]/g, ''));
-            updateCosts();
-        }
-
-        function deleteProduct(index) {
-            if(confirm('هل أنت متأكد من حذف هذا المنتج؟')) {
-                products.splice(index, 1);
-                appData.products = products;
-                saveData();
-                updateProductsTable();
-                updateInvoiceProducts();
-                document.getElementById('dashboard-products').textContent = products.length;
-            }
-        }
-
-        function deleteInvoice(index) {
-            if(confirm('هل أنت متأكد من حذف هذه الفاتورة؟')) {
-                appData.invoices.splice(index, 1);
-                saveData();
-                updateInvoicesTable();
-                updateTrackingTable();
-                document.getElementById('dashboard-invoices').textContent = appData.invoices.length;
-            }
-        }
-
-        function previewProduct(index) {
-            alert('عرض تفاصيل المنتج: ' + products[index].name);
-        }
-
-        function updateInvoiceProducts() {
-            const selects = document.querySelectorAll('.product-select');
-            selects.forEach(select => {
-                select.innerHTML = '<option value="">اختر منتج</option>';
-                products.forEach(product => {
-                    const option = document.createElement('option');
-                    option.value = product.code;
-                    option.dataset.price = product.finalPrice.replace(/[^0-9.]/g, '');
-                    option.textContent = product.name + ' - ' + product.finalPrice;
-                    select.appendChild(option);
-                });
-            });
-        }
-
-        function validateForm() {
-            let isValid = true;
-            
-            // إخفاء جميع رسائل الخطأ
-            document.querySelectorAll('.error-message').forEach(el => {
-                el.style.display = 'none';
-            });
-            
-            // إزالة فئة الخطأ من جميع الحقول
-            document.querySelectorAll('.error-input').forEach(el => {
-                el.classList.remove('error-input');
-            });
-            
-            // التحقق من الحقول المطلوبة
-            const requiredFields = [
-                { id: 'product-name', errorId: 'product-name-error' },
-                { id: 'sale-quantity', errorId: 'sale-quantity-error' },
-                { id: 'profit-rate', errorId: 'profit-rate-error' },
-                { id: 'final-price-input', errorId: 'final-price-error' },
-                { id: 'depreciation-rate', errorId: 'depreciation-rate-error' }
-            ];
-            
-            requiredFields.forEach(field => {
-                const input = document.getElementById(field.id);
-                if (!input.value.trim()) {
-                    isValid = false;
-                    document.getElementById(field.errorId).style.display = 'flex';
-                    input.classList.add('error-input');
-                    if (isValid === false) {
-                        input.focus();
-                    }
-                }
-            });
-            
-            // التحقق من تكاليف اليد العاملة
-            const salary = document.querySelector('.salary');
-            const hours = document.querySelector('.hours');
-            const pieces = document.querySelector('.pieces');
-            
-            if (!salary.value.trim()) {
-                isValid = false;
-                document.getElementById('salary-error').style.display = 'flex';
-                salary.classList.add('error-input');
-                if (isValid === false) {
-                    salary.focus();
-                }
-            }
-            
-            if (!hours.value.trim()) {
-                isValid = false;
-                document.getElementById('hours-error').style.display = 'flex';
-                hours.classList.add('error-input');
-                if (isValid === false) {
-                    hours.focus();
-                }
-            }
-            
-            if (!pieces.value.trim()) {
-                isValid = false;
-                document.getElementById('pieces-error').style.display = 'flex';
-                pieces.classList.add('error-input');
-                if (isValid === false) {
-                    pieces.focus();
-                }
-            }
-            
-            return isValid;
-        }
-
-        function saveProduct(){
-            if (!validateForm()) {
-                return;
-            }
-            
-            const name=document.getElementById('product-name').value;
-            const code=document.getElementById('product-code').value;
-            const qty=document.getElementById('sale-quantity').value;
-            const profitRate=document.getElementById('profit-rate').value;
-            const finalPrice=document.getElementById('final-price-input').value;
-            
-            const product = {
-                code: code,
-                name: name,
-                quantity: qty,
-                totalCost: document.getElementById('grand-total-cost').textContent,
-                finalPrice: formatCurrency(parseFloat(finalPrice)),
-                profitRate: profitRate + '%',
-                profitMargin: document.getElementById('final-profit').textContent,
-                laborCost: document.getElementById('labor-summary').textContent,
-                depreciation: document.getElementById('depreciation-summary').textContent
-            };
-            
-            if(editingIndex >= 0) {
-                products[editingIndex] = product;
-                editingIndex = -1;
-            } else {
-                products.push(product);
-            }
-            
-            appData.products = products;
-            saveData();
-            updateProductsTable();
-            updateInvoiceProducts();
-            clearForm();
-            alert('تم حفظ المنتج بنجاح!');
-            showPage('manage-products');
-        }
-
-        // Invoice product selection and auto-price
-        document.addEventListener('change', function(e) {
-            if (e.target.classList.contains('product-select')) {
-                const selectedOption = e.target.options[e.target.selectedIndex];
-                const price = selectedOption.dataset.price;
-                const row = e.target.closest('tr');
-                const priceInput = row.querySelector('.unit-price');
-                if (price) {
-                    priceInput.value = parseFloat(price).toFixed(currencyDecimals);
-                } else {
-                    priceInput.value = '';
-                }
-                calculateRowTotal(row);
-            }
-        });
-
-        function calculateRowTotal(row) {
-            const price = parseFloat(row.querySelector('.unit-price').value) || 0;
-            const quantity = parseFloat(row.querySelector('.quantity').value) || 1;
-            const total = price * quantity;
-            row.querySelector('.item-total').textContent = total.toFixed(currencyDecimals);
-            calculateInvoiceTotals();
-        }
-
-        function calculateInvoiceTotals() {
-            let subtotal = 0;
-            let tax = 0;
-            document.querySelectorAll('#invoice-items-table tbody tr').forEach(row => {
-                const total = parseFloat(row.querySelector('.item-total').textContent) || 0;
-                subtotal += total;
-            });
-            document.getElementById('invoice-subtotal').textContent = subtotal.toFixed(currencyDecimals) + ' ' + currentCurrency;
-            document.getElementById('invoice-tax').textContent = tax.toFixed(currencyDecimals) + ' ' + currentCurrency;
-            document.getElementById('invoice-total').textContent = subtotal.toFixed(currencyDecimals) + ' ' + currentCurrency;
-        }
-
-        // إضافة حدث input لجميع الحقول في جداول المواد والتغليف لتحديث النتائج مباشرة
-        document.addEventListener('input', function(e) {
-            if (e.target.closest('#materials-table') || e.target.closest('#packaging-table') || 
-                e.target.closest('#workers-table-1') || e.target.closest('#workers-table-2')) {
-                updateCosts();
-            }
-            
-            // تحديث عند تغيير سعر البيع النهائي
-            if (e.target.id === 'final-price-input') {
-                updateCosts();
-            }
-        });
-
-        document.getElementById('add-material').addEventListener('click',()=>addTableRow('materials-table'));
-        document.getElementById('add-packaging').addEventListener('click',()=>addTableRow('packaging-table'));
-        document.getElementById('sidebarToggle').addEventListener('click',()=>document.getElementById('sidebar').classList.toggle('show'));
-        document.getElementById('save-product').addEventListener('click',saveProduct);
-
-        ['depreciation-rate','profit-rate','sale-quantity','final-price-input'].forEach(id=>{
-            document.getElementById(id).addEventListener('input',updateCosts);
-            document.getElementById(id).addEventListener('change',updateCosts);
-            document.getElementById(id).addEventListener('keyup',updateCosts);
-        });
-
-        // تحديث الجداول عند تحميل الصفحة
-        updateProductsTable();
-        updateInvoicesTable();
-        updateTrackingTable();
-        updateInvoiceProducts();
-        updateCosts();
-    </script>
-</body>
-</html>
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>الإعدادات - Ajwaapilot</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
-    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --primary-color: #1a1a1a;
-            --primary-light: #2a2a2a;
-            --secondary-color: #ff6b35;
-            --accent-color: #f7931e;
-            --background: #fafafa;
-            --surface: #ffffff;
-            --surface-hover: #f5f5f5;
-            --text-primary: #1a1a1a;
-            --text-secondary: #666666;
-            --text-muted: #999999;
-            --border-color: #e0e0e0;
-            --success: #00c853;
-            --warning: #ff9800;
-            --error: #f44336;
-            --shadow-sm: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
-            --shadow-md: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
-            --shadow-lg: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
-        }
-        * { box-sizing: border-box; }
-        body {
-            font-family: 'IBM Plex Sans Arabic', sans-serif;
-            background-color: var(--background);
-            color: var(--text-primary);
-            line-height: 1.6;
-            margin: 0;
-            padding: 0;
-        }
-        .main-content {
-            padding: 2rem;
-            min-height: 100vh;
-        }
-        .page {
-            display: block;
-            animation: fadeIn 0.3s ease;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .card-modern {
-            background: var(--surface);
-            border: none;
-            border-radius: 16px;
-            box-shadow: var(--shadow-sm);
-            margin-bottom: 2rem;
-            overflow: hidden;
-        }
-        .card-header-modern {
-            background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
-            color: white;
-            padding: 1.5rem;
-            font-weight: 600;
-            font-size: 1.1rem;
-        }
-        .card-body-modern {
-            padding: 2rem;
-        }
-        
-        /* إضافة أنماط جديدة لقسم الإعدادات */
-        .settings-section-modern {
-            margin-bottom: 2rem;
-        }
-        
-        .settings-section-modern h4 {
-            padding-bottom: 0.5rem;
-            margin-bottom: 1.5rem;
-            border-bottom: 2px solid var(--border-color);
-            color: var(--primary-color);
-        }
-        
-        .settings-table {
-            width: 100%;
-            margin-bottom: 1.5rem;
-            border-collapse: collapse;
-        }
-        
-        .settings-table th {
-            background: var(--primary-light);
-            color: white;
-            padding: 1rem;
-            text-align: right;
-        }
-        
-        .settings-table td {
-            padding: 1rem;
-            border-bottom: 1px solid var(--border-color);
-            vertical-align: middle;
-        }
-        
-        .settings-table tr:last-child td {
-            border-bottom: none;
-        }
-        
-        .settings-table .action-cell {
-            width: 150px;
-            text-align: center;
-        }
-        
-        .settings-table .edit-btn {
-            background: var(--secondary-color);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            padding: 0.5rem 1rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 0.9rem;
-        }
-        
-        .settings-table .edit-btn:hover {
-            background: var(--accent-color);
-        }
-        
-        .settings-table .save-btn {
-            background: var(--success);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            padding: 0.5rem 1rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 0.9rem;
-            display: none;
-        }
-        
-        .settings-table .save-btn:hover {
-            background: #00e676;
-        }
-        
-        .settings-table .add-btn {
-            background: var(--success);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            padding: 0.75rem 1.5rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            margin-top: 1rem;
-            font-size: 1rem;
-        }
-        
-        .settings-table .add-btn:hover {
-            background: #00e676;
-        }
-        
-        .settings-table .delete-btn {
-            background: var(--error);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            padding: 0.5rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            margin-right: 0.5rem;
-        }
-        
-        .settings-table .delete-btn:hover {
-            background: #ff5252;
-        }
-        
-        .settings-table .activate-btn {
-            background: var(--success);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            padding: 0.5rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            margin-right: 0.5rem;
-        }
-        
-        .settings-table .activate-btn:hover {
-            background: #00e676;
-        }
-        
-        .settings-table .deactivate-btn {
-            background: var(--warning);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            padding: 0.5rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            margin-right: 0.5rem;
-        }
-        
-        .settings-table .deactivate-btn:hover {
-            background: #ffb74d;
-        }
-        
-        .settings-subnav {
-            display: flex;
-            gap: 1rem;
-            margin-bottom: 2rem;
-            border-bottom: 2px solid var(--border-color);
-            padding-bottom: 1rem;
-        }
-        
-        .settings-subnav a {
-            text-decoration: none;
-            color: var(--text-secondary);
-            font-weight: 500;
-            padding: 0.75rem 1.5rem;
-            border-radius: 12px;
-            transition: all 0.3s ease;
-        }
-        
-        .settings-subnav a.active {
-            background: linear-gradient(135deg, var(--secondary-color), var(--accent-color));
-            color: white;
-            box-shadow: var(--shadow-sm);
-        }
-        
-        .settings-subnav a:hover:not(.active) {
-            background: var(--surface-hover);
-        }
-        
-        .settings-subpage {
-            display: none;
-        }
-        
-        .settings-subpage.active {
-            display: block;
-        }
-        
-        .logo-preview {
-            width: 150px;
-            height: 150px;
-            border: 2px dashed var(--border-color);
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 1rem;
-            overflow: hidden;
-        }
-        
-        .logo-preview img {
-            max-width: 100%;
-            max-height: 100%;
-        }
-        
-        .logo-upload-btn {
-            background: var(--primary-color);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            padding: 0.75rem 1.5rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        
-        .logo-upload-btn:hover {
-            background: var(--primary-light);
-        }
-        
-        .tax-toggle {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-        
-        .tax-toggle .form-check {
-            margin-bottom: 0;
-        }
-        
-        .tax-fields {
-            margin-top: 1rem;
-            padding: 1rem;
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            background: var(--surface-hover);
-        }
-        
-        .tax-fields.disabled {
-            opacity: 0.5;
-            pointer-events: none;
-        }
-        
-        .settings-input {
-            border: 2px solid var(--border-color);
-            border-radius: 8px;
-            padding: 0.75rem;
-            width: 100%;
-            background: white;
-            transition: all 0.3s ease;
-        }
-        
-        .settings-input:focus {
-            border-color: var(--secondary-color);
-            outline: none;
-        }
-        
-        .settings-input:disabled {
-            background-color: #f8f9fa;
-            cursor: not-allowed;
-        }
-        
-        .editing .settings-input {
-            border-color: var(--secondary-color);
-            background: #fffaf0;
-        }
-        
-        @media (max-width: 768px) {
-            .settings-subnav {
-                flex-direction: column;
-            }
-            .settings-table .action-cell {
-                width: 120px;
-            }
-        }
-    </style>
-</head>
-<body>
-    <div class="main-content">
         <!-- صفحة الإعدادات الرئيسية -->
-        <div id="settings" class="page active">
+        <div id="settings" class="page">
             <div class="content-header">
                 <h2 class="content-title"><i class="bi bi-gear"></i> إعدادات النظام</h2>
             </div>
@@ -2175,6 +1551,8 @@
     <script>
         // قاعدة بيانات محلية لتخزين البيانات
         let appData = {
+            products: [],
+            invoices: [],
             settings: {
                 project: {},
                 system: { currency: 'BHD', color: 'default', language: 'ar' },
@@ -2199,6 +1577,544 @@
 
         // تحميل البيانات عند بدء التشغيل
         loadData();
+
+        let productCounter = appData.products.length + 1;
+        let products = appData.products;
+        let editingIndex = -1;
+        let currentCurrency = 'د.ب';
+        let currencyDecimals = 3;
+
+        function showPage(pageId){
+            document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+            document.getElementById(pageId)?.classList.add('active');
+            document.querySelectorAll('.sidebar .nav-link').forEach(l=>l.classList.remove('active'));
+            document.querySelectorAll('.sidebar .nav-link').forEach(l=>{
+                if(l.getAttribute('data-page') === pageId){
+                    l.classList.add('active');
+                }
+            });
+            document.getElementById('sidebar').classList.remove('show');
+            
+            // تحديث الجداول عند عرض الصفحات
+            if (pageId === 'manage-products') {
+                updateProductsTable();
+            } else if (pageId === 'manage-invoices') {
+                updateInvoicesTable();
+            } else if (pageId === 'track-invoices') {
+                updateTrackingTable();
+            }
+        }
+
+        document.addEventListener('click', function(e){
+            if(e.target.closest('[data-page]')){
+                e.preventDefault();
+                showPage(e.target.closest('[data-page]').getAttribute('data-page'));
+            }
+        });
+
+        showPage('dashboard');
+
+        document.getElementById('invoice-number').value = "INV-" + new Date().getFullYear() + "-" + String(appData.invoices.length + 1).padStart(4, '0');
+        document.getElementById('product-code').value = "PRD-" + String(productCounter).padStart(4, '0');
+        document.getElementById('invoice-date').value = new Date().toISOString().split('T')[0];
+
+        function updateCurrencyFormat() {
+            const currencySelect = document.getElementById('system-currency');
+            const selectedText = currencySelect.options[currencySelect.selectedIndex].text;
+            const match = selectedText.match(/\(([^)]+)\)/);
+            if(match) {
+                currentCurrency = match[1];
+                currencyDecimals = selectedText.includes('0.000') ? 3 : 2;
+            }
+            updateCosts();
+        }
+
+        function formatCurrency(value) {
+            return value.toFixed(currencyDecimals) + ' ' + currentCurrency;
+        }
+
+        function updateCosts(){
+            // حساب تكاليف المواد
+            let materialsCost = 0;
+            document.querySelectorAll('#materials-table tbody tr').forEach(row=>{
+                const inputs = row.querySelectorAll('input');
+                const count = parseFloat(inputs[1].value) || 1;
+                const price = parseFloat(inputs[2].value) || 0;
+                const used = parseFloat(inputs[3].value) || 0;
+                const cost = (price / count) * used;
+                row.querySelector('.material-cost').textContent = formatCurrency(cost);
+                materialsCost += cost;
+            });
+
+            // حساب تكاليف التغليف
+            let packagingCost = 0;
+            document.querySelectorAll('#packaging-table tbody tr').forEach(row=>{
+                const inputs = row.querySelectorAll('input');
+                const count = parseFloat(inputs[1].value) || 1;
+                const price = parseFloat(inputs[2].value) || 0;
+                const used = parseFloat(inputs[3].value) || 0;
+                const cost = (price / count) * used;
+                row.querySelector('.packaging-cost').textContent = formatCurrency(cost);
+                packagingCost += cost;
+            });
+
+            // حساب تكاليف اليد العاملة
+            let totalLaborCost = 0;
+            const workers = document.querySelectorAll('#workers-table-1 tbody tr');
+            const productions = document.querySelectorAll('#workers-table-2 tbody tr');
+            
+            workers.forEach((worker, index) => {
+                const salary = parseFloat(worker.querySelector('.salary')?.value) || 0;
+                const hours = parseFloat(worker.querySelector('.hours')?.value) || 1;
+                const hourlyCost = ((salary / 30) / 8) * hours;
+                worker.querySelector('.hourly-cost').textContent = formatCurrency(hourlyCost);
+
+                if(productions[index]) {
+                    const pieces = parseFloat(productions[index].querySelector('.pieces')?.value) || 1;
+                    const piecesPerHour = pieces / hours;
+                    const pieceCost = pieces > 0 ? ((salary / 30) / 8) / pieces : 0;
+                    const boxCost = pieceCost * (parseFloat(document.getElementById('sale-quantity').value) || 1);
+                    
+                    productions[index].querySelector('.pieces-per-hour').textContent = piecesPerHour.toFixed(0);
+                    productions[index].querySelector('.piece-cost').textContent = formatCurrency(pieceCost);
+                    productions[index].querySelector('.box-cost').textContent = formatCurrency(boxCost);
+                    totalLaborCost += boxCost;
+                }
+            });
+
+            const piecesProduced = parseFloat(document.querySelector('#workers-table-2 tbody tr .pieces')?.value) || 1;
+            const piecesPerBox = parseFloat(document.getElementById('sale-quantity').value) || 1;
+
+            // حساب التكاليف للعلبة الواحدة
+            // التعديل: تقسيم تكلفة المواد على عدد القطع المنتجة وضربها في عدد القطع في العلبة
+            const materialBoxCost = (materialsCost / piecesProduced) * piecesPerBox;
+            const packagingBoxCost = packagingCost;
+            const laborBoxCost = totalLaborCost;
+
+            // حساب إهلاك المعدات
+            const depreciationRate = parseFloat(document.getElementById('depreciation-rate').value) || 0;
+            const depreciationCost = materialsCost * (depreciationRate / 100);
+            const depreciationBoxCost = (depreciationCost / piecesProduced) * piecesPerBox;
+
+            // تحديث القيم في الواجهة
+            document.getElementById('material-summary').textContent = formatCurrency(materialBoxCost);
+            document.getElementById('packaging-summary').textContent = formatCurrency(packagingBoxCost);
+            document.getElementById('depreciation-summary').textContent = formatCurrency(depreciationBoxCost);
+            document.getElementById('labor-summary').textContent = formatCurrency(laborBoxCost);
+
+            document.getElementById('materials-per-box').textContent = formatCurrency(materialBoxCost);
+            document.getElementById('packaging-per-box').textContent = formatCurrency(packagingBoxCost);
+            document.getElementById('labor-per-box').textContent = formatCurrency(laborBoxCost);
+
+            document.getElementById('equipment-depreciation').value = depreciationCost.toFixed(currencyDecimals);
+            document.getElementById('equipment-depreciation-box').value = depreciationBoxCost.toFixed(currencyDecimals);
+
+            // حساب التكلفة الإجمالية للعلبة
+            const totalCostPerBox = materialBoxCost + packagingBoxCost + laborBoxCost + depreciationBoxCost;
+            document.getElementById('grand-total-cost').textContent = formatCurrency(totalCostPerBox);
+
+            // حساب سعر البيع المقترح
+            const profitRate = parseFloat(document.getElementById('profit-rate').value) || 0;
+            const profitAmount = totalCostPerBox * (profitRate / 100);
+            const suggestedPrice = totalCostPerBox + profitAmount;
+            document.getElementById('suggested-price').textContent = formatCurrency(suggestedPrice);
+            const suggestedProfit = formatCurrency(profitAmount) + ' (' + profitRate + '%)';
+            document.getElementById('suggested-profit').textContent = suggestedProfit;
+            
+            // حساب سعر البيع النهائي
+            const finalPriceInput = document.getElementById('final-price-input');
+            const finalPrice = parseFloat(finalPriceInput.value) || suggestedPrice;
+            const finalProfit = finalPrice - totalCostPerBox;
+            const finalProfitRate = totalCostPerBox > 0 ? (finalProfit / totalCostPerBox) * 100 : 0;
+            const finalProfitText = formatCurrency(finalProfit) + ' (' + finalProfitRate.toFixed(1) + '%)';
+            document.getElementById('final-profit').textContent = finalProfitText;
+            document.getElementById('final-price-summary').textContent = formatCurrency(finalPrice);
+            document.getElementById('profit-summary').textContent = formatCurrency(finalProfit) + ' (' + finalProfitRate.toFixed(1) + '%)';
+            
+            document.getElementById('grand-total-cost').style.color = 'var(--blue-cost)';
+            document.getElementById('suggested-price').style.color = 'var(--orange-suggested)';
+        }
+
+        function addTableRow(tableId){
+            const tbody=document.querySelector(`#${tableId} tbody`);
+            const newRow=document.createElement('tr');
+            if(tableId==='materials-table'){
+                newRow.innerHTML=`
+                    <td class="product-name-col"><input type="text" class="form-control-modern" required></td>
+                    <td><input type="number" class="form-control-modern" required></td>
+                    <td class="price-input-container"><input type="number" class="form-control-modern" step="0.001" required></td>
+                    <td><input type="number" class="form-control-modern" required></td>
+                    <td class="material-cost">0.000 د.ب</td>
+                    <td><button class="btn btn-danger-modern btn-action remove-row"><i class="bi bi-trash"></i></button></td>`;
+            }else if(tableId==='packaging-table'){
+                newRow.innerHTML=`
+                    <td class="product-name-col"><input type="text" class="form-control-modern" required></td>
+                    <td><input type="number" class="form-control-modern" required></td>
+                    <td class="price-input-container"><input type="number" class="form-control-modern" step="0.001" required></td>
+                    <td><input type="number" class="form-control-modern" required></td>
+                    <td class="packaging-cost">0.000 د.ب</td>
+                    <td><button class="btn btn-danger-modern btn-action remove-row"><i class="bi bi-trash"></i></button></td>`;
+            }
+            tbody.appendChild(newRow);
+            setupRowEvents(newRow);
+            updateCosts();
+        }
+
+        function setupRowEvents(row){
+            row.querySelector('.remove-row')?.addEventListener('click',()=>{
+                row.remove();
+                updateCosts();
+            });
+            row.querySelectorAll('input').forEach(i=>{
+                i.addEventListener('input',updateCosts);
+                i.addEventListener('change',updateCosts);
+                i.addEventListener('keyup',updateCosts);
+            });
+        }
+
+        function clearForm() {
+            document.getElementById('product-name').value='';
+            document.getElementById('sale-quantity').value='';
+            document.getElementById('profit-rate').value='';
+            document.getElementById('final-price-input').value='';
+            document.querySelectorAll('#materials-table tbody tr, #packaging-table tbody tr').forEach(row => {
+                if(row.parentElement.children.length > 1) row.remove();
+            });
+            document.querySelectorAll('#materials-table tbody tr input, #packaging-table tbody tr input').forEach(input => {
+                input.value = '';
+            });
+            document.querySelectorAll('#workers-table-1 tbody tr input, #workers-table-2 tbody tr input').forEach(input => {
+                input.value = '';
+            });
+            productCounter++;
+            document.getElementById('product-code').value = "PRD-" + String(productCounter).padStart(4, '0');
+            updateCosts();
+        }
+
+        function saveProjectSettings() {
+            appData.settings.project = {
+                name: document.getElementById('project-name').value,
+                phone: document.getElementById('country-code').value + document.getElementById('phone-number').value,
+                address: document.getElementById('project-address').value
+            };
+            saveData();
+            alert('تم حفظ إعدادات المشروع بنجاح!');
+        }
+
+        function saveSystemSettings() {
+            appData.settings.system = {
+                color: document.getElementById('system-color').value,
+                language: document.getElementById('system-language').value,
+                currency: document.getElementById('system-currency').value
+            };
+            saveData();
+            alert('تم حفظ إعدادات النظام بنجاح!');
+            updateCurrencyFormat();
+        }
+
+        function saveTaxSettings() {
+            appData.settings.tax = {
+                enabled: document.getElementById('tax-enabled').checked,
+                rate: parseFloat(document.getElementById('tax-rate').value) || 0,
+                number: document.getElementById('tax-number').value
+            };
+            saveData();
+            alert('تم حفظ إعدادات الضريبة بنجاح!');
+        }
+
+        function saveDeliverySettings() {
+            // حفظ إعدادات التوصيل
+            alert('تم حفظ إعدادات التوصيل بنجاح!');
+        }
+
+        function addPaymentMethod() {
+            alert('تم إضافة طريقة دفع جديدة!');
+        }
+
+        function updateProductsTable() {
+            const tbody = document.getElementById('products-list');
+            if(products.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" class="text-center">لا توجد منتجات مسجلة بعد</td></tr>';
+                return;
+            }
+            tbody.innerHTML = '';
+            products.forEach((product, index) => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${product.code}</td>
+                    <td>${product.name}</td>
+                    <td>${product.quantity}</td>
+                    <td>${product.totalCost}</td>
+                    <td>${product.finalPrice}</td>
+                    <td>
+                        <button class="btn btn-primary-modern btn-action" onclick="editProduct(${index})"><i class="bi bi-pencil"></i></button>
+                        <button class="btn btn-danger-modern btn-action" onclick="deleteProduct(${index})"><i class="bi bi-trash"></i></button>
+                        <button class="btn btn-info btn-action" onclick="previewProduct(${index})"><i class="bi bi-eye"></i></button>
+                    </td>`;
+                tbody.appendChild(tr);
+            });
+            document.getElementById('dashboard-products').textContent = products.length;
+        }
+
+        function updateInvoicesTable() {
+            const tbody = document.getElementById('invoices-list');
+            if(appData.invoices.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="8" class="text-center">لا توجد فواتير مسجلة بعد</td></tr>';
+                return;
+            }
+            tbody.innerHTML = '';
+            appData.invoices.forEach((invoice, index) => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${invoice.number}</td>
+                    <td>${invoice.date}</td>
+                    <td>${invoice.customerName}</td>
+                    <td>${invoice.customerPhone}</td>
+                    <td>${invoice.total}</td>
+                    <td>${invoice.paymentMethod}</td>
+                    <td>${invoice.paymentStatus === 'paid' ? 'مدفوع' : 'غير مدفوع'}</td>
+                    <td>
+                        <button class="btn btn-primary-modern btn-action"><i class="bi bi-eye"></i></button>
+                        <button class="btn btn-danger-modern btn-action" onclick="deleteInvoice(${index})"><i class="bi bi-trash"></i></button>
+                    </td>`;
+                tbody.appendChild(tr);
+            });
+            document.getElementById('dashboard-invoices').textContent = appData.invoices.length;
+        }
+
+        function updateTrackingTable() {
+            const tbody = document.getElementById('tracking-list');
+            if(appData.invoices.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="8" class="text-center">لا توجد فواتير مسجلة بعد</td></tr>';
+                return;
+            }
+            tbody.innerHTML = '';
+            appData.invoices.forEach((invoice, index) => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${invoice.number}</td>
+                    <td>${invoice.customerName}</td>
+                    <td>${invoice.date}</td>
+                    <td>قيد المعالجة</td>
+                    <td>${invoice.paymentMethod}</td>
+                    <td>${invoice.paymentStatus === 'paid' ? 'مدفوع' : 'غير مدفوع'}</td>
+                    <td>${invoice.total}</td>
+                    <td>
+                        <button class="btn btn-primary-modern btn-action"><i class="bi bi-eye"></i></button>
+                    </td>`;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function editProduct(index) {
+            const product = products[index];
+            editingIndex = index;
+            showPage('calculate-product');
+            
+            document.getElementById('product-name').value = product.name;
+            document.getElementById('product-code').value = product.code;
+            document.getElementById('sale-quantity').value = product.quantity;
+            const profitRateText = product.profitRate.replace('%', '');
+            document.getElementById('profit-rate').value = profitRateText;
+            document.getElementById('final-price-input').value = parseFloat(product.finalPrice.replace(/[^0-9.]/g, ''));
+            updateCosts();
+        }
+
+        function deleteProduct(index) {
+            if(confirm('هل أنت متأكد من حذف هذا المنتج؟')) {
+                products.splice(index, 1);
+                appData.products = products;
+                saveData();
+                updateProductsTable();
+                updateInvoiceProducts();
+                document.getElementById('dashboard-products').textContent = products.length;
+            }
+        }
+
+        function deleteInvoice(index) {
+            if(confirm('هل أنت متأكد من حذف هذه الفاتورة؟')) {
+                appData.invoices.splice(index, 1);
+                saveData();
+                updateInvoicesTable();
+                updateTrackingTable();
+                document.getElementById('dashboard-invoices').textContent = appData.invoices.length;
+            }
+        }
+
+        function previewProduct(index) {
+            alert('عرض تفاصيل المنتج: ' + products[index].name);
+        }
+
+        function updateInvoiceProducts() {
+            const selects = document.querySelectorAll('.product-select');
+            selects.forEach(select => {
+                select.innerHTML = '<option value="">اختر منتج</option>';
+                products.forEach(product => {
+                    const option = document.createElement('option');
+                    option.value = product.code;
+                    option.dataset.price = product.finalPrice.replace(/[^0-9.]/g, '');
+                    option.textContent = product.name + ' - ' + product.finalPrice;
+                    select.appendChild(option);
+                });
+            });
+        }
+
+        function validateForm() {
+            let isValid = true;
+            
+            // إخفاء جميع رسائل الخطأ
+            document.querySelectorAll('.error-message').forEach(el => {
+                el.style.display = 'none';
+            });
+            
+            // إزالة فئة الخطأ من جميع الحقول
+            document.querySelectorAll('.error-input').forEach(el => {
+                el.classList.remove('error-input');
+            });
+            
+            // التحقق من الحقول المطلوبة
+            const requiredFields = [
+                { id: 'product-name', errorId: 'product-name-error' },
+                { id: 'sale-quantity', errorId: 'sale-quantity-error' },
+                { id: 'profit-rate', errorId: 'profit-rate-error' },
+                { id: 'final-price-input', errorId: 'final-price-error' },
+                { id: 'depreciation-rate', errorId: 'depreciation-rate-error' }
+            ];
+            
+            requiredFields.forEach(field => {
+                const input = document.getElementById(field.id);
+                if (!input.value.trim()) {
+                    isValid = false;
+                    document.getElementById(field.errorId).style.display = 'flex';
+                    input.classList.add('error-input');
+                    if (isValid === false) {
+                        input.focus();
+                    }
+                }
+            });
+            
+            // التحقق من تكاليف اليد العاملة
+            const salary = document.querySelector('.salary');
+            const hours = document.querySelector('.hours');
+            const pieces = document.querySelector('.pieces');
+            
+            if (!salary.value.trim()) {
+                isValid = false;
+                document.getElementById('salary-error').style.display = 'flex';
+                salary.classList.add('error-input');
+                if (isValid === false) {
+                    salary.focus();
+                }
+            }
+            
+            if (!hours.value.trim()) {
+                isValid = false;
+                document.getElementById('hours-error').style.display = 'flex';
+                hours.classList.add('error-input');
+                if (isValid === false) {
+                    hours.focus();
+                }
+            }
+            
+            if (!pieces.value.trim()) {
+                isValid = false;
+                document.getElementById('pieces-error').style.display = 'flex';
+                pieces.classList.add('error-input');
+                if (isValid === false) {
+                    pieces.focus();
+                }
+            }
+            
+            return isValid;
+        }
+
+        function saveProduct(){
+            if (!validateForm()) {
+                return;
+            }
+            
+            const name=document.getElementById('product-name').value;
+            const code=document.getElementById('product-code').value;
+            const qty=document.getElementById('sale-quantity').value;
+            const profitRate=document.getElementById('profit-rate').value;
+            const finalPrice=document.getElementById('final-price-input').value;
+            
+            const product = {
+                code: code,
+                name: name,
+                quantity: qty,
+                totalCost: document.getElementById('grand-total-cost').textContent,
+                finalPrice: formatCurrency(parseFloat(finalPrice)),
+                profitRate: profitRate + '%',
+                profitMargin: document.getElementById('final-profit').textContent,
+                laborCost: document.getElementById('labor-summary').textContent,
+                depreciation: document.getElementById('depreciation-summary').textContent
+            };
+            
+            if(editingIndex >= 0) {
+                products[editingIndex] = product;
+                editingIndex = -1;
+            } else {
+                products.push(product);
+            }
+            
+            appData.products = products;
+            saveData();
+            updateProductsTable();
+            updateInvoiceProducts();
+            clearForm();
+            alert('تم حفظ المنتج بنجاح!');
+            showPage('manage-products');
+        }
+
+        // Invoice product selection and auto-price
+        document.addEventListener('change', function(e) {
+            if (e.target.classList.contains('product-select')) {
+                const selectedOption = e.target.options[e.target.selectedIndex];
+                const price = selectedOption.dataset.price;
+                const row = e.target.closest('tr');
+                const priceInput = row.querySelector('.unit-price');
+                if (price) {
+                    priceInput.value = parseFloat(price).toFixed(currencyDecimals);
+                } else {
+                    priceInput.value = '';
+                }
+                calculateRowTotal(row);
+            }
+        });
+
+        function calculateRowTotal(row) {
+            const price = parseFloat(row.querySelector('.unit-price').value) || 0;
+            const quantity = parseFloat(row.querySelector('.quantity').value) || 1;
+            const total = price * quantity;
+            row.querySelector('.item-total').textContent = total.toFixed(currencyDecimals);
+            calculateInvoiceTotals();
+        }
+
+        function calculateInvoiceTotals() {
+            let subtotal = 0;
+            let tax = 0;
+            document.querySelectorAll('#invoice-items-table tbody tr').forEach(row => {
+                const total = parseFloat(row.querySelector('.item-total').textContent) || 0;
+                subtotal += total;
+            });
+            document.getElementById('invoice-subtotal').textContent = subtotal.toFixed(currencyDecimals) + ' ' + currentCurrency;
+            document.getElementById('invoice-tax').textContent = tax.toFixed(currencyDecimals) + ' ' + currentCurrency;
+            document.getElementById('invoice-total').textContent = subtotal.toFixed(currencyDecimals) + ' ' + currentCurrency;
+        }
+
+        // إضافة حدث input لجميع الحقول في جداول المواد والتغليف لتحديث النتائج مباشرة
+        document.addEventListener('input', function(e) {
+            if (e.target.closest('#materials-table') || e.target.closest('#packaging-table') || 
+                e.target.closest('#workers-table-1') || e.target.closest('#workers-table-2')) {
+                updateCosts();
+            }
+            
+            // تحديث عند تغيير سعر البيع النهائي
+            if (e.target.id === 'final-price-input') {
+                updateCosts();
+            }
+        });
 
         // وظائف جديدة للإعدادات
         function showSettingsSubpage(subpageId) {
@@ -2520,6 +2436,24 @@
                 }
             }
         });
+
+        document.getElementById('add-material').addEventListener('click',()=>addTableRow('materials-table'));
+        document.getElementById('add-packaging').addEventListener('click',()=>addTableRow('packaging-table'));
+        document.getElementById('sidebarToggle').addEventListener('click',()=>document.getElementById('sidebar').classList.toggle('show'));
+        document.getElementById('save-product').addEventListener('click',saveProduct);
+
+        ['depreciation-rate','profit-rate','sale-quantity','final-price-input'].forEach(id=>{
+            document.getElementById(id).addEventListener('input',updateCosts);
+            document.getElementById(id).addEventListener('change',updateCosts);
+            document.getElementById(id).addEventListener('keyup',updateCosts);
+        });
+
+        // تحديث الجداول عند تحميل الصفحة
+        updateProductsTable();
+        updateInvoicesTable();
+        updateTrackingTable();
+        updateInvoiceProducts();
+        updateCosts();
     </script>
 </body>
 </html>
