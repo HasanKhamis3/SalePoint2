@@ -678,6 +678,23 @@
             border-bottom: none;
         }
         
+        /* تعديلات الجداول في تكاليف اليد العاملة */
+        .workers-table-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        
+        .workers-table-container .table-modern {
+            margin-bottom: 0;
+        }
+        
+        .workers-table-container .table-modern th,
+        .workers-table-container .table-modern td {
+            height: 70px;
+            vertical-align: middle;
+        }
+        
         @media (max-width: 768px) {
             .sidebar { transform: translateX(100%); }
             .sidebar.show { transform: translateX(0); }
@@ -687,6 +704,9 @@
             }
             .settings-table .action-cell {
                 width: 120px;
+            }
+            .workers-table-container {
+                flex-direction: column;
             }
         }
     </style>
@@ -936,68 +956,62 @@
             <div class="card-modern">
                 <div class="card-header-modern"><i class="bi bi-people"></i> تكاليف اليد العاملة</div>
                 <div class="card-body-modern">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <h5>معلومات العامل</h5>
-                            <div class="table-responsive">
-                                <table class="table-modern" id="workers-table-1">
-                                    <thead>
-                                        <tr>
-                                            <th style="width: 25%">الراتب الشهري (د.ب)</th>
-                                            <th style="width: 25%">عدد ساعات العمل</th>
-                                            <th style="width: 25%">تكلفة ساعات العمل</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td class="price-input-container">
-                                                <input type="number" class="form-control-modern salary" step="0.001" required>
-                                                <div class="error-message" id="salary-error" style="display: none;">
-                                                    <i class="bi bi-exclamation-circle error-icon"></i>
-                                                    <span>يرجى إدخال الراتب الشهري</span>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <input type="number" class="form-control-modern hours" required>
-                                                <div class="error-message" id="hours-error" style="display: none;">
-                                                    <i class="bi bi-exclamation-circle error-icon"></i>
-                                                    <span>يرجى إدخال عدد ساعات العمل</span>
-                                                </div>
-                                            </td>
-                                            <td class="hourly-cost">0.000 د.ب</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
+                    <div class="workers-table-container">
+                        <div class="table-responsive">
+                            <table class="table-modern" id="workers-table-1">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 25%">الراتب الشهري (د.ب)</th>
+                                        <th style="width: 25%">عدد ساعات العمل</th>
+                                        <th style="width: 25%">تكلفة ساعات العمل</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="price-input-container">
+                                            <input type="number" class="form-control-modern salary" step="0.001" required>
+                                            <div class="error-message" id="salary-error" style="display: none;">
+                                                <i class="bi bi-exclamation-circle error-icon"></i>
+                                                <span>يرجى إدخال الراتب الشهري</span>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <input type="number" class="form-control-modern hours" required>
+                                            <div class="error-message" id="hours-error" style="display: none;">
+                                                <i class="bi bi-exclamation-circle error-icon"></i>
+                                                <span>يرجى إدخال عدد ساعات العمل</span>
+                                            </div>
+                                        </td>
+                                        <td class="hourly-cost">0.000 د.ب</td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
-                        <div class="col-md-6">
-                            <h5>حسابات الإنتاج</h5>
-                            <div class="table-responsive">
-                                <table class="table-modern" id="workers-table-2">
-                                    <thead>
-                                        <tr>
-                                            <th style="width: 25%">عدد القطع المنتجة</th>
-                                            <th style="width: 25%">عدد القطع لكل ساعة</th>
-                                            <th style="width: 25%">تكلفة القطعة</th>
-                                            <th style="width: 25%">تكلفة العلبة</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>
-                                                <input type="number" class="form-control-modern pieces" required>
-                                                <div class="error-message" id="pieces-error" style="display: none;">
-                                                    <i class="bi bi-exclamation-circle error-icon"></i>
-                                                    <span>يرجى إدخال عدد القطع المنتجة</span>
-                                                </div>
-                                            </td>
-                                            <td class="pieces-per-hour">0</td>
-                                            <td class="piece-cost">0.000 د.ب</td>
-                                            <td class="box-cost">0.000 د.ب</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
+                        <div class="table-responsive">
+                            <table class="table-modern" id="workers-table-2">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 25%">عدد القطع المنتجة</th>
+                                        <th style="width: 25%">عدد القطع لكل ساعة</th>
+                                        <th style="width: 25%">تكلفة القطعة</th>
+                                        <th style="width: 25%">تكلفة العلبة</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <input type="number" class="form-control-modern pieces" required>
+                                            <div class="error-message" id="pieces-error" style="display: none;">
+                                                <i class="bi bi-exclamation-circle error-icon"></i>
+                                                <span>يرجى إدخال عدد القطع المنتجة</span>
+                                            </div>
+                                        </td>
+                                        <td class="pieces-per-hour">0</td>
+                                        <td class="piece-cost">0.000 د.ب</td>
+                                        <td class="box-cost">0.000 د.ب</td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                     <div class="cost-total-box">
@@ -1051,7 +1065,7 @@
                             <thead>
                                 <tr>
                                     <th class="product-name-col">المنتج</th>
-                                    <th>العدد/الوزن</th>
+                                    <th>العدد</th>
                                     <th>السعر (د.ب)</th>
                                     <th>العدد المستخدم</th>
                                     <th>سعر التكلفة</th>
@@ -1268,7 +1282,7 @@
                                         <button class="logo-upload-btn" id="logo-upload-trigger"><i class="bi bi-upload"></i> رفع شعار</button>
                                     </td>
                                     <td class="action-cell">
-                                        <button class="save-btn"><i class="bi bi-save"></i> حفظ</button>
+                                        <button class="save-btn" id="save-logo"><i class="bi bi-save"></i> حفظ</button>
                                     </td>
                                 </tr>
                             </tbody>
@@ -1284,20 +1298,19 @@
                                 <tr>
                                     <td style="width: 30%">اللغة</td>
                                     <td style="width: 50%">
-                                        <select class="settings-input" id="system-language" disabled>
+                                        <select class="settings-input" id="system-language">
                                             <option value="ar">العربية</option>
                                             <option value="en">English</option>
                                         </select>
                                     </td>
                                     <td class="action-cell">
-                                        <button class="edit-btn" data-field="language"><i class="bi bi-pencil"></i> تعديل</button>
-                                        <button class="save-btn" data-field="language"><i class="bi bi-save"></i> حفظ</button>
+                                        <!-- تم إزالة أزرار التعديل والحفظ -->
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>العملة</td>
                                     <td>
-                                        <select class="settings-input" id="system-currency" disabled>
+                                        <select class="settings-input" id="system-currency">
                                             <option value="BHD">دينار بحريني (0.000 د.ب)</option>
                                             <option value="SAR">ريال سعودي (0.00 ر.س)</option>
                                             <option value="AED">درهم إماراتي (0.00 د.إ)</option>
@@ -1309,8 +1322,7 @@
                                         </select>
                                     </td>
                                     <td class="action-cell">
-                                        <button class="edit-btn" data-field="currency"><i class="bi bi-pencil"></i> تعديل</button>
-                                        <button class="save-btn" data-field="currency"><i class="bi bi-save"></i> حفظ</button>
+                                        <!-- تم إزالة أزرار التعديل والحفظ -->
                                     </td>
                                 </tr>
                             </tbody>
@@ -1328,7 +1340,7 @@
                                     <td style="width: 50%">
                                         <div class="tax-toggle">
                                             <div class="form-check form-switch">
-                                                <input class="form-check-input" type="checkbox" id="tax-enabled" checked>
+                                                <input class="form-check-input" type="checkbox" id="tax-enabled">
                                                 <label class="form-check-label" for="tax-enabled">تفعيل الضريبة</label>
                                             </div>
                                         </div>
@@ -1668,11 +1680,45 @@
             products: [],
             invoices: [],
             settings: {
-                project: {},
-                system: { currency: 'BHD', color: 'default', language: 'ar' },
-                tax: { enabled: false, rate: 0, number: '' },
+                project: {
+                    name: "Ajwaapilot",
+                    phone: "+97312345678",
+                    whatsapp: "+97312345678",
+                    instagram: "@ajwaapilot",
+                    snapchat: "@ajwaapilot",
+                    tiktok: "@ajwaapilot",
+                    logo: ""
+                },
+                system: { 
+                    currency: 'BHD', 
+                    language: 'ar' 
+                },
+                tax: { 
+                    enabled: false, 
+                    rate: 10, 
+                    number: '123456789' 
+                },
                 paymentMethods: [],
-                delivery: { areas: [], cities: [] }
+                delivery: { 
+                    scopes: [
+                        { name: "النطاق الذهبي", value: 2.000 },
+                        { name: "النطاق الفضي", value: 1.500 }
+                    ],
+                    areas: [
+                        { name: "المنامة", scope: "النطاق الذهبي" },
+                        { name: "المحرق", scope: "النطاق الفضي" }
+                    ]
+                },
+                users: {
+                    admins: [
+                        { firstName: "أحمد", lastName: "محمد", email: "ahmed@ajwaapilot.com", phone: "12345678", active: true },
+                        { firstName: "فاطمة", lastName: "علي", email: "fatima@ajwaapilot.com", phone: "87654321", active: false }
+                    ],
+                    sellers: [
+                        { firstName: "خالد", lastName: "إبراهيم", email: "khaled@ajwaapilot.com", phone: "11223344", active: true },
+                        { firstName: "سارة", lastName: "عبدالله", email: "sara@ajwaapilot.com", phone: "44332211", active: false }
+                    ]
+                }
             }
         };
 
@@ -1681,6 +1727,8 @@
             const savedData = localStorage.getItem('accountingAppData');
             if (savedData) {
                 appData = JSON.parse(savedData);
+                // تحديث الواجهة بناءً على البيانات المحملة
+                updateSettingsUI();
             }
         }
 
@@ -1691,6 +1739,45 @@
 
         // تحميل البيانات عند بدء التشغيل
         loadData();
+
+        // تحديث واجهة الإعدادات بناءً على البيانات المحفوظة
+        function updateSettingsUI() {
+            // تحديث تفاصيل المشروع
+            document.getElementById('project-name').value = appData.settings.project.name;
+            document.getElementById('phone-number').value = appData.settings.project.phone.substring(4);
+            document.getElementById('whatsapp-number').value = appData.settings.project.whatsapp.substring(4);
+            document.getElementById('instagram-account').value = appData.settings.project.instagram;
+            document.getElementById('snapchat-account').value = appData.settings.project.snapchat;
+            document.getElementById('tiktok-account').value = appData.settings.project.tiktok;
+            
+            // تحديث إعدادات النظام
+            document.getElementById('system-language').value = appData.settings.system.language;
+            document.getElementById('system-currency').value = appData.settings.system.currency;
+            
+            // تحديث إعدادات الضرائب
+            document.getElementById('tax-enabled').checked = appData.settings.tax.enabled;
+            document.getElementById('tax-rate').value = appData.settings.tax.rate;
+            document.getElementById('tax-number').value = appData.settings.tax.number;
+            
+            // تحديث حالة حقول الضرائب
+            const taxFields = document.getElementById('tax-fields');
+            if (appData.settings.tax.enabled) {
+                taxFields.classList.remove('disabled');
+            } else {
+                taxFields.classList.add('disabled');
+            }
+            
+            // تحديث الشعار
+            if (appData.settings.project.logo) {
+                const logoPreview = document.getElementById('logo-preview-img');
+                logoPreview.src = appData.settings.project.logo;
+                logoPreview.style.display = 'block';
+                document.getElementById('logo-placeholder').style.display = 'none';
+            }
+            
+            // تحديث العملة
+            updateCurrencyFormat();
+        }
 
         let productCounter = appData.products.length + 1;
         let products = appData.products;
@@ -1716,6 +1803,8 @@
                 updateInvoicesTable();
             } else if (pageId === 'track-invoices') {
                 updateTrackingTable();
+            } else if (pageId === 'settings') {
+                updateSettingsUI();
             }
         }
 
@@ -1800,7 +1889,6 @@
             const piecesPerBox = parseFloat(document.getElementById('sale-quantity').value) || 1;
 
             // حساب التكاليف للعلبة الواحدة
-            // التعديل: تقسيم تكلفة المواد على عدد القطع المنتجة وضربها في عدد القطع في العلبة
             const materialBoxCost = (materialsCost / piecesProduced) * piecesPerBox;
             const packagingBoxCost = packagingCost;
             const laborBoxCost = totalLaborCost;
@@ -1903,46 +1991,6 @@
             productCounter++;
             document.getElementById('product-code').value = "PRD-" + String(productCounter).padStart(4, '0');
             updateCosts();
-        }
-
-        function saveProjectSettings() {
-            appData.settings.project = {
-                name: document.getElementById('project-name').value,
-                phone: document.getElementById('country-code').value + document.getElementById('phone-number').value,
-                address: document.getElementById('project-address').value
-            };
-            saveData();
-            alert('تم حفظ إعدادات المشروع بنجاح!');
-        }
-
-        function saveSystemSettings() {
-            appData.settings.system = {
-                color: document.getElementById('system-color').value,
-                language: document.getElementById('system-language').value,
-                currency: document.getElementById('system-currency').value
-            };
-            saveData();
-            alert('تم حفظ إعدادات النظام بنجاح!');
-            updateCurrencyFormat();
-        }
-
-        function saveTaxSettings() {
-            appData.settings.tax = {
-                enabled: document.getElementById('tax-enabled').checked,
-                rate: parseFloat(document.getElementById('tax-rate').value) || 0,
-                number: document.getElementById('tax-number').value
-            };
-            saveData();
-            alert('تم حفظ إعدادات الضريبة بنجاح!');
-        }
-
-        function saveDeliverySettings() {
-            // حفظ إعدادات التوصيل
-            alert('تم حفظ إعدادات التوصيل بنجاح!');
-        }
-
-        function addPaymentMethod() {
-            alert('تم إضافة طريقة دفع جديدة!');
         }
 
         function updateProductsTable() {
@@ -2218,7 +2266,11 @@
         function calculateRowTotal(row) {
             const price = parseFloat(row.querySelector('.unit-price').value) || 0;
             const quantity = parseFloat(row.querySelector('.quantity').value) || 1;
-            const total = price * quantity;
+            const taxRate = appData.settings.tax.enabled ? appData.settings.tax.rate : 0;
+            const tax = (price * quantity) * (taxRate / 100);
+            const total = (price * quantity) + tax;
+            
+            row.querySelector('.item-tax').textContent = tax.toFixed(currencyDecimals);
             row.querySelector('.item-total').textContent = total.toFixed(currencyDecimals);
             calculateInvoiceTotals();
         }
@@ -2227,12 +2279,15 @@
             let subtotal = 0;
             let tax = 0;
             document.querySelectorAll('#invoice-items-table tbody tr').forEach(row => {
-                const total = parseFloat(row.querySelector('.item-total').textContent) || 0;
-                subtotal += total;
+                const price = parseFloat(row.querySelector('.unit-price').value) || 0;
+                const quantity = parseFloat(row.querySelector('.quantity').value) || 1;
+                subtotal += price * quantity;
+                tax += parseFloat(row.querySelector('.item-tax').textContent) || 0;
             });
+            
             document.getElementById('invoice-subtotal').textContent = subtotal.toFixed(currencyDecimals) + ' ' + currentCurrency;
             document.getElementById('invoice-tax').textContent = tax.toFixed(currencyDecimals) + ' ' + currentCurrency;
-            document.getElementById('invoice-total').textContent = subtotal.toFixed(currencyDecimals) + ' ' + currentCurrency;
+            document.getElementById('invoice-total').textContent = (subtotal + tax).toFixed(currencyDecimals) + ' ' + currentCurrency;
         }
 
         // إضافة حدث input لجميع الحقول في جداول المواد والتغليف لتحديث النتائج مباشرة
@@ -2286,6 +2341,8 @@
                     el.style.display = 'none';
                 });
             }
+            // إعادة حساب الفاتورة
+            calculateInvoiceTotals();
         });
 
         // إضافة صفوف جديدة للجداول
@@ -2457,9 +2514,32 @@
                     logoPreview.src = e.target.result;
                     logoPreview.style.display = 'block';
                     document.getElementById('logo-placeholder').style.display = 'none';
+                    
+                    // حفظ الصورة في البيانات
+                    appData.settings.project.logo = e.target.result;
+                    saveData();
                 };
                 reader.readAsDataURL(file);
             }
+        });
+
+        // حفظ الشعار
+        document.getElementById('save-logo').addEventListener('click', function() {
+            alert('تم حفظ الشعار بنجاح!');
+        });
+
+        // حفظ إعدادات النظام تلقائياً
+        document.getElementById('system-language').addEventListener('change', function() {
+            appData.settings.system.language = this.value;
+            saveData();
+            alert('تم حفظ إعدادات اللغة تلقائياً!');
+        });
+
+        document.getElementById('system-currency').addEventListener('change', function() {
+            appData.settings.system.currency = this.value;
+            saveData();
+            updateCurrencyFormat();
+            alert('تم حفظ إعدادات العملة تلقائياً!');
         });
 
         // إضافة أحداث لأزرار التعديل والحفظ في الإعدادات العامة
@@ -2484,10 +2564,6 @@
                         document.getElementById('snapchat-account').disabled = false;
                     } else if (field === 'tiktok') {
                         document.getElementById('tiktok-account').disabled = false;
-                    } else if (field === 'language') {
-                        document.getElementById('system-language').disabled = false;
-                    } else if (field === 'currency') {
-                        document.getElementById('system-currency').disabled = false;
                     } else if (field === 'tax-enabled') {
                         document.getElementById('tax-enabled').disabled = false;
                     } else if (field === 'tax-rate') {
@@ -2520,33 +2596,40 @@
                 const field = btn.getAttribute('data-field');
                 
                 if (field) {
-                    // تعطيل الحقول المرتبطة
+                    // حفظ البيانات أولاً
                     if (field === 'project-name') {
+                        appData.settings.project.name = document.getElementById('project-name').value;
                         document.getElementById('project-name').disabled = true;
                     } else if (field === 'phone') {
+                        appData.settings.project.phone = document.getElementById('country-code').value + document.getElementById('phone-number').value;
                         document.getElementById('country-code').disabled = true;
                         document.getElementById('phone-number').disabled = true;
                     } else if (field === 'whatsapp') {
+                        appData.settings.project.whatsapp = document.getElementById('whatsapp-country-code').value + document.getElementById('whatsapp-number').value;
                         document.getElementById('whatsapp-country-code').disabled = true;
                         document.getElementById('whatsapp-number').disabled = true;
                     } else if (field === 'instagram') {
+                        appData.settings.project.instagram = document.getElementById('instagram-account').value;
                         document.getElementById('instagram-account').disabled = true;
                     } else if (field === 'snapchat') {
+                        appData.settings.project.snapchat = document.getElementById('snapchat-account').value;
                         document.getElementById('snapchat-account').disabled = true;
                     } else if (field === 'tiktok') {
+                        appData.settings.project.tiktok = document.getElementById('tiktok-account').value;
                         document.getElementById('tiktok-account').disabled = true;
-                    } else if (field === 'language') {
-                        document.getElementById('system-language').disabled = true;
-                    } else if (field === 'currency') {
-                        document.getElementById('system-currency').disabled = true;
-                        updateCurrencyFormat();
                     } else if (field === 'tax-enabled') {
+                        appData.settings.tax.enabled = document.getElementById('tax-enabled').checked;
                         document.getElementById('tax-enabled').disabled = true;
                     } else if (field === 'tax-rate') {
+                        appData.settings.tax.rate = parseFloat(document.getElementById('tax-rate').value);
                         document.getElementById('tax-rate').disabled = true;
                     } else if (field === 'tax-number') {
+                        appData.settings.tax.number = document.getElementById('tax-number').value;
                         document.getElementById('tax-number').disabled = true;
                     }
+                    
+                    // حفظ البيانات
+                    saveData();
                     
                     // إظهار زر التعديل وإخفاء زر الحفظ
                     btn.style.display = 'none';
@@ -2595,6 +2678,7 @@
         updateTrackingTable();
         updateInvoiceProducts();
         updateCosts();
+        updateSettingsUI();
     </script>
 </body>
 </html>
