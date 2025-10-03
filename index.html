@@ -627,6 +627,57 @@
             background: #fffaf0;
         }
         
+        /* أنماط جديدة للمنتجات */
+        .product-preview-modal .modal-body {
+            padding: 2rem;
+        }
+        
+        .product-preview-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .product-preview-detail {
+            background: var(--surface-hover);
+            border-radius: 12px;
+            padding: 1rem;
+            text-align: center;
+        }
+        
+        .product-preview-detail-label {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+        
+        .product-preview-detail-value {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        
+        .product-cost-breakdown {
+            margin-top: 1.5rem;
+        }
+        
+        .product-cost-breakdown h6 {
+            margin-bottom: 1rem;
+            color: var(--primary-color);
+        }
+        
+        .cost-breakdown-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .cost-breakdown-item:last-child {
+            border-bottom: none;
+        }
+        
         @media (max-width: 768px) {
             .sidebar { transform: translateX(100%); }
             .sidebar.show { transform: translateX(0); }
@@ -1547,6 +1598,69 @@
         </div>
     </div>
 
+    <!-- نافذة معاينة المنتج -->
+    <div class="modal fade" id="productPreviewModal" tabindex="-1" aria-labelledby="productPreviewModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="productPreviewModalLabel">معاينة المنتج</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body product-preview-modal">
+                    <div class="product-preview-details">
+                        <div class="product-preview-detail">
+                            <div class="product-preview-detail-label">اسم المنتج</div>
+                            <div class="product-preview-detail-value" id="preview-product-name">-</div>
+                        </div>
+                        <div class="product-preview-detail">
+                            <div class="product-preview-detail-label">رمز المنتج</div>
+                            <div class="product-preview-detail-value" id="preview-product-code">-</div>
+                        </div>
+                        <div class="product-preview-detail">
+                            <div class="product-preview-detail-label">عدد القطع في العلبة</div>
+                            <div class="product-preview-detail-value" id="preview-product-quantity">-</div>
+                        </div>
+                        <div class="product-preview-detail">
+                            <div class="product-preview-detail-label">سعر البيع</div>
+                            <div class="product-preview-detail-value" id="preview-product-price">-</div>
+                        </div>
+                    </div>
+                    
+                    <div class="product-cost-breakdown">
+                        <h6>تفاصيل التكاليف</h6>
+                        <div class="cost-breakdown-item">
+                            <span>تكلفة المواد:</span>
+                            <span id="preview-material-cost">-</span>
+                        </div>
+                        <div class="cost-breakdown-item">
+                            <span>تكلفة التغليف:</span>
+                            <span id="preview-packaging-cost">-</span>
+                        </div>
+                        <div class="cost-breakdown-item">
+                            <span>تكلفة اليد العاملة:</span>
+                            <span id="preview-labor-cost">-</span>
+                        </div>
+                        <div class="cost-breakdown-item">
+                            <span>إهلاك المعدات:</span>
+                            <span id="preview-depreciation-cost">-</span>
+                        </div>
+                        <div class="cost-breakdown-item" style="font-weight: bold; border-top: 1px solid var(--border-color);">
+                            <span>التكلفة الإجمالية:</span>
+                            <span id="preview-total-cost">-</span>
+                        </div>
+                        <div class="cost-breakdown-item" style="font-weight: bold;">
+                            <span>هامش الربح:</span>
+                            <span id="preview-profit-margin">-</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إغلاق</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         // قاعدة بيانات محلية لتخزين البيانات
@@ -1942,7 +2056,23 @@
         }
 
         function previewProduct(index) {
-            alert('عرض تفاصيل المنتج: ' + products[index].name);
+            const product = products[index];
+            
+            // تعبئة بيانات المنتج في نافذة المعاينة
+            document.getElementById('preview-product-name').textContent = product.name;
+            document.getElementById('preview-product-code').textContent = product.code;
+            document.getElementById('preview-product-quantity').textContent = product.quantity;
+            document.getElementById('preview-product-price').textContent = product.finalPrice;
+            document.getElementById('preview-material-cost').textContent = product.materialCost || '0.000 د.ب';
+            document.getElementById('preview-packaging-cost').textContent = product.packagingCost || '0.000 د.ب';
+            document.getElementById('preview-labor-cost').textContent = product.laborCost || '0.000 د.ب';
+            document.getElementById('preview-depreciation-cost').textContent = product.depreciation || '0.000 د.ب';
+            document.getElementById('preview-total-cost').textContent = product.totalCost;
+            document.getElementById('preview-profit-margin').textContent = product.profitMargin;
+            
+            // عرض نافذة المعاينة
+            const previewModal = new bootstrap.Modal(document.getElementById('productPreviewModal'));
+            previewModal.show();
         }
 
         function updateInvoiceProducts() {
@@ -2048,6 +2178,8 @@
                 profitRate: profitRate + '%',
                 profitMargin: document.getElementById('final-profit').textContent,
                 laborCost: document.getElementById('labor-summary').textContent,
+                materialCost: document.getElementById('material-summary').textContent,
+                packagingCost: document.getElementById('packaging-summary').textContent,
                 depreciation: document.getElementById('depreciation-summary').textContent
             };
             
@@ -2143,8 +2275,16 @@
             const taxFields = document.getElementById('tax-fields');
             if (this.checked) {
                 taxFields.classList.remove('disabled');
+                // إظهار حقول الضريبة في الفاتورة
+                document.querySelectorAll('.tax-related').forEach(el => {
+                    el.style.display = '';
+                });
             } else {
                 taxFields.classList.add('disabled');
+                // إخفاء حقول الضريبة في الفاتورة
+                document.querySelectorAll('.tax-related').forEach(el => {
+                    el.style.display = 'none';
+                });
             }
         });
 
@@ -2399,6 +2539,7 @@
                         document.getElementById('system-language').disabled = true;
                     } else if (field === 'currency') {
                         document.getElementById('system-currency').disabled = true;
+                        updateCurrencyFormat();
                     } else if (field === 'tax-enabled') {
                         document.getElementById('tax-enabled').disabled = true;
                     } else if (field === 'tax-rate') {
