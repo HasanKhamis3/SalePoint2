@@ -1785,6 +1785,7 @@
         let currentCurrency = 'د.ب';
         let currencyDecimals = 3;
 
+        // دالة التنقل بين الصفحات مع تحديث الرابط
         function showPage(pageId){
             document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
             document.getElementById(pageId)?.classList.add('active');
@@ -1795,6 +1796,10 @@
                 }
             });
             document.getElementById('sidebar').classList.remove('show');
+            
+            // تحديث الرابط في المتصفح
+            const newUrl = window.location.origin + window.location.pathname + '#' + pageId;
+            window.history.pushState({page: pageId}, '', newUrl);
             
             // تحديث الجداول عند عرض الصفحات
             if (pageId === 'manage-products') {
@@ -1808,18 +1813,51 @@
             }
         }
 
+        // معالجة حدث النقر على روابط التنقل
         document.addEventListener('click', function(e){
             if(e.target.closest('[data-page]')){
                 e.preventDefault();
-                showPage(e.target.closest('[data-page]').getAttribute('data-page'));
+                const pageId = e.target.closest('[data-page]').getAttribute('data-page');
+                showPage(pageId);
             }
         });
 
-        showPage('dashboard');
+        // معالجة حدث تغيير الرابط في المتصفح
+        window.addEventListener('popstate', function(e) {
+            const hash = window.location.hash.substring(1);
+            if (hash) {
+                showPage(hash);
+            } else {
+                showPage('dashboard');
+            }
+        });
 
-        document.getElementById('invoice-number').value = "INV-" + new Date().getFullYear() + "-" + String(appData.invoices.length + 1).padStart(4, '0');
-        document.getElementById('product-code').value = "PRD-" + String(productCounter).padStart(4, '0');
-        document.getElementById('invoice-date').value = new Date().toISOString().split('T')[0];
+        // تحميل الصفحة المناسبة عند بدء التشغيل بناءً على الرابط
+        function initPage() {
+            const hash = window.location.hash.substring(1);
+            if (hash && document.getElementById(hash)) {
+                showPage(hash);
+            } else {
+                showPage('dashboard');
+            }
+        }
+
+        // تهيئة الصفحة عند تحميلها
+        document.addEventListener('DOMContentLoaded', function() {
+            initPage();
+            
+            document.getElementById('invoice-number').value = "INV-" + new Date().getFullYear() + "-" + String(appData.invoices.length + 1).padStart(4, '0');
+            document.getElementById('product-code').value = "PRD-" + String(productCounter).padStart(4, '0');
+            document.getElementById('invoice-date').value = new Date().toISOString().split('T')[0];
+            
+            // تحديث الجداول عند تحميل الصفحة
+            updateProductsTable();
+            updateInvoicesTable();
+            updateTrackingTable();
+            updateInvoiceProducts();
+            updateCosts();
+            updateSettingsUI();
+        });
 
         function updateCurrencyFormat() {
             const currencySelect = document.getElementById('system-currency');
@@ -2671,14 +2709,6 @@
             document.getElementById(id).addEventListener('change',updateCosts);
             document.getElementById(id).addEventListener('keyup',updateCosts);
         });
-
-        // تحديث الجداول عند تحميل الصفحة
-        updateProductsTable();
-        updateInvoicesTable();
-        updateTrackingTable();
-        updateInvoiceProducts();
-        updateCosts();
-        updateSettingsUI();
     </script>
 </body>
 </html>
