@@ -627,6 +627,47 @@
             background: #fffaf0;
         }
         
+        .phone-input-group {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .phone-input-group .country-code {
+            max-width: 120px;
+        }
+        
+        .tax-input-group {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .tax-input-group .tax-input {
+            flex: 1;
+        }
+        
+        .tax-input-group .tax-symbol {
+            background: var(--surface-hover);
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            padding: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 50px;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-muted);
+        }
+        
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+        
         @media (max-width: 768px) {
             .sidebar { transform: translateX(100%); }
             .sidebar.show { transform: translateX(0); }
@@ -636,6 +677,12 @@
             }
             .settings-table .action-cell {
                 width: 120px;
+            }
+            .phone-input-group {
+                flex-direction: column;
+            }
+            .phone-input-group .country-code {
+                max-width: 100%;
             }
         }
     </style>
@@ -650,9 +697,6 @@
         <nav class="sidebar-nav">
             <ul class="nav flex-column">
                 <li class="nav-item"><a class="nav-link active" href="#" data-page="dashboard"><i class="bi bi-speedometer2"></i><span>لوحة التحكم</span></a></li>
-                <li class="nav-item"><a class="nav-link" href="#" data-page="invoice"><i class="bi bi-receipt"></i><span>فاتورة جديدة</span></a></li>
-                <li class="nav-item"><a class="nav-link" href="#" data-page="manage-invoices"><i class="bi bi-table"></i><span>إدارة الفواتير</span></a></li>
-                <li class="nav-item"><a class="nav-link" href="#" data-page="track-invoices"><i class="bi bi-geo-alt"></i><span>تتبع الفواتير</span></a></li>
                 <li class="nav-item"><a class="nav-link" href="#" data-page="calculate-product"><i class="bi bi-calculator"></i><span>حساب تكلفة المنتج</span></a></li>
                 <li class="nav-item"><a class="nav-link" href="#" data-page="manage-products"><i class="bi bi-box-seam"></i><span>إدارة المنتجات</span></a></li>
                 <li class="nav-item"><a class="nav-link" href="#" data-page="settings"><i class="bi bi-gear"></i><span>الإعدادات</span></a></li>
@@ -661,7 +705,7 @@
     </div>
 
     <div class="main-content">
-        <!-- الصفحات الحالية (بدون تغيير) -->
+        <!-- الصفحات المطلوبة فقط -->
         <div id="dashboard" class="page active">
             <div class="content-header"><h2 class="content-title"><i class="bi bi-speedometer2"></i> لوحة التحكم</h2></div>
             <div class="dashboard-stats">
@@ -669,11 +713,6 @@
                     <i class="bi bi-box-seam-fill stat-icon"></i>
                     <div class="stat-value" id="dashboard-products">0</div>
                     <div class="stat-label">إجمالي المنتجات</div>
-                </div>
-                <div class="stat-card">
-                    <i class="bi bi-receipt stat-icon"></i>
-                    <div class="stat-value" id="dashboard-invoices">0</div>
-                    <div class="stat-label">إجمالي الفواتير</div>
                 </div>
                 <div class="stat-card">
                     <i class="bi bi-currency-dollar stat-icon"></i>
@@ -685,134 +724,10 @@
                     <div class="stat-value" id="dashboard-customers">0</div>
                     <div class="stat-label">العملاء</div>
                 </div>
-            </div>
-        </div>
-
-        <div id="invoice" class="page">
-            <div class="content-header"><h2 class="content-title"><i class="bi bi-receipt"></i> فاتورة جديدة</h2></div>
-            <div class="card-modern">
-                <div class="card-header-modern"><i class="bi bi-plus-circle"></i> إنشاء فاتورة جديدة</div>
-                <div class="card-body-modern">
-                    <form id="invoice-form">
-                        <div class="row">
-                            <div class="col-md-3"><label class="form-label">رقم الفاتورة</label><input type="text" class="form-control-modern" id="invoice-number" readonly></div>
-                            <div class="col-md-3"><label class="form-label">اسم العميل</label><input type="text" class="form-control-modern" id="customer-name"></div>
-                            <div class="col-md-3"><label class="form-label">هاتف العميل</label><input type="tel" class="form-control-modern" id="customer-phone"></div>
-                            <div class="col-md-3"><label class="form-label">تاريخ الفاتورة</label><input type="date" class="form-control-modern" id="invoice-date"></div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-4"><label class="form-label">طريقة الدفع</label><select class="form-select-modern" id="payment-method"><option value="">اختر طريقة الدفع</option></select></div>
-                            <div class="col-md-4"><label class="form-label">حالة الدفع</label><select class="form-select-modern" id="payment-status"><option value="paid">مدفوع</option><option value="unpaid">غير مدفوع</option></select></div>
-                        </div>
-                        <h5 class="mb-3 mt-4">عناصر الفاتورة</h5>
-                        <div class="table-responsive">
-                            <table class="table-modern" id="invoice-items-table">
-                                <thead>
-                                    <tr>
-                                        <th class="product-name-col">المنتج</th>
-                                        <th>السعر</th>
-                                        <th>الكمية</th>
-                                        <th class="tax-related">الضريبة</th>
-                                        <th>الإجمالي</th>
-                                        <th></th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td class="product-name-col"><select class="form-select-modern product-select"><option value="">اختر منتج</option></select></td>
-                                        <td><input type="number" class="form-control-modern unit-price" readonly></td>
-                                        <td><input type="number" class="form-control-modern quantity" value="1" min="1"></td>
-                                        <td class="item-tax tax-related">0.000</td>
-                                        <td class="item-total">0.000</td>
-                                        <td><button class="btn btn-danger-modern btn-action remove-item"><i class="bi bi-trash"></i></button></td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                        <button type="button" class="btn btn-success-modern" id="add-invoice-item"><i class="bi bi-plus"></i> إضافة منتج</button>
-                        <h5 class="mb-3 mt-4">عنوان التوصيل</h5>
-                        <div class="row">
-                            <div class="col-md-3"><label class="form-label">المدينة/المنطقة</label><select class="form-select-modern" id="delivery-city"><option value="">اختر المدينة/المنطقة</option></select></div>
-                            <div class="col-md-2"><label class="form-label">المنطقة</label><input type="text" class="form-control-modern" id="delivery-area"></div>
-                            <div class="col-md-2"><label class="form-label">مبني / منزل</label><input type="text" class="form-control-modern" id="delivery-building"></div>
-                            <div class="col-md-2"><label class="form-label">شقة</label><input type="text" class="form-control-modern" id="delivery-apartment"></div>
-                            <div class="col-md-3"><label class="form-label">طريق</label><input type="text" class="form-control-modern" id="delivery-street"></div>
-                        </div>
-                        <div class="row mt-4">
-                            <div class="col-md-6"><label class="form-label">ملاحظات</label><textarea class="form-control-modern" id="invoice-notes" rows="3"></textarea></div>
-                            <div class="col-md-6">
-                                <div class="card-modern"><div class="card-body-modern">
-                                    <div class="d-flex justify-content-between mb-2"><span>المجموع:</span><span id="invoice-subtotal">0.000 د.ب</span></div>
-                                    <div class="d-flex justify-content-between mb-2 tax-related"><span>الضريبة:</span><span id="invoice-tax">0.000 د.ب</span></div>
-                                    <div class="d-flex justify-content-between mb-2"><span>قيمة التوصيل:</span><span id="invoice-delivery">0.000 د.ب</span></div>
-                                    <div class="d-flex justify-content-between fw-bold text-success" style="font-size:1.2rem"><span>الإجمالي النهائي:</span><span id="invoice-total">0.000 د.ب</span></div>
-                                </div></div>
-                            </div>
-                        </div>
-                        <div class="d-flex justify-content-between mt-4">
-                            <button type="button" class="btn btn-primary-modern" id="preview-invoice"><i class="bi bi-eye"></i> معاينة الفاتورة</button>
-                            <div>
-                                <button type="button" class="btn btn-secondary" id="save-draft"><i class="bi bi-save"></i> حفظ مسودة</button>
-                                <button type="button" class="btn btn-success-modern ms-2" id="save-invoice"><i class="bi bi-check-circle"></i> حفظ الفاتورة</button>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-
-        <div id="manage-invoices" class="page">
-            <div class="content-header"><h2 class="content-title"><i class="bi bi-table"></i> إدارة الفواتير</h2></div>
-            <div class="card-modern">
-                <div class="card-header-modern"><i class="bi bi-table"></i> إدارة الفواتير</div>
-                <div class="card-body-modern">
-                    <div class="table-responsive">
-                        <table class="table-modern">
-                            <thead>
-                                <tr>
-                                    <th>رقم الفاتورة</th>
-                                    <th>تاريخ الفاتورة</th>
-                                    <th>اسم العميل</th>
-                                    <th>هاتف العميل</th>
-                                    <th>المجموع</th>
-                                    <th>طريقة الدفع</th>
-                                    <th>حالة الدفع</th>
-                                    <th>الإجراءات</th>
-                                </tr>
-                            </thead>
-                            <tbody id="invoices-list">
-                                <tr><td colspan="8" class="text-center">لا توجد فواتير مسجلة بعد</td></tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div id="track-invoices" class="page">
-            <div class="content-header"><h2 class="content-title"><i class="bi bi-geo-alt"></i> تتبع الفواتير</h2></div>
-            <div class="card-modern">
-                <div class="card-header-modern"><i class="bi bi-geo-alt"></i> تتبع الفواتير</div>
-                <div class="card-body-modern">
-                    <div class="table-responsive">
-                        <table class="table-modern">
-                            <thead>
-                                <tr>
-                                    <th>رقم الفاتورة</th>
-                                    <th>اسم العميل</th>
-                                    <th>تاريخ الطلب</th>
-                                    <th>حالة الطلب</th>
-                                    <th>طريقة الدفع</th>
-                                    <th>حالة الدفع</th>
-                                    <th>الإجمالي</th>
-                                    <th>الإجراءات</th>
-                                </tr>
-                            </thead>
-                            <tbody id="tracking-list">
-                                <tr><td colspan="8" class="text-center">لا توجد فواتير مسجلة بعد</td></tr>
-                            </tbody>
-                        </table>
-                    </div>
+                <div class="stat-card">
+                    <i class="bi bi-graph-up stat-icon"></i>
+                    <div class="stat-value" id="dashboard-growth">0%</div>
+                    <div class="stat-label">النمو</div>
                 </div>
             </div>
         </div>
@@ -1139,8 +1054,8 @@
                                 <tr>
                                     <td>رقم الاتصال</td>
                                     <td>
-                                        <div class="input-group">
-                                            <select class="settings-input" id="country-code" style="max-width:120px" disabled>
+                                        <div class="phone-input-group">
+                                            <select class="settings-input country-code" id="country-code" disabled>
                                                 <option value="+973">+973 (البحرين)</option>
                                                 <option value="+966">+966 (السعودية)</option>
                                                 <option value="+971">+971 (الإمارات)</option>
@@ -1159,8 +1074,8 @@
                                 <tr>
                                     <td>رقم الواتساب</td>
                                     <td>
-                                        <div class="input-group">
-                                            <select class="settings-input" id="whatsapp-country-code" style="max-width:120px" disabled>
+                                        <div class="phone-input-group">
+                                            <select class="settings-input country-code" id="whatsapp-country-code" disabled>
                                                 <option value="+973">+973 (البحرين)</option>
                                                 <option value="+966">+966 (السعودية)</option>
                                                 <option value="+971">+971 (الإمارات)</option>
@@ -1226,48 +1141,6 @@
                 </div>
                 
                 <div class="card-modern">
-                    <div class="card-header-modern"><i class="bi bi-globe"></i> إعدادات النظام</div>
-                    <div class="card-body-modern">
-                        <table class="settings-table">
-                            <tbody>
-                                <tr>
-                                    <td style="width: 30%">اللغة</td>
-                                    <td style="width: 50%">
-                                        <select class="settings-input" id="system-language" disabled>
-                                            <option value="ar">العربية</option>
-                                            <option value="en">English</option>
-                                        </select>
-                                    </td>
-                                    <td class="action-cell">
-                                        <button class="edit-btn" data-field="language"><i class="bi bi-pencil"></i> تعديل</button>
-                                        <button class="save-btn" data-field="language"><i class="bi bi-save"></i> حفظ</button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>العملة</td>
-                                    <td>
-                                        <select class="settings-input" id="system-currency" disabled>
-                                            <option value="BHD">دينار بحريني (0.000 د.ب)</option>
-                                            <option value="SAR">ريال سعودي (0.00 ر.س)</option>
-                                            <option value="AED">درهم إماراتي (0.00 د.إ)</option>
-                                            <option value="QAR">ريال قطري (0.00 ر.ق)</option>
-                                            <option value="KWD">دينار كويتي (0.000 د.ك)</option>
-                                            <option value="OMR">ريال عماني (0.000 ر.ع)</option>
-                                            <option value="USD">دولار أمريكي ($0.00)</option>
-                                            <option value="EUR">يورو (€0.00)</option>
-                                        </select>
-                                    </td>
-                                    <td class="action-cell">
-                                        <button class="edit-btn" data-field="currency"><i class="bi bi-pencil"></i> تعديل</button>
-                                        <button class="save-btn" data-field="currency"><i class="bi bi-save"></i> حفظ</button>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                
-                <div class="card-modern">
                     <div class="card-header-modern"><i class="bi bi-percent"></i> إعدادات الضرائب</div>
                     <div class="card-body-modern">
                         <table class="settings-table">
@@ -1296,9 +1169,9 @@
                                     <tr>
                                         <td style="width: 30%">نسبة الضريبة (%)</td>
                                         <td style="width: 50%">
-                                            <div class="input-group">
-                                                <input type="number" class="settings-input" id="tax-rate" step="0.1" min="0" max="100" value="10" disabled>
-                                                <span class="input-group-text">%</span>
+                                            <div class="tax-input-group">
+                                                <input type="number" class="settings-input tax-input" id="tax-rate" step="0.1" min="0" max="100" value="10" disabled>
+                                                <div class="tax-symbol">%</div>
                                             </div>
                                         </td>
                                         <td class="action-cell">
@@ -1337,32 +1210,7 @@
                                 </tr>
                             </thead>
                             <tbody id="delivery-scopes-list">
-                                <tr>
-                                    <td>
-                                        <input type="text" class="settings-input" value="النطاق الذهبي" disabled>
-                                    </td>
-                                    <td>
-                                        <input type="number" class="settings-input" step="0.001" value="2.000" disabled>
-                                    </td>
-                                    <td class="action-cell">
-                                        <button class="edit-btn"><i class="bi bi-pencil"></i> تعديل</button>
-                                        <button class="save-btn" style="display:none"><i class="bi bi-save"></i> حفظ</button>
-                                        <button class="delete-btn"><i class="bi bi-trash"></i></button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <input type="text" class="settings-input" value="النطاق الفضي" disabled>
-                                    </td>
-                                    <td>
-                                        <input type="number" class="settings-input" step="0.001" value="1.500" disabled>
-                                    </td>
-                                    <td class="action-cell">
-                                        <button class="edit-btn"><i class="bi bi-pencil"></i> تعديل</button>
-                                        <button class="save-btn" style="display:none"><i class="bi bi-save"></i> حفظ</button>
-                                        <button class="delete-btn"><i class="bi bi-trash"></i></button>
-                                    </td>
-                                </tr>
+                                <!-- سيتم تعبئة البيانات ديناميكياً -->
                             </tbody>
                         </table>
                         <button class="add-btn" id="add-delivery-scope"><i class="bi bi-plus"></i> إضافة نطاق توصيل</button>
@@ -1381,40 +1229,7 @@
                                 </tr>
                             </thead>
                             <tbody id="delivery-areas-list">
-                                <tr>
-                                    <td>
-                                        <input type="text" class="settings-input" value="المنامة" disabled>
-                                    </td>
-                                    <td>
-                                        <select class="settings-input" disabled>
-                                            <option>اختر نطاق التوصيل</option>
-                                            <option selected>النطاق الذهبي</option>
-                                            <option>النطاق الفضي</option>
-                                        </select>
-                                    </td>
-                                    <td class="action-cell">
-                                        <button class="edit-btn"><i class="bi bi-pencil"></i> تعديل</button>
-                                        <button class="save-btn" style="display:none"><i class="bi bi-save"></i> حفظ</button>
-                                        <button class="delete-btn"><i class="bi bi-trash"></i></button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <input type="text" class="settings-input" value="المحرق" disabled>
-                                    </td>
-                                    <td>
-                                        <select class="settings-input" disabled>
-                                            <option>اختر نطاق التوصيل</option>
-                                            <option>النطاق الذهبي</option>
-                                            <option selected>النطاق الفضي</option>
-                                        </select>
-                                    </td>
-                                    <td class="action-cell">
-                                        <button class="edit-btn"><i class="bi bi-pencil"></i> تعديل</button>
-                                        <button class="save-btn" style="display:none"><i class="bi bi-save"></i> حفظ</button>
-                                        <button class="delete-btn"><i class="bi bi-trash"></i></button>
-                                    </td>
-                                </tr>
+                                <!-- سيتم تعبئة البيانات ديناميكياً -->
                             </tbody>
                         </table>
                         <button class="add-btn" id="add-delivery-area"><i class="bi bi-plus"></i> إضافة منطقة / مدينة</button>
@@ -1438,46 +1253,7 @@
                                 </tr>
                             </thead>
                             <tbody id="admins-list">
-                                <tr>
-                                    <td>
-                                        <input type="text" class="settings-input" value="أحمد" disabled>
-                                    </td>
-                                    <td>
-                                        <input type="text" class="settings-input" value="محمد" disabled>
-                                    </td>
-                                    <td>
-                                        <input type="email" class="settings-input" value="ahmed@ajwaapilot.com" disabled>
-                                    </td>
-                                    <td>
-                                        <input type="tel" class="settings-input" value="12345678" disabled>
-                                    </td>
-                                    <td class="action-cell">
-                                        <button class="edit-btn"><i class="bi bi-pencil"></i> تعديل</button>
-                                        <button class="save-btn" style="display:none"><i class="bi bi-save"></i> حفظ</button>
-                                        <button class="delete-btn"><i class="bi bi-trash"></i></button>
-                                        <button class="activate-btn"><i class="bi bi-check-circle"></i> تفعيل</button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <input type="text" class="settings-input" value="فاطمة" disabled>
-                                    </td>
-                                    <td>
-                                        <input type="text" class="settings-input" value="علي" disabled>
-                                    </td>
-                                    <td>
-                                        <input type="email" class="settings-input" value="fatima@ajwaapilot.com" disabled>
-                                    </td>
-                                    <td>
-                                        <input type="tel" class="settings-input" value="87654321" disabled>
-                                    </td>
-                                    <td class="action-cell">
-                                        <button class="edit-btn"><i class="bi bi-pencil"></i> تعديل</button>
-                                        <button class="save-btn" style="display:none"><i class="bi bi-save"></i> حفظ</button>
-                                        <button class="delete-btn"><i class="bi bi-trash"></i></button>
-                                        <button class="deactivate-btn"><i class="bi bi-x-circle"></i> إلغاء</button>
-                                    </td>
-                                </tr>
+                                <!-- سيتم تعبئة البيانات ديناميكياً -->
                             </tbody>
                         </table>
                         <button class="add-btn" id="add-admin"><i class="bi bi-plus"></i> إضافة مشرف</button>
@@ -1498,46 +1274,7 @@
                                 </tr>
                             </thead>
                             <tbody id="sellers-list">
-                                <tr>
-                                    <td>
-                                        <input type="text" class="settings-input" value="خالد" disabled>
-                                    </td>
-                                    <td>
-                                        <input type="text" class="settings-input" value="إبراهيم" disabled>
-                                    </td>
-                                    <td>
-                                        <input type="email" class="settings-input" value="khaled@ajwaapilot.com" disabled>
-                                    </td>
-                                    <td>
-                                        <input type="tel" class="settings-input" value="11223344" disabled>
-                                    </td>
-                                    <td class="action-cell">
-                                        <button class="edit-btn"><i class="bi bi-pencil"></i> تعديل</button>
-                                        <button class="save-btn" style="display:none"><i class="bi bi-save"></i> حفظ</button>
-                                        <button class="delete-btn"><i class="bi bi-trash"></i></button>
-                                        <button class="activate-btn"><i class="bi bi-check-circle"></i> تفعيل</button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <input type="text" class="settings-input" value="سارة" disabled>
-                                    </td>
-                                    <td>
-                                        <input type="text" class="settings-input" value="عبدالله" disabled>
-                                    </td>
-                                    <td>
-                                        <input type="email" class="settings-input" value="sara@ajwaapilot.com" disabled>
-                                    </td>
-                                    <td>
-                                        <input type="tel" class="settings-input" value="44332211" disabled>
-                                    </td>
-                                    <td class="action-cell">
-                                        <button class="edit-btn"><i class="bi bi-pencil"></i> تعديل</button>
-                                        <button class="save-btn" style="display:none"><i class="bi bi-save"></i> حفظ</button>
-                                        <button class="delete-btn"><i class="bi bi-trash"></i></button>
-                                        <button class="deactivate-btn"><i class="bi bi-x-circle"></i> إلغاء</button>
-                                    </td>
-                                </tr>
+                                <!-- سيتم تعبئة البيانات ديناميكياً -->
                             </tbody>
                         </table>
                         <button class="add-btn" id="add-seller"><i class="bi bi-plus"></i> إضافة بائع</button>
@@ -1552,13 +1289,29 @@
         // قاعدة بيانات محلية لتخزين البيانات
         let appData = {
             products: [],
-            invoices: [],
             settings: {
-                project: {},
-                system: { currency: 'BHD', color: 'default', language: 'ar' },
-                tax: { enabled: false, rate: 0, number: '' },
-                paymentMethods: [],
-                delivery: { areas: [], cities: [] }
+                project: {
+                    name: "Ajwaapilot",
+                    phone: "+97312345678",
+                    whatsapp: "+97312345678",
+                    instagram: "@ajwaapilot",
+                    snapchat: "@ajwaapilot",
+                    tiktok: "@ajwaapilot",
+                    logo: ""
+                },
+                tax: { 
+                    enabled: true, 
+                    rate: 10, 
+                    number: "123456789" 
+                },
+                delivery: { 
+                    scopes: [], 
+                    areas: [] 
+                },
+                users: { 
+                    admins: [], 
+                    sellers: [] 
+                }
             }
         };
 
@@ -1598,10 +1351,8 @@
             // تحديث الجداول عند عرض الصفحات
             if (pageId === 'manage-products') {
                 updateProductsTable();
-            } else if (pageId === 'manage-invoices') {
-                updateInvoicesTable();
-            } else if (pageId === 'track-invoices') {
-                updateTrackingTable();
+            } else if (pageId === 'settings') {
+                loadSettingsData();
             }
         }
 
@@ -1614,9 +1365,7 @@
 
         showPage('dashboard');
 
-        document.getElementById('invoice-number').value = "INV-" + new Date().getFullYear() + "-" + String(appData.invoices.length + 1).padStart(4, '0');
         document.getElementById('product-code').value = "PRD-" + String(productCounter).padStart(4, '0');
-        document.getElementById('invoice-date').value = new Date().toISOString().split('T')[0];
 
         function updateCurrencyFormat() {
             const currencySelect = document.getElementById('system-currency');
@@ -1791,46 +1540,6 @@
             updateCosts();
         }
 
-        function saveProjectSettings() {
-            appData.settings.project = {
-                name: document.getElementById('project-name').value,
-                phone: document.getElementById('country-code').value + document.getElementById('phone-number').value,
-                address: document.getElementById('project-address').value
-            };
-            saveData();
-            alert('تم حفظ إعدادات المشروع بنجاح!');
-        }
-
-        function saveSystemSettings() {
-            appData.settings.system = {
-                color: document.getElementById('system-color').value,
-                language: document.getElementById('system-language').value,
-                currency: document.getElementById('system-currency').value
-            };
-            saveData();
-            alert('تم حفظ إعدادات النظام بنجاح!');
-            updateCurrencyFormat();
-        }
-
-        function saveTaxSettings() {
-            appData.settings.tax = {
-                enabled: document.getElementById('tax-enabled').checked,
-                rate: parseFloat(document.getElementById('tax-rate').value) || 0,
-                number: document.getElementById('tax-number').value
-            };
-            saveData();
-            alert('تم حفظ إعدادات الضريبة بنجاح!');
-        }
-
-        function saveDeliverySettings() {
-            // حفظ إعدادات التوصيل
-            alert('تم حفظ إعدادات التوصيل بنجاح!');
-        }
-
-        function addPaymentMethod() {
-            alert('تم إضافة طريقة دفع جديدة!');
-        }
-
         function updateProductsTable() {
             const tbody = document.getElementById('products-list');
             if(products.length === 0) {
@@ -1856,56 +1565,6 @@
             document.getElementById('dashboard-products').textContent = products.length;
         }
 
-        function updateInvoicesTable() {
-            const tbody = document.getElementById('invoices-list');
-            if(appData.invoices.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="8" class="text-center">لا توجد فواتير مسجلة بعد</td></tr>';
-                return;
-            }
-            tbody.innerHTML = '';
-            appData.invoices.forEach((invoice, index) => {
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td>${invoice.number}</td>
-                    <td>${invoice.date}</td>
-                    <td>${invoice.customerName}</td>
-                    <td>${invoice.customerPhone}</td>
-                    <td>${invoice.total}</td>
-                    <td>${invoice.paymentMethod}</td>
-                    <td>${invoice.paymentStatus === 'paid' ? 'مدفوع' : 'غير مدفوع'}</td>
-                    <td>
-                        <button class="btn btn-primary-modern btn-action"><i class="bi bi-eye"></i></button>
-                        <button class="btn btn-danger-modern btn-action" onclick="deleteInvoice(${index})"><i class="bi bi-trash"></i></button>
-                    </td>`;
-                tbody.appendChild(tr);
-            });
-            document.getElementById('dashboard-invoices').textContent = appData.invoices.length;
-        }
-
-        function updateTrackingTable() {
-            const tbody = document.getElementById('tracking-list');
-            if(appData.invoices.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="8" class="text-center">لا توجد فواتير مسجلة بعد</td></tr>';
-                return;
-            }
-            tbody.innerHTML = '';
-            appData.invoices.forEach((invoice, index) => {
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td>${invoice.number}</td>
-                    <td>${invoice.customerName}</td>
-                    <td>${invoice.date}</td>
-                    <td>قيد المعالجة</td>
-                    <td>${invoice.paymentMethod}</td>
-                    <td>${invoice.paymentStatus === 'paid' ? 'مدفوع' : 'غير مدفوع'}</td>
-                    <td>${invoice.total}</td>
-                    <td>
-                        <button class="btn btn-primary-modern btn-action"><i class="bi bi-eye"></i></button>
-                    </td>`;
-                tbody.appendChild(tr);
-            });
-        }
-
         function editProduct(index) {
             const product = products[index];
             editingIndex = index;
@@ -1926,37 +1585,12 @@
                 appData.products = products;
                 saveData();
                 updateProductsTable();
-                updateInvoiceProducts();
                 document.getElementById('dashboard-products').textContent = products.length;
-            }
-        }
-
-        function deleteInvoice(index) {
-            if(confirm('هل أنت متأكد من حذف هذه الفاتورة؟')) {
-                appData.invoices.splice(index, 1);
-                saveData();
-                updateInvoicesTable();
-                updateTrackingTable();
-                document.getElementById('dashboard-invoices').textContent = appData.invoices.length;
             }
         }
 
         function previewProduct(index) {
             alert('عرض تفاصيل المنتج: ' + products[index].name);
-        }
-
-        function updateInvoiceProducts() {
-            const selects = document.querySelectorAll('.product-select');
-            selects.forEach(select => {
-                select.innerHTML = '<option value="">اختر منتج</option>';
-                products.forEach(product => {
-                    const option = document.createElement('option');
-                    option.value = product.code;
-                    option.dataset.price = product.finalPrice.replace(/[^0-9.]/g, '');
-                    option.textContent = product.name + ' - ' + product.finalPrice;
-                    select.appendChild(option);
-                });
-            });
         }
 
         function validateForm() {
@@ -2061,46 +1695,9 @@
             appData.products = products;
             saveData();
             updateProductsTable();
-            updateInvoiceProducts();
             clearForm();
             alert('تم حفظ المنتج بنجاح!');
             showPage('manage-products');
-        }
-
-        // Invoice product selection and auto-price
-        document.addEventListener('change', function(e) {
-            if (e.target.classList.contains('product-select')) {
-                const selectedOption = e.target.options[e.target.selectedIndex];
-                const price = selectedOption.dataset.price;
-                const row = e.target.closest('tr');
-                const priceInput = row.querySelector('.unit-price');
-                if (price) {
-                    priceInput.value = parseFloat(price).toFixed(currencyDecimals);
-                } else {
-                    priceInput.value = '';
-                }
-                calculateRowTotal(row);
-            }
-        });
-
-        function calculateRowTotal(row) {
-            const price = parseFloat(row.querySelector('.unit-price').value) || 0;
-            const quantity = parseFloat(row.querySelector('.quantity').value) || 1;
-            const total = price * quantity;
-            row.querySelector('.item-total').textContent = total.toFixed(currencyDecimals);
-            calculateInvoiceTotals();
-        }
-
-        function calculateInvoiceTotals() {
-            let subtotal = 0;
-            let tax = 0;
-            document.querySelectorAll('#invoice-items-table tbody tr').forEach(row => {
-                const total = parseFloat(row.querySelector('.item-total').textContent) || 0;
-                subtotal += total;
-            });
-            document.getElementById('invoice-subtotal').textContent = subtotal.toFixed(currencyDecimals) + ' ' + currentCurrency;
-            document.getElementById('invoice-tax').textContent = tax.toFixed(currencyDecimals) + ' ' + currentCurrency;
-            document.getElementById('invoice-total').textContent = subtotal.toFixed(currencyDecimals) + ' ' + currentCurrency;
         }
 
         // إضافة حدث input لجميع الحقول في جداول المواد والتغليف لتحديث النتائج مباشرة
@@ -2149,7 +1746,7 @@
         });
 
         // إضافة صفوف جديدة للجداول
-        function addTableRowToSettings(tableId, rowTemplate) {
+        function addTableRowToSettings(tableId, rowTemplate, dataArray, type) {
             const tbody = document.querySelector(`#${tableId} tbody`);
             const newRow = document.createElement('tr');
             newRow.innerHTML = rowTemplate;
@@ -2169,16 +1766,36 @@
             if (saveBtn) {
                 saveBtn.addEventListener('click', function() {
                     disableRowEditing(newRow);
+                    saveSettingsData();
                 });
             }
             
             if (deleteBtn) {
                 deleteBtn.addEventListener('click', function() {
                     if (confirm('هل أنت متأكد من حذف هذا العنصر؟')) {
+                        const index = Array.from(tbody.children).indexOf(newRow);
+                        if (index !== -1) {
+                            dataArray.splice(index, 1);
+                            saveSettingsData();
+                        }
                         newRow.remove();
+                        updateEmptyState(tableId);
                     }
                 });
             }
+            
+            // إضافة بيانات جديدة إلى المصفوفة
+            if (type === 'delivery-scope') {
+                dataArray.push({ name: '', price: 0 });
+            } else if (type === 'delivery-area') {
+                dataArray.push({ name: '', scope: '' });
+            } else if (type === 'admin') {
+                dataArray.push({ firstName: '', lastName: '', email: '', phone: '', active: true });
+            } else if (type === 'seller') {
+                dataArray.push({ firstName: '', lastName: '', email: '', phone: '', active: true });
+            }
+            
+            updateEmptyState(tableId);
         }
 
         // تمكين التعديل على صف
@@ -2209,8 +1826,342 @@
             
             if (editBtn) editBtn.style.display = 'inline-block';
             if (saveBtn) saveBtn.style.display = 'none';
+        }
+
+        // تحديث حالة الجداول الفارغة
+        function updateEmptyState(tableId) {
+            const tbody = document.querySelector(`#${tableId} tbody`);
+            if (tbody.children.length === 0) {
+                let message = '';
+                if (tableId === 'delivery-scopes-list') {
+                    message = 'يرجى إضافة نطاق توصيل جديد';
+                } else if (tableId === 'delivery-areas-list') {
+                    message = 'يرجى إضافة منطقة / مدينة جديدة';
+                } else if (tableId === 'admins-list') {
+                    message = 'يرجى إضافة مشرف جديد';
+                } else if (tableId === 'sellers-list') {
+                    message = 'يرجى إضافة بائع جديد';
+                }
+                
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="3" class="empty-state">
+                            <i class="bi bi-inbox"></i>
+                            <div>${message}</div>
+                        </td>
+                    </tr>
+                `;
+            }
+        }
+
+        // تحميل بيانات الإعدادات
+        function loadSettingsData() {
+            // تفاصيل المشروع
+            document.getElementById('project-name').value = appData.settings.project.name || 'Ajwaapilot';
             
-            alert('تم حفظ التعديلات بنجاح!');
+            // رقم الاتصال
+            const phone = appData.settings.project.phone || '+97312345678';
+            const phoneCode = phone.substring(0, 4);
+            const phoneNumber = phone.substring(4);
+            document.getElementById('country-code').value = phoneCode;
+            document.getElementById('phone-number').value = phoneNumber;
+            
+            // رقم الواتساب
+            const whatsapp = appData.settings.project.whatsapp || '+97312345678';
+            const whatsappCode = whatsapp.substring(0, 4);
+            const whatsappNumber = whatsapp.substring(4);
+            document.getElementById('whatsapp-country-code').value = whatsappCode;
+            document.getElementById('whatsapp-number').value = whatsappNumber;
+            
+            // وسائل التواصل الاجتماعي
+            document.getElementById('instagram-account').value = appData.settings.project.instagram || '@ajwaapilot';
+            document.getElementById('snapchat-account').value = appData.settings.project.snapchat || '@ajwaapilot';
+            document.getElementById('tiktok-account').value = appData.settings.project.tiktok || '@ajwaapilot';
+            
+            // الشعار
+            if (appData.settings.project.logo) {
+                document.getElementById('logo-preview-img').src = appData.settings.project.logo;
+                document.getElementById('logo-preview-img').style.display = 'block';
+                document.getElementById('logo-placeholder').style.display = 'none';
+            }
+            
+            // الضرائب
+            document.getElementById('tax-enabled').checked = appData.settings.tax.enabled;
+            document.getElementById('tax-rate').value = appData.settings.tax.rate;
+            document.getElementById('tax-number').value = appData.settings.tax.number;
+            
+            // تحديث حالة الضرائب
+            const taxFields = document.getElementById('tax-fields');
+            if (appData.settings.tax.enabled) {
+                taxFields.classList.remove('disabled');
+            } else {
+                taxFields.classList.add('disabled');
+            }
+            
+            // نطاقات التوصيل
+            const deliveryScopesTbody = document.getElementById('delivery-scopes-list');
+            deliveryScopesTbody.innerHTML = '';
+            
+            if (appData.settings.delivery.scopes.length === 0) {
+                updateEmptyState('delivery-scopes-list');
+            } else {
+                appData.settings.delivery.scopes.forEach((scope, index) => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>
+                            <input type="text" class="settings-input" value="${scope.name}" disabled>
+                        </td>
+                        <td>
+                            <input type="number" class="settings-input" step="0.001" value="${scope.price}" disabled>
+                        </td>
+                        <td class="action-cell">
+                            <button class="edit-btn"><i class="bi bi-pencil"></i> تعديل</button>
+                            <button class="save-btn" style="display:none"><i class="bi bi-save"></i> حفظ</button>
+                            <button class="delete-btn"><i class="bi bi-trash"></i></button>
+                        </td>
+                    `;
+                    deliveryScopesTbody.appendChild(row);
+                    
+                    // إضافة الأحداث
+                    const editBtn = row.querySelector('.edit-btn');
+                    const saveBtn = row.querySelector('.save-btn');
+                    const deleteBtn = row.querySelector('.delete-btn');
+                    
+                    editBtn.addEventListener('click', function() {
+                        enableRowEditing(row);
+                    });
+                    
+                    saveBtn.addEventListener('click', function() {
+                        disableRowEditing(row);
+                        // تحديث البيانات
+                        appData.settings.delivery.scopes[index].name = row.querySelector('input[type="text"]').value;
+                        appData.settings.delivery.scopes[index].price = parseFloat(row.querySelector('input[type="number"]').value);
+                        saveSettingsData();
+                    });
+                    
+                    deleteBtn.addEventListener('click', function() {
+                        if (confirm('هل أنت متأكد من حذف هذا النطاق؟')) {
+                            appData.settings.delivery.scopes.splice(index, 1);
+                            saveSettingsData();
+                            row.remove();
+                            updateEmptyState('delivery-scopes-list');
+                        }
+                    });
+                });
+            }
+            
+            // المناطق/المدن
+            const deliveryAreasTbody = document.getElementById('delivery-areas-list');
+            deliveryAreasTbody.innerHTML = '';
+            
+            if (appData.settings.delivery.areas.length === 0) {
+                updateEmptyState('delivery-areas-list');
+            } else {
+                appData.settings.delivery.areas.forEach((area, index) => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>
+                            <input type="text" class="settings-input" value="${area.name}" disabled>
+                        </td>
+                        <td>
+                            <select class="settings-input" disabled>
+                                <option value="">اختر نطاق التوصيل</option>
+                                ${appData.settings.delivery.scopes.map(scope => 
+                                    `<option value="${scope.name}" ${area.scope === scope.name ? 'selected' : ''}>${scope.name}</option>`
+                                ).join('')}
+                            </select>
+                        </td>
+                        <td class="action-cell">
+                            <button class="edit-btn"><i class="bi bi-pencil"></i> تعديل</button>
+                            <button class="save-btn" style="display:none"><i class="bi bi-save"></i> حفظ</button>
+                            <button class="delete-btn"><i class="bi bi-trash"></i></button>
+                        </td>
+                    `;
+                    deliveryAreasTbody.appendChild(row);
+                    
+                    // إضافة الأحداث
+                    const editBtn = row.querySelector('.edit-btn');
+                    const saveBtn = row.querySelector('.save-btn');
+                    const deleteBtn = row.querySelector('.delete-btn');
+                    
+                    editBtn.addEventListener('click', function() {
+                        enableRowEditing(row);
+                    });
+                    
+                    saveBtn.addEventListener('click', function() {
+                        disableRowEditing(row);
+                        // تحديث البيانات
+                        appData.settings.delivery.areas[index].name = row.querySelector('input[type="text"]').value;
+                        appData.settings.delivery.areas[index].scope = row.querySelector('select').value;
+                        saveSettingsData();
+                    });
+                    
+                    deleteBtn.addEventListener('click', function() {
+                        if (confirm('هل أنت متأكد من حذف هذه المنطقة؟')) {
+                            appData.settings.delivery.areas.splice(index, 1);
+                            saveSettingsData();
+                            row.remove();
+                            updateEmptyState('delivery-areas-list');
+                        }
+                    });
+                });
+            }
+            
+            // المشرفين
+            const adminsTbody = document.getElementById('admins-list');
+            adminsTbody.innerHTML = '';
+            
+            if (appData.settings.users.admins.length === 0) {
+                updateEmptyState('admins-list');
+            } else {
+                appData.settings.users.admins.forEach((admin, index) => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>
+                            <input type="text" class="settings-input" value="${admin.firstName}" disabled>
+                        </td>
+                        <td>
+                            <input type="text" class="settings-input" value="${admin.lastName}" disabled>
+                        </td>
+                        <td>
+                            <input type="email" class="settings-input" value="${admin.email}" disabled>
+                        </td>
+                        <td>
+                            <input type="tel" class="settings-input" value="${admin.phone}" disabled>
+                        </td>
+                        <td class="action-cell">
+                            <button class="edit-btn"><i class="bi bi-pencil"></i> تعديل</button>
+                            <button class="save-btn" style="display:none"><i class="bi bi-save"></i> حفظ</button>
+                            <button class="delete-btn"><i class="bi bi-trash"></i></button>
+                            ${admin.active ? 
+                                '<button class="deactivate-btn"><i class="bi bi-x-circle"></i> إلغاء</button>' : 
+                                '<button class="activate-btn"><i class="bi bi-check-circle"></i> تفعيل</button>'
+                            }
+                        </td>
+                    `;
+                    adminsTbody.appendChild(row);
+                    
+                    // إضافة الأحداث
+                    setupUserRowEvents(row, index, 'admin');
+                });
+            }
+            
+            // البائعين
+            const sellersTbody = document.getElementById('sellers-list');
+            sellersTbody.innerHTML = '';
+            
+            if (appData.settings.users.sellers.length === 0) {
+                updateEmptyState('sellers-list');
+            } else {
+                appData.settings.users.sellers.forEach((seller, index) => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>
+                            <input type="text" class="settings-input" value="${seller.firstName}" disabled>
+                        </td>
+                        <td>
+                            <input type="text" class="settings-input" value="${seller.lastName}" disabled>
+                        </td>
+                        <td>
+                            <input type="email" class="settings-input" value="${seller.email}" disabled>
+                        </td>
+                        <td>
+                            <input type="tel" class="settings-input" value="${seller.phone}" disabled>
+                        </td>
+                        <td class="action-cell">
+                            <button class="edit-btn"><i class="bi bi-pencil"></i> تعديل</button>
+                            <button class="save-btn" style="display:none"><i class="bi bi-save"></i> حفظ</button>
+                            <button class="delete-btn"><i class="bi bi-trash"></i></button>
+                            ${seller.active ? 
+                                '<button class="deactivate-btn"><i class="bi bi-x-circle"></i> إلغاء</button>' : 
+                                '<button class="activate-btn"><i class="bi bi-check-circle"></i> تفعيل</button>'
+                            }
+                        </td>
+                    `;
+                    sellersTbody.appendChild(row);
+                    
+                    // إضافة الأحداث
+                    setupUserRowEvents(row, index, 'seller');
+                });
+            }
+        }
+
+        // إعداد أحداث صفوف المستخدمين
+        function setupUserRowEvents(row, index, type) {
+            const editBtn = row.querySelector('.edit-btn');
+            const saveBtn = row.querySelector('.save-btn');
+            const deleteBtn = row.querySelector('.delete-btn');
+            const activateBtn = row.querySelector('.activate-btn');
+            const deactivateBtn = row.querySelector('.deactivate-btn');
+            const dataArray = type === 'admin' ? appData.settings.users.admins : appData.settings.users.sellers;
+            
+            editBtn.addEventListener('click', function() {
+                enableRowEditing(row);
+            });
+            
+            saveBtn.addEventListener('click', function() {
+                disableRowEditing(row);
+                // تحديث البيانات
+                dataArray[index].firstName = row.cells[0].querySelector('input').value;
+                dataArray[index].lastName = row.cells[1].querySelector('input').value;
+                dataArray[index].email = row.cells[2].querySelector('input').value;
+                dataArray[index].phone = row.cells[3].querySelector('input').value;
+                saveSettingsData();
+            });
+            
+            deleteBtn.addEventListener('click', function() {
+                if (confirm('هل أنت متأكد من حذف هذا المستخدم؟')) {
+                    dataArray.splice(index, 1);
+                    saveSettingsData();
+                    row.remove();
+                    updateEmptyState(type === 'admin' ? 'admins-list' : 'sellers-list');
+                }
+            });
+            
+            if (activateBtn) {
+                activateBtn.addEventListener('click', function() {
+                    dataArray[index].active = true;
+                    saveSettingsData();
+                    // إعادة تحميل الصف
+                    loadSettingsData();
+                });
+            }
+            
+            if (deactivateBtn) {
+                deactivateBtn.addEventListener('click', function() {
+                    dataArray[index].active = false;
+                    saveSettingsData();
+                    // إعادة تحميل الصف
+                    loadSettingsData();
+                });
+            }
+        }
+
+        // حفظ بيانات الإعدادات
+        function saveSettingsData() {
+            // حفظ البيانات في appData
+            appData.settings.project.name = document.getElementById('project-name').value;
+            
+            const phoneCode = document.getElementById('country-code').value;
+            const phoneNumber = document.getElementById('phone-number').value;
+            appData.settings.project.phone = phoneCode + phoneNumber;
+            
+            const whatsappCode = document.getElementById('whatsapp-country-code').value;
+            const whatsappNumber = document.getElementById('whatsapp-number').value;
+            appData.settings.project.whatsapp = whatsappCode + whatsappNumber;
+            
+            appData.settings.project.instagram = document.getElementById('instagram-account').value;
+            appData.settings.project.snapchat = document.getElementById('snapchat-account').value;
+            appData.settings.project.tiktok = document.getElementById('tiktok-account').value;
+            
+            appData.settings.tax.enabled = document.getElementById('tax-enabled').checked;
+            appData.settings.tax.rate = parseFloat(document.getElementById('tax-rate').value);
+            appData.settings.tax.number = document.getElementById('tax-number').value;
+            
+            // حفظ البيانات في localStorage
+            saveData();
+            
+            alert('تم حفظ الإعدادات بنجاح!');
         }
 
         // إضافة نطاق توصيل جديد
@@ -2228,7 +2179,7 @@
                     <button class="delete-btn"><i class="bi bi-trash"></i></button>
                 </td>
             `;
-            addTableRowToSettings('delivery-scopes-list', rowTemplate);
+            addTableRowToSettings('delivery-scopes-list', rowTemplate, appData.settings.delivery.scopes, 'delivery-scope');
         });
 
         // إضافة منطقة/مدينة جديدة
@@ -2239,9 +2190,10 @@
                 </td>
                 <td>
                     <select class="settings-input" disabled>
-                        <option>اختر نطاق التوصيل</option>
-                        <option>النطاق الذهبي</option>
-                        <option>النطاق الفضي</option>
+                        <option value="">اختر نطاق التوصيل</option>
+                        ${appData.settings.delivery.scopes.map(scope => 
+                            `<option value="${scope.name}">${scope.name}</option>`
+                        ).join('')}
                     </select>
                 </td>
                 <td class="action-cell">
@@ -2250,7 +2202,7 @@
                     <button class="delete-btn"><i class="bi bi-trash"></i></button>
                 </td>
             `;
-            addTableRowToSettings('delivery-areas-list', rowTemplate);
+            addTableRowToSettings('delivery-areas-list', rowTemplate, appData.settings.delivery.areas, 'delivery-area');
         });
 
         // إضافة مشرف جديد
@@ -2275,7 +2227,7 @@
                     <button class="activate-btn"><i class="bi bi-check-circle"></i> تفعيل</button>
                 </td>
             `;
-            addTableRowToSettings('admins-list', rowTemplate);
+            addTableRowToSettings('admins-list', rowTemplate, appData.settings.users.admins, 'admin');
         });
 
         // إضافة بائع جديد
@@ -2300,7 +2252,7 @@
                     <button class="activate-btn"><i class="bi bi-check-circle"></i> تفعيل</button>
                 </td>
             `;
-            addTableRowToSettings('sellers-list', rowTemplate);
+            addTableRowToSettings('sellers-list', rowTemplate, appData.settings.users.sellers, 'seller');
         });
 
         // رفع الشعار
@@ -2317,6 +2269,10 @@
                     logoPreview.src = e.target.result;
                     logoPreview.style.display = 'block';
                     document.getElementById('logo-placeholder').style.display = 'none';
+                    
+                    // حفظ صورة الشعار في البيانات
+                    appData.settings.project.logo = e.target.result;
+                    saveSettingsData();
                 };
                 reader.readAsDataURL(file);
             }
@@ -2344,10 +2300,6 @@
                         document.getElementById('snapchat-account').disabled = false;
                     } else if (field === 'tiktok') {
                         document.getElementById('tiktok-account').disabled = false;
-                    } else if (field === 'language') {
-                        document.getElementById('system-language').disabled = false;
-                    } else if (field === 'currency') {
-                        document.getElementById('system-currency').disabled = false;
                     } else if (field === 'tax-enabled') {
                         document.getElementById('tax-enabled').disabled = false;
                     } else if (field === 'tax-rate') {
@@ -2368,10 +2320,6 @@
                     if (row) {
                         row.classList.add('editing');
                     }
-                } else {
-                    // إذا لم يكن هناك حقل محدد، فهذا زر في جدول
-                    const row = btn.closest('tr');
-                    enableRowEditing(row);
                 }
             }
             
@@ -2395,10 +2343,6 @@
                         document.getElementById('snapchat-account').disabled = true;
                     } else if (field === 'tiktok') {
                         document.getElementById('tiktok-account').disabled = true;
-                    } else if (field === 'language') {
-                        document.getElementById('system-language').disabled = true;
-                    } else if (field === 'currency') {
-                        document.getElementById('system-currency').disabled = true;
                     } else if (field === 'tax-enabled') {
                         document.getElementById('tax-enabled').disabled = true;
                     } else if (field === 'tax-rate') {
@@ -2420,19 +2364,7 @@
                         row.classList.remove('editing');
                     }
                     
-                    alert('تم حفظ التعديلات بنجاح!');
-                } else {
-                    // إذا لم يكن هناك حقل محدد، فهذا زر في جدول
-                    const row = btn.closest('tr');
-                    disableRowEditing(row);
-                }
-            }
-            
-            if (e.target.closest('.delete-btn')) {
-                const btn = e.target.closest('.delete-btn');
-                const row = btn.closest('tr');
-                if (confirm('هل أنت متأكد من حذف هذا العنصر؟')) {
-                    row.remove();
+                    saveSettingsData();
                 }
             }
         });
@@ -2450,9 +2382,6 @@
 
         // تحديث الجداول عند تحميل الصفحة
         updateProductsTable();
-        updateInvoicesTable();
-        updateTrackingTable();
-        updateInvoiceProducts();
         updateCosts();
     </script>
 </body>
